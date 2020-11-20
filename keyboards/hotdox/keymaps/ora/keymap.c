@@ -72,20 +72,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_MINS,    KC_EQL,  KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
     MT_LCES, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L,    KC_QUOT, MT_RCEN,
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_GRV,     KC_SCLN, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-    KC_LALT, KC_LEFT, KC_DOWN, KC_RGHT, KC_LGUI,                                        KC_RGUI, MC_MPRV, TD_PLSP, MC_MNXT, KC_RALT,
-                                                 LT_NMPD, TD_DMC1,    TD_DMC2, KC_LEAD,
-                                        /*-----\ /-----*/ KC_BSPC,    KC_BSPC, /*-----\ /-----*/
-                                        MT_LSSP, LT_SYBS, LT_FNES,    LT_FNES, LT_SYEN, MT_RSSP)
+    KC_LALT, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,                                        KC_LEAD, MC_MPRV, TD_PLSP, MC_MNXT, KC_RALT,
+                                                 LT_NMPD, TD_DMC1,    TD_DMC2, LT_NMPD,
+                                        /*-----\ /-----*/ LT_FNES,    LT_FNES, /*-----\ /-----*/
+                                        MT_LSSP, LT_SYBS, KC_LGUI,    KC_RGUI, LT_SYEN, MT_RSSP)
 ,
 [LAYER_WIN] = LAYOUT_ergodox_pretty(
     _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______,                                        _______, WN_MPRV, WN_MPLY, WN_MNXT, _______,
+    KC_LGUI, _______, _______, _______, _______,                                        _______, WN_MPRV, WN_MPLY, WN_MNXT, KC_RGUI,
                                                  _______, _______,    _______, _______,
-                                        /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/
-                                        _______, _______, LT_WFNE,    LT_WFNE, _______, _______)
+                                        /*-----\ /-----*/ LT_WFNE,    LT_WFNE, /*-----\ /-----*/
+                                        _______, _______, KC_LALT,    KC_RALT, _______, _______)
 ,
 [LAYER_GAMES] = LAYOUT_ergodox_pretty(
     KC_GRV,  _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
@@ -93,9 +93,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LCTL, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
     KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,                                          _______, _______, _______, _______, _______,
-                                                 TD_DMC1, TD_DMC2,    LT_NMPD, _______,
-                                        /*-----\ /-----*/ KC_BSPC,    _______, /*-----\ /-----*/
-                                        KC_SPC,  KC_LALT, LT_WFNE,    _______, _______, _______)
+                                                 TD_DMC1, TD_DMC2,    _______, _______,
+                                        /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/
+                                        KC_SPC,  KC_LALT, KC_ESC,     _______, _______, _______)
 ,
 [LAYER_FUNCTION] = LAYOUT_ergodox_pretty(
     _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,      KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______,
