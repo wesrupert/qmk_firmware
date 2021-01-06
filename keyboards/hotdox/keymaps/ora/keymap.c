@@ -10,7 +10,8 @@ enum keycodes {
 enum tap_dances {
     TAP_DANCE_DYN_MACRO_1 = 0,
     TAP_DANCE_DYN_MACRO_2,
-    TAP_DANCE_PLAYPAUSE_SPOTIFY,
+    TAP_DANCE_MAC_PLAYPAUSE_SPOTIFY,
+    TAP_DANCE_WIN_PLAYPAUSE_SPOTIFY,
     X_TAP_DANCE
 };
 
@@ -22,10 +23,8 @@ enum layers {
 };
 
 #define LAUNCH_APP(string) do { \
-    SEND_STRING(MC_LAUNCH); \
-    wait_ms(250); \
-    SEND_STRING(string); \
-    wait_ms(250); \
+    if (IS_LAYER_ON(LAYER_WIN)) { SEND_STRING(WN_LAUNCH); } else { SEND_STRING(MC_LAUNCH); } \
+    wait_ms(250); SEND_STRING(string); wait_ms(250); \
     SEND_STRING(SS_TAP(X_ENTER)); \
 } while (false)
 
@@ -64,7 +63,8 @@ enum layers {
 
 #define TD_DMC1 TD(TAP_DANCE_DYN_MACRO_1)
 #define TD_DMC2 TD(TAP_DANCE_DYN_MACRO_2)
-#define TD_PLSP TD(TAP_DANCE_PLAYPAUSE_SPOTIFY)
+#define TD_MPLS TD(TAP_DANCE_MAC_PLAYPAUSE_SPOTIFY)
+#define TD_WPLS TD(TAP_DANCE_WIN_PLAYPAUSE_SPOTIFY)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [LAYER_BASE] = LAYOUT_ergodox_pretty(
@@ -72,7 +72,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_MINS,    KC_EQL,  KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
     MT_LCES, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L,    KC_QUOT, MT_RCEN,
     KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_GRV,     KC_SCLN, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-    KC_LALT, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,                                        KC_LEAD, MC_MPRV, TD_PLSP, MC_MNXT, KC_RALT,
+    KC_LEAD, MC_MPRV, TD_MPLS, MC_MNXT, KC_LALT,                                        KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_LEAD,
                                                  LT_NMPD, TD_DMC1,    TD_DMC2, LT_NMPD,
                                         /*-----\ /-----*/ LT_FNES,    LT_FNES, /*-----\ /-----*/
                                         MT_LSSP, LT_SYBS, KC_LGUI,    KC_RGUI, LT_SYEN, MT_RSSP)
@@ -82,17 +82,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
-    KC_LGUI, _______, _______, _______, _______,                                        _______, WN_MPRV, WN_MPLY, WN_MNXT, KC_RGUI,
+    _______, WN_MPRV, TD_WPLS, WN_MNXT, _______,                                        _______, _______, _______, _______, _______,
                                                  _______, _______,    _______, _______,
                                         /*-----\ /-----*/ LT_WFNE,    LT_WFNE, /*-----\ /-----*/
-                                        _______, _______, KC_LALT,    KC_RALT, _______, _______)
+                                        _______, _______, _______,    _______, _______, _______)
 ,
 [LAYER_GAMES] = LAYOUT_ergodox_pretty(
     KC_GRV,  _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
     KC_LCTL, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
-    KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,                                          _______, _______, _______, _______, _______,
+    _______, _______, _______, _______, _______, _______, KC_HOME,    _______, _______, _______, _______, _______, _______, _______,
+    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                                          WN_MPRV, TD_WPLS, WN_MNXT, _______, _______,
                                                  TD_DMC1, TD_DMC2,    _______, _______,
                                         /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/
                                         KC_SPC,  KC_LALT, KC_ESC,     _______, _______, _______)
@@ -102,7 +102,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_CAPS, XXXXXXX, MC_VOLD, MC_MUTE, MC_VOLU, XXXXXXX, XXXXXXX,    XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  MC_PSCR, KC_CAPS,
     KC_ESC,  XXXXXXX, MC_MPRV, MC_MPLY, MC_MNXT, XXXXXXX,                      KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, MC_PSCF, KC_ENT,
     KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_RCTL,
-    _______, _______, KC_UP,   _______, _______,                                        _______, MC_VOLD, MC_MUTE, MC_VOLU, _______,
+    _______, MC_VOLD, MC_MUTE, MC_VOLU, _______,                                        _______, _______, _______, _______, _______,
                                                  RESET,   _______,    _______, MC_LOCK,
                                         /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/
                                         _______, _______, _______,    _______, _______, _______)
@@ -112,7 +112,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_CAPS, XXXXXXX, WN_VOLD, WN_MUTE, WN_VOLU, XXXXXXX, XXXXXXX,    XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  WN_PSCR, KC_CAPS,
     KC_ESC,  XXXXXXX, WN_MPRV, WN_MPLY, WN_MNXT, XXXXXXX,                      KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, WN_PSCF, KC_ENT,
     KC_LCTL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_RCTL,
-    _______, _______, KC_UP,   _______, _______,                                        _______, WN_VOLD, WN_MUTE, WN_VOLU, _______,
+    _______, WN_VOLD, WN_MUTE, WN_VOLU, _______,                                        _______, _______, _______, _______, _______,
                                                  RESET,   _______,    _______, WN_LOCK,
                                         /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/
                                         _______, _______, _______,    _______, _______, _______)
@@ -230,18 +230,19 @@ void dance_dynamic_macro_2(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void dance_playpause_spotify(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        tap_code(MC_MPLY);
-    } else if (state->count == 2) {
-        LAUNCH_APP("spotify");
-    }
+void dance_mac_playpause_spotify(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) { tap_code(MC_MPLY); } else if (state->count == 2) { LAUNCH_APP("spotify"); }
+}
+
+void dance_win_playpause_spotify(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) { tap_code(WN_MPLY); } else if (state->count == 2) { LAUNCH_APP("spotify"); }
 }
 
 qk_tap_dance_action_t tap_dance_actions[] = {
     [TAP_DANCE_DYN_MACRO_1] = ACTION_TAP_DANCE_FN(dance_dynamic_macro_1),
     [TAP_DANCE_DYN_MACRO_2] = ACTION_TAP_DANCE_FN(dance_dynamic_macro_2),
-    [TAP_DANCE_PLAYPAUSE_SPOTIFY] = ACTION_TAP_DANCE_FN(dance_playpause_spotify),
+    [TAP_DANCE_MAC_PLAYPAUSE_SPOTIFY] = ACTION_TAP_DANCE_FN(dance_mac_playpause_spotify),
+    [TAP_DANCE_WIN_PLAYPAUSE_SPOTIFY] = ACTION_TAP_DANCE_FN(dance_win_playpause_spotify),
 };
 
 
