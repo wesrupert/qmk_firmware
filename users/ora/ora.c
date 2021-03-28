@@ -70,6 +70,7 @@ void matrix_scan_user(void) {
         SEQ_ONE_KEY(KC_M) { layer_move(LAYER_BASE);  return; }
         SEQ_ONE_KEY(KC_N) { LAUNCH_APP("stickies");  return; }
         SEQ_ONE_KEY(KC_O) { LAUNCH_APP("outlook");   return; }
+        SEQ_ONE_KEY(KC_P) { LAUNCH_APP("spotify");   return; }
         SEQ_ONE_KEY(KC_R) { LAUNCH_APP("reminders"); return; }
         SEQ_ONE_KEY(KC_S) { LAUNCH_APP("slack");     return; }
         SEQ_ONE_KEY(KC_T) { LAUNCH_APP("iterm");     return; }
