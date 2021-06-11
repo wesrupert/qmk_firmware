@@ -33,6 +33,12 @@ enum layers {
 
 // Platform-specific keys
 #define MC_LAUNCH SS_LGUI(" ")
+#define MC_COPY LGUI(KC_C)
+#define MC_CUT LGUI(KC_X)
+#define MC_SALL LGUI(KC_A)
+#define MC_PSTE LGUI(KC_V)
+#define MC_UNDO LGUI(KC_Z)
+
 #define MC_LOCK LGUI(LCTL(KC_Q))
 #define MC_MNXT KC_MFFD
 #define MC_MPLY KC_MPLY
@@ -44,6 +50,12 @@ enum layers {
 #define MC_VOLU KC__VOLUP
 
 #define WN_LAUNCH SS_TAP(X_LGUI)
+#define WN_COPY LCTL(KC_C)
+#define WN_CUT LCTL(KC_X)
+#define WN_SALL LCTL(KC_A)
+#define WN_PSTE LCTL(KC_V)
+#define WN_UNDO LGUI(KC_Z)
+
 #define WN_LOCK LGUI(KC_L)
 #define WN_MNXT KC_MNXT
 #define WN_MPLY KC_MPLY
@@ -67,56 +79,53 @@ enum layers {
 
 // Common key groupings
 // Base Layer
-#define __QWER_L1__ KC_1,   KC_2,   KC_3,   KC_4,   KC_5
-#define __QWER_R1__ KC_6,   KC_7,   KC_8,   KC_9,   KC_0
-#define __QWER_L2__ KC_Q,   KC_W,   KC_E,   KC_R,   KC_T
-#define __QWER_R2__ KC_Y,   KC_U,   KC_I,   KC_O,   KC_P
-#define __QWER_L3__ KC_A,   KC_S,   KC_D,   KC_F,   KC_G
-#define __QWER_R3__ KC_H,   KC_J,   KC_K,   KC_L
-#define __QWER_L4__ KC_Z,   KC_X,   KC_C,   KC_V,   KC_B
-#define __QWER_R4__ KC_N,   KC_M,   KC_COMM,KC_DOT, KC_SLSH
+#define __QWER_L1__ KC_1   , KC_2   , KC_3   , KC_4   , KC_5
+#define __QWER_R1__ KC_6   , KC_7   , KC_8   , KC_9   , KC_0
+#define __QWER_L2__ KC_Q   , KC_W   , KC_E   , KC_R   , KC_T
+#define __QWER_R2__ KC_Y   , KC_U   , KC_I   , KC_O   , KC_P
+#define __QWER_L3__ KC_A   , KC_S   , KC_D   , KC_F   , KC_G
+#define __QWER_R3__ KC_H   , KC_J   , KC_K   , KC_L
+#define __QWER_L4__ KC_Z   , KC_X   , KC_C   , KC_V   , KC_B
+#define __QWER_R4__ KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH
 
 // Media
-#define __MDIA_MC__ MC_MPRV,TD_MPLS,MC_MNXT
-#define __MDIA_WN__ WN_MPRV,TD_WPLS,WN_MNXT
-#define __VOLM_MC__ MC_VOLD,MC_MUTE,MC_VOLU
-#define __VOLM_WN__ WN_VOLD,WN_MUTE,WN_VOLU
+#define __MDIA_MC__ MC_MPRV, TD_MPLS, MC_MNXT                                     //   PREV    PAUSE   NEXT
+#define __MDIA_WN__ WN_MPRV, TD_WPLS, WN_MNXT                                     //   PREV    PAUSE   NEXT
+#define __VOLM_MC__ MC_VOLD, MC_MUTE, MC_VOLU                                     //   VOLU    MUTE    VOLD
+#define __VOLM_WN__ WN_VOLD, WN_MUTE, WN_VOLU                                     //   VOLU    MUTE    VOLD
+
+// Clipboard
+#define __CLIP_MC__ MC_CUT , MC_COPY, MC_PSTE                                     //   CUT     COPY    PASTE
+#define __CLIP_WN__ WN_CUT , WN_COPY, WN_PSTE                                     //   CUT     COPY    PASTE
 
 // Function Layer
-#define __FUNC_L1__ KC_F1,  KC_F2,  KC_F3,  KC_F4,  KC_F5
-#define __FUNC_R1__ KC_F6,  KC_F7,  KC_F8,  KC_F9,  KC_F10, KC_F11,  KC_F12
-#define __FUNC_L2__ KC_HOME,KC_PGUP,KC_PGDN,KC_END
-#define __FUNC_R2__ KC_HOME,KC_PGDN,KC_PGUP,KC_END
-#define __FUNC_L3__ KC_LEFT,KC_UP,  KC_DOWN,KC_RGHT
-#define __FUNC_R3__ KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT
+#define __FUNC_L1__ KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5                     //    F1      F2      F3      F4      F5
+#define __FUNC_R1__ KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12  //    F6      F7      F8      F9      F10      F11     F12
+#define __FUNC_L2__ KC_HOME, KC_PGUP, KC_PGDN, KC_END                             //   HOME    PGUP    PGDN     END
+#define __FUNC_R2__ KC_HOME, KC_PGDN, KC_PGUP, KC_END                             //   HOME    PGDN    PGUP     END
+#define __FUNC_L3__ KC_LEFT, KC_UP  , KC_DOWN, KC_RGHT                            //   LEFT     UP     DOWN    RIGHT
+#define __FUNC_R3__ KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT                            //   LEFT    DOWN     UP     RIGHT
 
 // Symbol Layer
-//                   !       @       #       $       %
-//                   ^       &      *       (        )      {\n}   ()=>{}
-#define __SYMB_L1__ KC_EXLM,KC_AT,  KC_HASH,KC_DLR, KC_PERC
-#define __SYMB_R1__ KC_CIRC,KC_AMPR,KC_ASTR,KC_LPRN,KC_RPRN,MA_BRNL,MA_LMBD
-//                  ||       |       /       -       ?
-//                   !       +       *       &      &&
-#define __SYMB_L2__ MA_OR,  KC_PIPE,KC_SLSH,KC_MINS,KC_QUES
-#define __SYMB_R2__ KC_EXLM,KC_PLUS,KC_ASTR,KC_AMPR,MA_AND
-//                  &&       [       {       (       <
-//                   >       )       }       ]      ||
-#define __SYMB_L3__ MA_AND, KC_LBRC,KC_LCBR,KC_LPRN,KC_LABK
-#define __SYMB_R3__ KC_RABK,KC_RPRN,KC_RCBR,KC_RBRC,MA_OR
-//                 /*  */    []     {  }     ()      <>
-//                  <>      ()     {  }     []   /*  */
-#define __SYMB_L4__ MA_PCMT,MA_PBRC,MA_PCBR,MA_PPRN,MA_PABK
-#define __SYMB_R4__ MA_PABK,MA_PPRN,MA_PCBR,MA_PBRC,MA_PCMT
+#define __SYMB_L1__ KC_EXLM, KC_AT  , KC_HASH, KC_DLR , KC_PERC                   //    !       @       #       $       %
+#define __SYMB_R1__ KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, MA_BRNL, MA_LMBD //    ^       &       *       (       )      {\n}   ()=>{}
+#define __SYMB_L2__ MA_OR  , KC_PIPE, KC_SLSH, KC_MINS, KC_QUES                   //    !       +       *       &       &&
+#define __SYMB_R2__ KC_EXLM, KC_PLUS, KC_ASTR, KC_AMPR, MA_AND                    //    ||      |       /       -       ?
+#define __SYMB_L3__ MA_AND , KC_LBRC, KC_LCBR, KC_LPRN, KC_LABK                   //    &&      [       {       (       <
+#define __SYMB_R3__ KC_RABK, KC_RPRN, KC_RCBR, KC_RBRC, MA_OR                     //    >       )       }       ]       ||
+#define __SYMB_L4__ MA_PCMT, MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK                   //  /*  */    []     {  }     ()      <>
+#define __SYMB_R4__ MA_PABK, MA_PPRN, MA_PCBR, MA_PBRC, MA_PCMT                   //    <>      ()     {  }     []    /*  */
 
-// Numpad Layer
-#define __NMPD_L1__ KC_BSPC,KC_DEL, KC_PENT,KC_PSLS
-#define __NMPD_L2__ KC_P7,  KC_P8,  KC_P9,  KC_PAST
-#define __NMPD_L3__ KC_P4,  KC_P5,  KC_P6,  KC_PMNS
-#define __NMPD_L4__ KC_P1,  KC_P2,  KC_P3,  KC_PPLS
-#define __NMPD_L5__ KC_PDOT,KC_P0,  KC_PEQL
+// Numpad Layer Left
+#define __NMPD_L1__ KC_BSPC, KC_DEL , KC_PENT, KC_PSLS                            //   x<-     ->x    enter     /
+#define __NMPD_L2__ KC_P7  , KC_P8  , KC_P9  , KC_PAST                            //    7       8       9       *
+#define __NMPD_L3__ KC_P4  , KC_P5  , KC_P6  , KC_PMNS                            //    4       5       6       -
+#define __NMPD_L4__ KC_P1  , KC_P2  , KC_P3  , KC_PPLS                            //    1       2       3       +
+#define __NMPD_L5__ KC_PDOT, KC_P0  , KC_PEQL                                     //    .       0       =
 
-#define __NMPD_R1__ KC_PSLS,KC_PENT,KC_BSPC,KC_DEL
-#define __NMPD_R2__ KC_PAST,KC_P7,  KC_P8,  KC_P9
-#define __NMPD_R3__ KC_PMNS,KC_P4,  KC_P5,  KC_P6
-#define __NMPD_R4__ KC_PPLS,KC_P1,  KC_P2,  KC_P3
-#define __NMPD_R5__         KC_PEQL,KC_P0,  KC_PDOT
+// Numpad Layer Right
+#define __NMPD_R1__ KC_PSLS, KC_PENT, KC_BSPC, KC_DEL                             //    /     enter    x<-     ->x
+#define __NMPD_R2__ KC_PAST, KC_P7  , KC_P8  , KC_P9                              //    *       7       8       9
+#define __NMPD_R3__ KC_PMNS, KC_P4  , KC_P5  , KC_P6                              //    -       4       5       6
+#define __NMPD_R4__ KC_PPLS, KC_P1  , KC_P2  , KC_P3                              //    +       1       2       3
+#define __NMPD_R5__          KC_PEQL, KC_P0  , KC_PDOT                            //            =       0       .
