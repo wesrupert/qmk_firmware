@@ -47,9 +47,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // }}}
 [LAYER_FUNCTION] = LAYOUT_wrapper( // {{{
     KC_ESC,                  __FUNC_L1__,                                                      __FUNC_R1__,                 RESET,
-    KC_CAPS, XXXXXXX,        __FUNC_L2__,                 XXXXXXX,    XXXXXXX,                 __FUNC_R2__,        MC_PSCR, KC_CAPS,
-    KC_LCTL, XXXXXXX,        __FUNC_L3__,                                                      __FUNC_R3__,        MC_PSCF, KC_RCTL,
-    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+    XXXXXXX, XXXXXXX,        __FUNC_L2__,                 XXXXXXX,    XXXXXXX,                 __FUNC_R2__,        MC_PSCR, KC_CAPS,
+    KC_CAPS, MC_SALL,        __FUNC_L3__,                                                      __FUNC_R3__,        MC_PSCF, KC_RCTL,
+    _______, MC_UNDO,        __CLIP_MC__,        XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
     _______,        __VOLM_MC__,        _______,                                        TD_MPLS, MC_MPRV, MC_VOLD, MC_VOLU, MC_MNXT,
                                                  _______, _______,    _______, MC_LOCK,
                                         /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/
@@ -57,9 +57,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // }}}
 [LAYER_WINFUN] = LAYOUT_wrapper( // {{{
     KC_ESC,                  __FUNC_L1__,                                                      __FUNC_R1__,                 RESET,
-    KC_CAPS, XXXXXXX,        __FUNC_L2__,                 XXXXXXX,    XXXXXXX,                 __FUNC_R2__,        MC_PSCR, KC_CAPS,
-    KC_LCTL, XXXXXXX,        __FUNC_L3__,                                                      __FUNC_R3__,        MC_PSCF, KC_RCTL,
-    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+    XXXXXXX, XXXXXXX,        __FUNC_L2__,                 XXXXXXX,    XXXXXXX,                 __FUNC_R2__,        MC_PSCR, KC_CAPS,
+    KC_CAPS, WN_SALL,        __FUNC_L3__,                                                      __FUNC_R3__,        MC_PSCF, KC_RCTL,
+    _______, WN_UNDO,        __CLIP_WN__,        XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
     _______,        __VOLM_WN__,        _______,                                        TD_WPLS, WN_MPRV, WN_VOLD, WN_VOLU, WN_MNXT,
                                                  _______, _______,    _______, WN_LOCK,
                                         /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/
@@ -83,7 +83,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      _______,             __NMPD_L5__,            XXXXXXX,                      XXXXXXX,            __NMPD_R5__,             _______,
                                                   _______, _______,    _______, _______,
                                          /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/
-                                         KC_SPC,  KC_PENT, _______,    _______, KC_PENT, KC_SPC)
+                                         KC_SPC,  KC_PENT, KC_BSPC,    KC_BSPC, KC_PENT, KC_SPC)
 // }}}
 //[LAYER_] = LAYOUT_wrapper( // {{{
 //    _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
