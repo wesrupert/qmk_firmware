@@ -1,3 +1,5 @@
+#define COMBO_SHOULD_TRIGGER
+
 #include QMK_KEYBOARD_H
 #include "ora.h"
 #include "version.h"

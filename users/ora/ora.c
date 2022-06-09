@@ -1,4 +1,5 @@
 #include "ora.h"
+#include "g/keymap_combo.h"
 
 __attribute__ ((weak))
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
@@ -126,3 +127,12 @@ qk_tap_dance_action_t tap_dance_actions[] = {
     [TAP_DANCE_WIN_PLAYPAUSE_SPOTIFY] = ACTION_TAP_DANCE_FN(dance_win_playpause_spotify),
 };
 
+bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
+    if (layer_state_is(LAYER_GAMES)) {
+        return false;
+    } else if (layer_state_is(LAYER_NUMPAD)) {
+        return false;
+    } else {
+        return true;
+    }
+}
