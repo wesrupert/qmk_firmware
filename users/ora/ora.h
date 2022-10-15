@@ -10,14 +10,40 @@ enum keycodes {
     MA_OR, MA_AND, MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK, MA_LMBD, MA_BRNL, MA_PCMT
 };
 
+#ifdef TAP_DANCE_ENABLE
+
+typedef enum {
+    TD_NONE,
+    TD_UNKNOWN,
+    TD_SINGLE_TAP,
+    TD_SINGLE_HOLD,
+    TD_DOUBLE_TAP,
+    TD_DOUBLE_HOLD,
+    TD_DOUBLE_SINGLE_TAP,
+    TD_TRIPLE_TAP,
+    TD_TRIPLE_HOLD
+} td_state_t;
+
+typedef struct {
+    bool is_press_action;
+    td_state_t state;
+} td_tap_t;
+
+td_state_t cur_dance(qk_tap_dance_state_t *state);
+td_state_t hold_cur_dance(qk_tap_dance_state_t *state);
+
 enum tap_dances {
     TAP_DANCE_LAYERS = 0,
     TAP_DANCE_DYN_MACRO_1,
     TAP_DANCE_DYN_MACRO_2,
     TAP_DANCE_MAC_PLAYPAUSE_SPOTIFY,
     TAP_DANCE_WIN_PLAYPAUSE_SPOTIFY,
+    TAP_DANCE_LEADER_LCTRL,
+    TAP_DANCE_LEADER_RCTRL,
     X_TAP_DANCE
 };
+
+#endif // TAP_DANCE_ENABLE
 
 enum layers {
     LAYER_BASE = 0, LAYER_WIN, LAYER_GAMES, LAYER_FUNCTION, LAYER_WINFUN,
@@ -42,11 +68,11 @@ enum layers {
 #define MC_MNXT KC_MFFD
 #define MC_MPLY KC_MPLY
 #define MC_MPRV KC_MRWD
-#define MC_MUTE KC__MUTE
+#define MC_MUTE KC_KB_MUTE
 #define MC_PSCF LGUI(LSFT(KC_4))
 #define MC_PSCR LGUI(LCTL(LSFT(KC_4)))
-#define MC_VOLD KC__VOLDOWN
-#define MC_VOLU KC__VOLUP
+#define MC_VOLD KC_KB_VOLUME_DOWN
+#define MC_VOLU KC_KB_VOLUME_UP
 
 #define WN_LAUNCH SS_TAP(X_LGUI)
 #define WN_COPY LCTL(KC_C)
@@ -72,6 +98,8 @@ enum layers {
 #define TD_DMC2 TD(TAP_DANCE_DYN_MACRO_2)
 #define TD_MPLS TD(TAP_DANCE_MAC_PLAYPAUSE_SPOTIFY)
 #define TD_WPLS TD(TAP_DANCE_WIN_PLAYPAUSE_SPOTIFY)
+#define TD_LCLD TD(TAP_DANCE_LEADER_LCTRL)
+#define TD_RCLD TD(TAP_DANCE_LEADER_RCTRL)
 
 // XY_ABCD alternates
 #define __MIS__ KC_NO
@@ -90,6 +118,7 @@ enum layers {
 // Media
 #define __MDIA_MC__ MC_MPRV, TD_MPLS, MC_MNXT                                     //   PREV    PAUSE   NEXT
 #define __MDIA_WN__ WN_MPRV, TD_WPLS, WN_MNXT                                     //   PREV    PAUSE   NEXT
+
 #define __VOLM_MC__ MC_VOLD, MC_MUTE, MC_VOLU                                     //   VOLU    MUTE    VOLD
 #define __VOLM_WN__ WN_VOLD, WN_MUTE, WN_VOLU                                     //   VOLU    MUTE    VOLD
 
@@ -100,18 +129,23 @@ enum layers {
 // Function Layer
 #define __FUNC_L1__ KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5                     //    F1      F2      F3      F4      F5
 #define __FUNC_R1__ KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12  //    F6      F7      F8      F9      F10      F11     F12
+
 #define __FUNC_L2__ KC_HOME, KC_PGUP, KC_PGDN, KC_END                             //   HOME    PGUP    PGDN     END
 #define __FUNC_R2__ KC_HOME, KC_PGDN, KC_PGUP, KC_END                             //   HOME    PGDN    PGUP     END
+
 #define __FUNC_L3__ KC_LEFT, KC_UP  , KC_DOWN, KC_RGHT                            //   LEFT     UP     DOWN    RIGHT
 #define __FUNC_R3__ KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT                            //   LEFT    DOWN     UP     RIGHT
 
 // Symbol Layer
 #define __SYMB_L1__ KC_EXLM, KC_AT  , KC_HASH, KC_DLR , KC_PERC                   //    !       @       #       $       %
 #define __SYMB_R1__ KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, MA_BRNL, MA_LMBD //    ^       &       *       (       )      {\n}   ()=>{}
+
 #define __SYMB_L2__ MA_OR  , KC_PIPE, KC_SLSH, KC_MINS, KC_QUES                   //    !       +       *       &       &&
 #define __SYMB_R2__ KC_EXLM, KC_PLUS, KC_ASTR, KC_AMPR, MA_AND                    //    ||      |       /       -       ?
+
 #define __SYMB_L3__ MA_AND , KC_LBRC, KC_LCBR, KC_LPRN, KC_LABK                   //    &&      [       {       (       <
 #define __SYMB_R3__ KC_RABK, KC_RPRN, KC_RCBR, KC_RBRC, MA_OR                     //    >       )       }       ]       ||
+
 #define __SYMB_L4__ MA_PCMT, MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK                   //  /*  */    []     {  }     ()      <>
 #define __SYMB_R4__ MA_PABK, MA_PPRN, MA_PCBR, MA_PBRC, MA_PCMT                   //    <>      ()     {  }     []    /*  */
 
