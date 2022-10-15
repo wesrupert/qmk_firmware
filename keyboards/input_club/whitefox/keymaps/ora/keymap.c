@@ -16,7 +16,7 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,                        __QWER_L2__,                   __QWER_R2__,                  KC_LBRC,KC_RBRC,KC_BSLS,      MC_MPLY,
     LT_NVES,                       __QWER_L3__,                   __QWER_R3__,            KC_SCLN,KC_QUOT,__MIS__,  LT_SYEN,  MC_MNXT,
     KC_LSFT,__MIS__,               __QWER_L4__,                   __QWER_R4__,                           KC_RSFT,     KC_UP,  MC_MPRV,
-    KC_LCTL,KC_LALT,KC_LGUI,                       KC_SPC,                         KC_RGUI,KC_LEAD,__MIS__,  KC_LEFT,KC_DOWN,KC_RGHT),
+    KC_LCTL,KC_LALT,KC_LGUI,                       KC_SPC,                         KC_RGUI,TD_RCLD,__MIS__,  KC_LEFT,KC_DOWN,KC_RGHT),
 // }}}
 [LAYER_WIN] = L( // {{{
     _______,  _______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,_______,

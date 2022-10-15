@@ -24,7 +24,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LSFT,                 __QWER_L4__,                 KC_GRV,     KC_SCLN,        __QWER_R4__,                          KC_RSFT,
     KC_LALT,        __MDIA_MC__,        KC_LGUI,                                        KC_RGUI, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,
                                                  LT_NMPD, TD_DMC1,    TD_DMC2, KC_LOCK,
-                                        /*-----\ /-----*/ KC_LEAD,    KC_LEAD, /*-----\ /-----*/
+                                        /*-----\ /-----*/ TD_LCLD,    TD_RCLD, /*-----\ /-----*/
                                         MT_LSSP, LT_SYEN, LT_FNES,    LT_FNES, LT_SYEN, MT_RSSP),
 // }}}
 [LAYER_WIN] = L( // {{{
@@ -48,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                         KC_SPC,  KC_LALT, KC_ESC,     _______, _______, _______),
 // }}}
 [LAYER_FUNCTION] = L( // {{{
-    KC_ESC,                  __FUNC_L1__,                                                      __FUNC_R1__,                 RESET,
+    KC_ESC,                  __FUNC_L1__,                                                      __FUNC_R1__,                 QK_BOOT,
     XXXXXXX, XXXXXXX,        __FUNC_L2__,                 XXXXXXX,    XXXXXXX,                 __FUNC_R2__,        MC_PSCR, KC_CAPS,
     KC_CAPS, MC_SALL,        __FUNC_L3__,                                                      __FUNC_R3__,        MC_PSCF, KC_RCTL,
     _______, MC_UNDO,        __CLIP_MC__,        XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
@@ -58,7 +58,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                         _______, _______, _______,    _______, _______, _______),
 // }}}
 [LAYER_WINFUN] = L( // {{{
-    KC_ESC,                  __FUNC_L1__,                                                      __FUNC_R1__,                 RESET,
+    KC_ESC,                  __FUNC_L1__,                                                      __FUNC_R1__,                 QK_BOOT,
     XXXXXXX, XXXXXXX,        __FUNC_L2__,                 XXXXXXX,    XXXXXXX,                 __FUNC_R2__,        WN_PSCR, KC_CAPS,
     KC_CAPS, WN_SALL,        __FUNC_L3__,                                                      __FUNC_R3__,        WN_PSCF, KC_RCTL,
     _______, WN_UNDO,        __CLIP_WN__,        XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
@@ -98,6 +98,5 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //                                        _______, _______, _______,    _______, _______, _______) COMMA???
 //// }}}
 };
-
 
 // vim: foldmethod=marker cursorcolumn
