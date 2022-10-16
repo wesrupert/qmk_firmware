@@ -1,3 +1,6 @@
+// Copyright 2022 Wes Rupert (@wesrupert)
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include "ora.h"
 #include "g/keymap_combo.h"
 
@@ -88,7 +91,7 @@ void matrix_scan_user(void) {
 
 // clang-format on
 
-#ifdef TAP_DANCE_ENABLE
+#if defined(TAP_DANCE_ENABLE)
 
 td_state_t cur_dance(qk_tap_dance_state_t *state) {
     if (state->count == 1) {
@@ -237,6 +240,8 @@ __attribute__((weak)) qk_tap_dance_action_t tap_dance_actions[] = {
 
 #endif // TAP_DANCE_ENABLE
 
+#if defined(COMBO_SHOULD_TRIGGER)
+
 bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
     if (layer_state_is(LAYER_GAMES)) {
         return false;
@@ -246,3 +251,5 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
         return true;
     }
 }
+
+#endif // COMBO_SHOULD_TRIGGER

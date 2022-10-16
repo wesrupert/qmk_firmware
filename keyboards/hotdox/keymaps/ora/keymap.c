@@ -1,3 +1,6 @@
+// Copyright 2022 Wes Rupert (@wesrupert)
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include QMK_KEYBOARD_H
 #include "ora.h"
 #include "version.h"
@@ -48,7 +51,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                         KC_SPC,  KC_LALT, KC_ESC,     _______, _______, _______),
 // }}}
 [LAYER_FUNCTION] = L( // {{{
-    KC_ESC,                  __FUNC_L1__,                                                      __FUNC_R1__,                 QK_BOOT,
+    KC_ESC,                  __FUNC_L1__,                                                      __FUNC_R1__,                 KC_DEL,
     XXXXXXX, XXXXXXX,        __FUNC_L2__,                 XXXXXXX,    XXXXXXX,                 __FUNC_R2__,        MC_PSCR, KC_CAPS,
     KC_CAPS, MC_SALL,        __FUNC_L3__,                                                      __FUNC_R3__,        MC_PSCF, KC_RCTL,
     _______, MC_UNDO,        __CLIP_MC__,        XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
@@ -58,7 +61,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                         _______, _______, _______,    _______, _______, _______),
 // }}}
 [LAYER_WINFUN] = L( // {{{
-    KC_ESC,                  __FUNC_L1__,                                                      __FUNC_R1__,                 QK_BOOT,
+    KC_ESC,                  __FUNC_L1__,                                                      __FUNC_R1__,                 KC_DEL,
     XXXXXXX, XXXXXXX,        __FUNC_L2__,                 XXXXXXX,    XXXXXXX,                 __FUNC_R2__,        WN_PSCR, KC_CAPS,
     KC_CAPS, WN_SALL,        __FUNC_L3__,                                                      __FUNC_R3__,        WN_PSCF, KC_RCTL,
     _______, WN_UNDO,        __CLIP_WN__,        XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
