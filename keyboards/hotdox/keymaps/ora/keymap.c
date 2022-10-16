@@ -1,5 +1,3 @@
-#define COMBO_SHOULD_TRIGGER
-
 #include QMK_KEYBOARD_H
 #include "ora.h"
 #include "version.h"
@@ -15,6 +13,8 @@
 
 // Expand key groups before passing into layout macro.
 #define L(...) LAYOUT_ergodox_pretty(__VA_ARGS__)
+
+// clang-format off
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [LAYER_BASE] = L( // {{{
@@ -98,5 +98,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 //                                        _______, _______, _______,    _______, _______, _______) COMMA???
 //// }}}
 };
+
+// clang-format off
 
 // vim: foldmethod=marker cursorcolumn
