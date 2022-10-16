@@ -10,6 +10,8 @@
 #define L(...) LAYOUT(__VA_ARGS__)
 #define MA_LCTA C(KC_LALT)
 
+// clang-format off
+
 const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [LAYER_BASE] = L( // {{{
     KC_GRV,                        __QWER_L1__,                   __QWER_R1__,                KC_MINS,KC_EQL, KC_BSPC,KC_DEL, TD_DMC1,
@@ -68,5 +70,7 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______,_______,_______,                        _______,                        _______,_______,__MIS__,  _______,_______,_______), */
 // }}}
 };
+
+// clang-format on
 
 // vim: foldmethod=marker cursorcolumn

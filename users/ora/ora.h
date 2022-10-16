@@ -1,60 +1,44 @@
 #pragma once
 
+#define COMBO_SHOULD_TRIGGER
+
 #include QMK_KEYBOARD_H
 #include "quantum.h"
 #include "action.h"
 #include "version.h"
 
-enum keycodes {
-    QWERTY = SAFE_RANGE, COLEMAK, DVORAK, PLOVER, LOWER, RAISE, BACKLIT, EXT_PLV,
-    MA_OR, MA_AND, MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK, MA_LMBD, MA_BRNL, MA_PCMT
-};
+enum keycodes { QWERTY = SAFE_RANGE, COLEMAK, DVORAK, PLOVER, LOWER, RAISE, BACKLIT, EXT_PLV, MA_OR, MA_AND, MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK, MA_LMBD, MA_BRNL, MA_PCMT };
 
 #ifdef TAP_DANCE_ENABLE
 
-typedef enum {
-    TD_NONE,
-    TD_UNKNOWN,
-    TD_SINGLE_TAP,
-    TD_SINGLE_HOLD,
-    TD_DOUBLE_TAP,
-    TD_DOUBLE_HOLD,
-    TD_DOUBLE_SINGLE_TAP,
-    TD_TRIPLE_TAP,
-    TD_TRIPLE_HOLD
-} td_state_t;
+typedef enum { TD_NONE, TD_UNKNOWN, TD_SINGLE_TAP, TD_SINGLE_HOLD, TD_DOUBLE_TAP, TD_DOUBLE_HOLD, TD_DOUBLE_SINGLE_TAP, TD_TRIPLE_TAP, TD_TRIPLE_HOLD } td_state_t;
 
 typedef struct {
-    bool is_press_action;
+    bool       is_press_action;
     td_state_t state;
 } td_tap_t;
 
 td_state_t cur_dance(qk_tap_dance_state_t *state);
 td_state_t hold_cur_dance(qk_tap_dance_state_t *state);
 
-enum tap_dances {
-    TAP_DANCE_LAYERS = 0,
-    TAP_DANCE_DYN_MACRO_1,
-    TAP_DANCE_DYN_MACRO_2,
-    TAP_DANCE_MAC_PLAYPAUSE_SPOTIFY,
-    TAP_DANCE_WIN_PLAYPAUSE_SPOTIFY,
-    TAP_DANCE_LEADER_LCTRL,
-    TAP_DANCE_LEADER_RCTRL,
-    X_TAP_DANCE
-};
+enum tap_dances { TAP_DANCE_LAYERS = 0, TAP_DANCE_DYN_MACRO_1, TAP_DANCE_DYN_MACRO_2, TAP_DANCE_MAC_PLAYPAUSE_SPOTIFY, TAP_DANCE_WIN_PLAYPAUSE_SPOTIFY, TAP_DANCE_LEADER_LCTRL, TAP_DANCE_LEADER_RCTRL, X_TAP_DANCE };
 
 #endif // TAP_DANCE_ENABLE
 
-enum layers {
-    LAYER_BASE = 0, LAYER_WIN, LAYER_GAMES, LAYER_FUNCTION, LAYER_WINFUN,
-    LAYER_SYMBOLS, LAYER_NUMPAD, LAYER_ENUM_END
-};
+enum layers { LAYER_BASE = 0, LAYER_WIN, LAYER_GAMES, LAYER_FUNCTION, LAYER_WINFUN, LAYER_SYMBOLS, LAYER_NUMPAD, LAYER_ENUM_END };
 
-#define LAUNCH_APP(string) do { \
-    if (IS_LAYER_ON(LAYER_WIN)) { SEND_STRING(WN_LAUNCH); } else { SEND_STRING(MC_LAUNCH); } \
-    wait_ms(250); SEND_STRING(string); wait_ms(250); \
-    SEND_STRING(SS_TAP(X_ENTER)); \
-} while (false)
+#define LAUNCH_APP(string)            \
+    do {                              \
+        if (IS_LAYER_ON(LAYER_WIN)) { \
+            SEND_STRING(WN_LAUNCH);   \
+        } else {                      \
+            SEND_STRING(MC_LAUNCH);   \
+        }                             \
+        wait_ms(250);                 \
+        SEND_STRING(string);          \
+        wait_ms(250);                 \
+        SEND_STRING(SS_TAP(X_ENTER)); \
+    } while (false)
 
 // Platform-specific keys
 #define MC_LAUNCH SS_LGUI(" ")
@@ -105,6 +89,8 @@ enum layers {
 #define __MIS__ KC_NO
 
 // Common key groupings
+// clang-format off
+
 // Base Layer
 #define __QWER_L1__ KC_1   , KC_2   , KC_3   , KC_4   , KC_5
 #define __QWER_R1__ KC_6   , KC_7   , KC_8   , KC_9   , KC_0
@@ -162,3 +148,5 @@ enum layers {
 #define __NMPD_R3__ KC_PMNS, KC_P4  , KC_P5  , KC_P6                              //    -       4       5       6
 #define __NMPD_R4__ KC_PPLS, KC_P1  , KC_P2  , KC_P3                              //    +       1       2       3
 #define __NMPD_R5__          KC_PEQL, KC_P0  , KC_PDOT                            //            =       0       .
+
+// clang-format on
