@@ -1,3 +1,6 @@
+// Copyright 2022 Wes Rupert (@wesrupert)
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #include QMK_KEYBOARD_H
 #include "ora.h"
 #include "version.h"

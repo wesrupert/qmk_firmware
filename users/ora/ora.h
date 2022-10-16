@@ -1,3 +1,6 @@
+// Copyright 2022 Wes Rupert (@wesrupert)
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #pragma once
 
 #define COMBO_SHOULD_TRIGGER
@@ -9,7 +12,7 @@
 
 enum keycodes { QWERTY = SAFE_RANGE, COLEMAK, DVORAK, PLOVER, LOWER, RAISE, BACKLIT, EXT_PLV, MA_OR, MA_AND, MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK, MA_LMBD, MA_BRNL, MA_PCMT };
 
-#ifdef TAP_DANCE_ENABLE
+#if defined(TAP_DANCE_ENABLE)
 
 typedef enum { TD_NONE, TD_UNKNOWN, TD_SINGLE_TAP, TD_SINGLE_HOLD, TD_DOUBLE_TAP, TD_DOUBLE_HOLD, TD_DOUBLE_SINGLE_TAP, TD_TRIPLE_TAP, TD_TRIPLE_HOLD } td_state_t;
 
