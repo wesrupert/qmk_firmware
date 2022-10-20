@@ -5,8 +5,8 @@
 #include "ora.h"
 #include "version.h"
 
-#define LT_FNES LT(LAYER_FUNCTION, KC_ESC)
-#define LT_WFNE LT(LAYER_WINFUN, KC_ESC)
+#define MC_FNES LT(LAYER_MACFUN, KC_ESC)
+#define WN_FNES LT(LAYER_WINFUN, KC_ESC)
 #define LT_SYEN LT(LAYER_SYMBOLS, KC_ENT)
 #define LT_NMPD TT(LAYER_NUMPAD)
 #define MT_LSSP LSFT_T(KC_SPC)
@@ -19,27 +19,36 @@
 
 // clang-format off
 
+// __{LAYER} macros so we can use set_single_persistent_default_layer without writing the base layer twice. {{{
+// ...Not that it does anything for this profile, it doesn't look like Hotdox v1 has EEPROM support?
+
+#define __BASE(OS) \
+    KC_DEL,                  __QWER_L1__,                                             __QWER_R1__,        KC_LBRC, KC_RBRC, KC_BSPC, \
+    KC_TAB,                  __QWER_L2__,                 KC_MINS,    KC_EQL,         __QWER_R2__,                          KC_BSLS, \
+    MT_LCES,                 __QWER_L3__,                                             __QWER_R3__,                 KC_QUOT, MT_RCEN, \
+    KC_LSFT,                 __QWER_L4__,                 KC_GRV,     KC_SCLN,        __QWER_R4__,                          KC_RSFT, \
+    KC_LALT,      __MDIA_##OS##__,      KC_LGUI,                                        KC_RGUI, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, \
+                                                 LT_NMPD, TD_DMC1,    TD_DMC2, KC_LOCK,          \
+                                        /*-----\ /-----*/ TD_LCLD,    TD_RCLD, /*-----\ /-----*/ \
+                                        MT_LSSP, LT_SYEN, OS##_FNES,OS##_FNES, LT_SYEN, MT_RSSP
+
+#define __FUNCTION(OS) \
+    KC_ESC,                  __FUNC_L1__,                                                      __FUNC_R1__,                 KC_DEL,  \
+    XXXXXXX, XXXXXXX,        __FUNC_L2__,                 XXXXXXX,    XXXXXXX,                 __FUNC_R2__,      OS##_PSCR, KC_CAPS, \
+    KC_CAPS, OS##_SALL,      __FUNC_L3__,                                                      __FUNC_R3__,      OS##_PSCF, KC_RCTL, \
+    _______, OS##_UNDO,    __CLIP_##OS##__,      XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, \
+    _______,      __VOLM_##OS##__,      _______,                                      TD_PLPS,OS##_MPRV,OS##_VOLD,OS##_VOLU,OS##_MNXT, \
+                                                 _______, _______,    _______, OS##_LOCK,        \
+                                        /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/ \
+                                        _______, _______, _______,    _______, _______, _______
+
+// }}}
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-[LAYER_BASE] = L( // {{{
-    KC_DEL,                  __QWER_L1__,                                             __QWER_R1__,        KC_LBRC, KC_RBRC, KC_BSPC,
-    KC_TAB,                  __QWER_L2__,                 KC_MINS,    KC_EQL,         __QWER_R2__,                          KC_BSLS,
-    MT_LCES,                 __QWER_L3__,                                             __QWER_R3__,                 KC_QUOT, MT_RCEN,
-    KC_LSFT,                 __QWER_L4__,                 KC_GRV,     KC_SCLN,        __QWER_R4__,                          KC_RSFT,
-    KC_LALT,        __MDIA_MC__,        KC_LGUI,                                        KC_RGUI, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT,
-                                                 LT_NMPD, TD_DMC1,    TD_DMC2, KC_LOCK,
-                                        /*-----\ /-----*/ TD_LCLD,    TD_RCLD, /*-----\ /-----*/
-                                        MT_LSSP, LT_SYEN, LT_FNES,    LT_FNES, LT_SYEN, MT_RSSP),
-// }}}
-[LAYER_WIN] = L( // {{{
-    _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
-    _______,        __MDIA_WN__,        _______,                                        _______, _______, _______, _______, _______,
-                                                 _______, _______,    _______, _______,
-                                        /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/
-                                        _______, _______, LT_WFNE,    LT_WFNE, _______, _______),
-// }}}
+[LAYER_WIN] = L(__BASE(WN)),
+[LAYER_WINFUN] = L(__FUNCTION(WN)),
+[LAYER_MAC] = L(__BASE(MC)),
+[LAYER_MACFUN] = L(__FUNCTION(MC)),
 [LAYER_GAMES] = L( // {{{
     KC_GRV,  _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
@@ -47,28 +56,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, KC_HOME,    _______, _______, _______, _______, _______, _______, _______,
     KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                                          _______, _______, _______, _______, _______,
                                                  WN_MPLY, WN_MNXT,    _______, _______,
-                                        /*-----\ /-----*/ LT_WFNE,    _______, /*-----\ /-----*/
+                                        /*-----\ /-----*/ WN_FNES,    _______, /*-----\ /-----*/
                                         KC_SPC,  KC_LALT, KC_ESC,     _______, _______, _______),
-// }}}
-[LAYER_FUNCTION] = L( // {{{
-    KC_ESC,                  __FUNC_L1__,                                                      __FUNC_R1__,                 KC_DEL,
-    XXXXXXX, XXXXXXX,        __FUNC_L2__,                 XXXXXXX,    XXXXXXX,                 __FUNC_R2__,        MC_PSCR, KC_CAPS,
-    KC_CAPS, MC_SALL,        __FUNC_L3__,                                                      __FUNC_R3__,        MC_PSCF, KC_RCTL,
-    _______, MC_UNDO,        __CLIP_MC__,        XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
-    _______,        __VOLM_MC__,        _______,                                        TD_MPLS, MC_MPRV, MC_VOLD, MC_VOLU, MC_MNXT,
-                                                 _______, _______,    _______, MC_LOCK,
-                                        /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/
-                                        _______, _______, _______,    _______, _______, _______),
-// }}}
-[LAYER_WINFUN] = L( // {{{
-    KC_ESC,                  __FUNC_L1__,                                                      __FUNC_R1__,                 KC_DEL,
-    XXXXXXX, XXXXXXX,        __FUNC_L2__,                 XXXXXXX,    XXXXXXX,                 __FUNC_R2__,        WN_PSCR, KC_CAPS,
-    KC_CAPS, WN_SALL,        __FUNC_L3__,                                                      __FUNC_R3__,        WN_PSCF, KC_RCTL,
-    _______, WN_UNDO,        __CLIP_WN__,        XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
-    _______,        __VOLM_WN__,        _______,                                        TD_WPLS, WN_MPRV, WN_VOLD, WN_VOLU, WN_MNXT,
-                                                 _______, _______,    _______, WN_LOCK,
-                                        /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/
-                                        _______, _______, _______,    _______, _______, _______),
 // }}}
 [LAYER_SYMBOLS] = L( // {{{
     _______,                               __SYMB_L1__,                          __SYMB_R1__,                               _______,

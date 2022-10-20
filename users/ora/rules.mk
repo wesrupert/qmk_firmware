@@ -2,7 +2,7 @@ SRC += ora.c
 
 VPATH += keyboards/gboards
 
-BOOTMAGIC_ENABLE  = no
+BOOTMAGIC_ENABLE  = yes
 COMMAND_ENABLE    = no
 MOUSEKEY_ENABLE   = no
 

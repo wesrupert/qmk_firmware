@@ -10,11 +10,38 @@
 #include "action.h"
 #include "version.h"
 
-enum keycodes { QWERTY = SAFE_RANGE, COLEMAK, DVORAK, PLOVER, LOWER, RAISE, BACKLIT, EXT_PLV, MA_OR, MA_AND, MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK, MA_LMBD, MA_BRNL, MA_PCMT };
+// clang-format off
+
+enum keycodes {
+    QWERTY = SAFE_RANGE, COLEMAK, DVORAK, PLOVER, LOWER, RAISE, BACKLIT, EXT_PLV,
+    MA_OR, MA_AND, MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK, MA_LMBD, MA_BRNL, MA_PCMT
+};
+
+// clang-format on
 
 #if defined(TAP_DANCE_ENABLE)
 
-typedef enum { TD_NONE, TD_UNKNOWN, TD_SINGLE_TAP, TD_SINGLE_HOLD, TD_DOUBLE_TAP, TD_DOUBLE_HOLD, TD_DOUBLE_SINGLE_TAP, TD_TRIPLE_TAP, TD_TRIPLE_HOLD } td_state_t;
+// clang-format off
+
+enum tap_dances {
+    TAP_DANCE_LAYERS = 0,
+    TAP_DANCE_DYN_MACRO_1,
+    TAP_DANCE_DYN_MACRO_2,
+    TAP_DANCE_PLAYPAUSE_SPOTIFY,
+    TAP_DANCE_LEADER_LCTRL,
+    TAP_DANCE_LEADER_RCTRL,
+    X_TAP_DANCE
+};
+
+typedef enum {
+    TD_NONE, TD_UNKNOWN,
+    TD_SINGLE_TAP, TD_SINGLE_HOLD,
+    TD_DOUBLE_TAP, TD_DOUBLE_HOLD,
+    TD_DOUBLE_SINGLE_TAP,
+    TD_TRIPLE_TAP, TD_TRIPLE_HOLD
+} td_state_t;
+
+// clang-format on
 
 typedef struct {
     bool       is_press_action;
@@ -24,23 +51,25 @@ typedef struct {
 td_state_t cur_dance(qk_tap_dance_state_t *state);
 td_state_t hold_cur_dance(qk_tap_dance_state_t *state);
 
-enum tap_dances { TAP_DANCE_LAYERS = 0, TAP_DANCE_DYN_MACRO_1, TAP_DANCE_DYN_MACRO_2, TAP_DANCE_MAC_PLAYPAUSE_SPOTIFY, TAP_DANCE_WIN_PLAYPAUSE_SPOTIFY, TAP_DANCE_LEADER_LCTRL, TAP_DANCE_LEADER_RCTRL, X_TAP_DANCE };
 
 #endif // TAP_DANCE_ENABLE
 
-enum layers { LAYER_BASE = 0, LAYER_WIN, LAYER_GAMES, LAYER_FUNCTION, LAYER_WINFUN, LAYER_SYMBOLS, LAYER_NUMPAD, LAYER_ENUM_END };
+enum layers { LAYER_WIN = 0, LAYER_MAC, LAYER_GAMES, LAYER_MACFUN, LAYER_WINFUN, LAYER_SYMBOLS, LAYER_NUMPAD, LAYER_ENUM_END };
 
-#define LAUNCH_APP(string)            \
+#define LAUNCH_APP_RET(WNAPP, MCAPP)  \
     do {                              \
         if (IS_LAYER_ON(LAYER_WIN)) { \
             SEND_STRING(WN_LAUNCH);   \
+            wait_ms(250);             \
+            SEND_STRING(WNAPP);       \
         } else {                      \
             SEND_STRING(MC_LAUNCH);   \
+            wait_ms(250);             \
+            SEND_STRING(MCAPP);       \
         }                             \
         wait_ms(250);                 \
-        SEND_STRING(string);          \
-        wait_ms(250);                 \
         SEND_STRING(SS_TAP(X_ENTER)); \
+        return;                       \
     } while (false)
 
 // Platform-specific keys
@@ -83,8 +112,7 @@ enum layers { LAYER_BASE = 0, LAYER_WIN, LAYER_GAMES, LAYER_FUNCTION, LAYER_WINF
 
 #define TD_DMC1 TD(TAP_DANCE_DYN_MACRO_1)
 #define TD_DMC2 TD(TAP_DANCE_DYN_MACRO_2)
-#define TD_MPLS TD(TAP_DANCE_MAC_PLAYPAUSE_SPOTIFY)
-#define TD_WPLS TD(TAP_DANCE_WIN_PLAYPAUSE_SPOTIFY)
+#define TD_PLPS TD(TAP_DANCE_PLAYPAUSE_SPOTIFY)
 #define TD_LCLD TD(TAP_DANCE_LEADER_LCTRL)
 #define TD_RCLD TD(TAP_DANCE_LEADER_RCTRL)
 
@@ -105,8 +133,8 @@ enum layers { LAYER_BASE = 0, LAYER_WIN, LAYER_GAMES, LAYER_FUNCTION, LAYER_WINF
 #define __QWER_R4__ KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH
 
 // Media
-#define __MDIA_MC__ MC_MPRV, TD_MPLS, MC_MNXT                                     //   PREV    PAUSE   NEXT
-#define __MDIA_WN__ WN_MPRV, TD_WPLS, WN_MNXT                                     //   PREV    PAUSE   NEXT
+#define __MDIA_MC__ MC_MPRV, TD_PLPS, MC_MNXT                                     //   PREV    PAUSE   NEXT
+#define __MDIA_WN__ WN_MPRV, TD_PLPS, WN_MNXT                                     //   PREV    PAUSE   NEXT
 
 #define __VOLM_MC__ MC_VOLD, MC_MUTE, MC_VOLU                                     //   VOLU    MUTE    VOLD
 #define __VOLM_WN__ WN_VOLD, WN_MUTE, WN_VOLU                                     //   VOLU    MUTE    VOLD
