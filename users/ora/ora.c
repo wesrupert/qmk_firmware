@@ -68,22 +68,21 @@ LEADER_EXTERNS();
 void matrix_scan_user(void) {
     LEADER_DICTIONARY() {
         leading = false;
-        SEQ_ONE_KEY(KC_A) { LAUNCH_APP("cisco any"); return; }
-        SEQ_ONE_KEY(KC_C) { LAUNCH_APP("chime");     return; }
-        SEQ_ONE_KEY(KC_E) { LAUNCH_APP("excel");     return; }
-        SEQ_ONE_KEY(KC_F) { LAUNCH_APP("firefox");   return; }
-        SEQ_ONE_KEY(KC_G) { layer_move(LAYER_BASE); layer_on(LAYER_WIN); layer_on(LAYER_GAMES); return; }
-        SEQ_ONE_KEY(KC_H) { LAUNCH_APP("chrome");    return; }
-        SEQ_ONE_KEY(KC_M) { layer_move(LAYER_BASE);  return; }
-        SEQ_ONE_KEY(KC_N) { LAUNCH_APP("stickies");  return; }
-        SEQ_ONE_KEY(KC_O) { LAUNCH_APP("outlook");   return; }
-        SEQ_ONE_KEY(KC_P) { LAUNCH_APP("spotify");   return; }
-        SEQ_ONE_KEY(KC_R) { LAUNCH_APP("reminders"); return; }
-        SEQ_ONE_KEY(KC_S) { LAUNCH_APP("slack");     return; }
-        SEQ_ONE_KEY(KC_T) { LAUNCH_APP("iterm");     return; }
-        SEQ_ONE_KEY(KC_U) { LAUNCH_APP("neovim");    return; }
-        SEQ_ONE_KEY(KC_V) { LAUNCH_APP("vimr");      return; }
-        SEQ_ONE_KEY(KC_W) { layer_move(LAYER_BASE); layer_on(LAYER_WIN); return; }
+
+        /* Calendar */ SEQ_ONE_KEY(KC_C) LAUNCH_APP_RET("google calendar", "google calendar");
+        /* Edit     */ SEQ_ONE_KEY(KC_E) LAUNCH_APP_RET("goneovim", "goneovim");
+        /* Notes    */ SEQ_ONE_KEY(KC_N) LAUNCH_APP_RET("obsidian", "obsidian");
+        /* Mail     */ SEQ_ONE_KEY(KC_M) LAUNCH_APP_RET("gmail", "gmail");
+        /* Play     */ SEQ_ONE_KEY(KC_P) LAUNCH_APP_RET("spotify", "spotify");
+        /* Slack    */ SEQ_ONE_KEY(KC_S) LAUNCH_APP_RET("slack", "slack");
+        /* Term     */ SEQ_ONE_KEY(KC_T) LAUNCH_APP_RET("terminal", "iterm");
+        /* Web      */ SEQ_ONE_KEY(KC_W) LAUNCH_APP_RET("firefox", "firefox");
+
+        /* Layer: Games */ SEQ_TWO_KEYS(KC_L, KC_G) { layer_move(LAYER_WIN); layer_on(LAYER_GAMES); return; }
+        /* Layer:   Mac */ SEQ_TWO_KEYS(KC_L, KC_M) { layer_move(LAYER_MAC); return; }
+        /* Layer:   Win */ SEQ_TWO_KEYS(KC_L, KC_W) { layer_move(LAYER_WIN); return; }
+        /* Default: Mac */ SEQ_TWO_KEYS(KC_D, KC_M) { layer_move(LAYER_MAC); set_single_persistent_default_layer(LAYER_MAC); return; }
+        /* Default: Win */ SEQ_TWO_KEYS(KC_D, KC_W) { layer_move(LAYER_WIN); set_single_persistent_default_layer(LAYER_WIN); return; }
 
         tap_code(KC_DEL);
     }
@@ -164,19 +163,15 @@ void dance_dynamic_macro_2(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void dance_mac_playpause_spotify(qk_tap_dance_state_t *state, void *user_data) {
+void dance_playpause_spotify(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
-        tap_code(MC_MPLY);
+        if (IS_LAYER_ON(LAYER_WIN)) { 
+            tap_code(WN_MPLY);
+        } else {
+            tap_code(MC_MPLY);
+        }
     } else if (state->count == 2) {
-        LAUNCH_APP("spotify");
-    }
-}
-
-void dance_win_playpause_spotify(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        tap_code(WN_MPLY);
-    } else if (state->count == 2) {
-        LAUNCH_APP("spotify");
+        LAUNCH_APP_RET("spotify", "spotify");
     }
 }
 
@@ -234,9 +229,17 @@ void dance_rctrl_reset(qk_tap_dance_state_t *state, void *user_data) {
     dance_rctrl_state = 0;
 }
 
+// clang-format off
+
 __attribute__((weak)) qk_tap_dance_action_t tap_dance_actions[] = {
-    [TAP_DANCE_DYN_MACRO_1] = ACTION_TAP_DANCE_FN(dance_dynamic_macro_1), [TAP_DANCE_DYN_MACRO_2] = ACTION_TAP_DANCE_FN(dance_dynamic_macro_2), [TAP_DANCE_MAC_PLAYPAUSE_SPOTIFY] = ACTION_TAP_DANCE_FN(dance_mac_playpause_spotify), [TAP_DANCE_WIN_PLAYPAUSE_SPOTIFY] = ACTION_TAP_DANCE_FN(dance_win_playpause_spotify), [TAP_DANCE_LEADER_LCTRL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lctrl_finished, dance_lctrl_reset), [TAP_DANCE_LEADER_RCTRL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_rctrl_finished, dance_rctrl_reset),
+    [TAP_DANCE_DYN_MACRO_1] = ACTION_TAP_DANCE_FN(dance_dynamic_macro_1),
+    [TAP_DANCE_DYN_MACRO_2] = ACTION_TAP_DANCE_FN(dance_dynamic_macro_2),
+    [TAP_DANCE_PLAYPAUSE_SPOTIFY] = ACTION_TAP_DANCE_FN(dance_playpause_spotify),
+    [TAP_DANCE_LEADER_LCTRL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lctrl_finished, dance_lctrl_reset),
+    [TAP_DANCE_LEADER_RCTRL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_rctrl_finished, dance_rctrl_reset),
 };
+
+// clang-format on
 
 #endif // TAP_DANCE_ENABLE
 
