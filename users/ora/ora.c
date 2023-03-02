@@ -84,6 +84,12 @@ void matrix_scan_user(void) {
         /* Default: Mac */ SEQ_TWO_KEYS(KC_D, KC_M) { layer_move(LAYER_MAC); set_single_persistent_default_layer(LAYER_MAC); return; }
         /* Default: Win */ SEQ_TWO_KEYS(KC_D, KC_W) { layer_move(LAYER_WIN); set_single_persistent_default_layer(LAYER_WIN); return; }
 
+        /* Layer:   Mac */ SEQ_TWO_KEYS(KC_L, KC_O) { layer_move(LAYER_MAC); return; }
+        /* Layer:   Win */ SEQ_TWO_KEYS(KC_L, KC_L) { layer_move(LAYER_WIN); return; }
+        /* Layer: Games */ SEQ_TWO_KEYS(KC_L, KC_DOT) { layer_move(LAYER_WIN); layer_on(LAYER_GAMES); return; }
+        /* Default: Mac */ SEQ_TWO_KEYS(KC_D, KC_I) { layer_move(LAYER_MAC); set_single_persistent_default_layer(LAYER_MAC); return; }
+        /* Default: Win */ SEQ_TWO_KEYS(KC_D, KC_K) { layer_move(LAYER_WIN); set_single_persistent_default_layer(LAYER_WIN); return; }
+
         tap_code(KC_DEL);
     }
 }
@@ -165,7 +171,7 @@ void dance_dynamic_macro_2(qk_tap_dance_state_t *state, void *user_data) {
 
 void dance_playpause_spotify(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
-        if (IS_LAYER_ON(LAYER_WIN)) { 
+        if (IS_LAYER_ON(LAYER_WIN)) {
             tap_code(WN_MPLY);
         } else {
             tap_code(MC_MPLY);
