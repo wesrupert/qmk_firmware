@@ -181,11 +181,11 @@ void dance_playpause_spotify(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-td_state_t dance_lctrl_state = 0;
+td_state_t dance_lctl_state = 0;
 
-void dance_lctrl_finished(qk_tap_dance_state_t *state, void *user_data) {
-    dance_lctrl_state = hold_cur_dance(state);
-    switch (dance_lctrl_state) {
+void dance_lctl_finished(qk_tap_dance_state_t *state, void *user_data) {
+    dance_lctl_state = hold_cur_dance(state);
+    switch (dance_lctl_state) {
         case TD_SINGLE_TAP:
             qk_leader_start();
             break;
@@ -197,22 +197,22 @@ void dance_lctrl_finished(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void dance_lctrl_reset(qk_tap_dance_state_t *state, void *user_data) {
-    switch (dance_lctrl_state) {
+void dance_lctl_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (dance_lctl_state) {
         case TD_SINGLE_HOLD:
             unregister_code(KC_LCTL);
             break;
         default:
             break;
     }
-    dance_lctrl_state = 0;
+    dance_lctl_state = 0;
 }
 
-td_state_t dance_rctrl_state = 0;
+td_state_t dance_rctl_state = 0;
 
-void dance_rctrl_finished(qk_tap_dance_state_t *state, void *user_data) {
-    dance_rctrl_state = hold_cur_dance(state);
-    switch (dance_rctrl_state) {
+void dance_rctl_finished(qk_tap_dance_state_t *state, void *user_data) {
+    dance_rctl_state = hold_cur_dance(state);
+    switch (dance_rctl_state) {
         case TD_SINGLE_TAP:
             qk_leader_start();
             break;
@@ -224,15 +224,15 @@ void dance_rctrl_finished(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void dance_rctrl_reset(qk_tap_dance_state_t *state, void *user_data) {
-    switch (dance_rctrl_state) {
+void dance_rctl_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (dance_rctl_state) {
         case TD_SINGLE_HOLD:
             unregister_code(KC_RCTL);
             break;
         default:
             break;
     }
-    dance_rctrl_state = 0;
+    dance_rctl_state = 0;
 }
 
 // clang-format off
@@ -241,8 +241,8 @@ __attribute__((weak)) qk_tap_dance_action_t tap_dance_actions[] = {
     [TAP_DANCE_DYN_MACRO_1] = ACTION_TAP_DANCE_FN(dance_dynamic_macro_1),
     [TAP_DANCE_DYN_MACRO_2] = ACTION_TAP_DANCE_FN(dance_dynamic_macro_2),
     [TAP_DANCE_PLAYPAUSE_SPOTIFY] = ACTION_TAP_DANCE_FN(dance_playpause_spotify),
-    [TAP_DANCE_LEADER_LCTRL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lctrl_finished, dance_lctrl_reset),
-    [TAP_DANCE_LEADER_RCTRL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_rctrl_finished, dance_rctrl_reset),
+    [TAP_DANCE_LEADER_LCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lctl_finished, dance_lctl_reset),
+    [TAP_DANCE_LEADER_RCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_rctl_finished, dance_rctl_reset),
 };
 
 // clang-format on
