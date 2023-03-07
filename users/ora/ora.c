@@ -235,6 +235,60 @@ void dance_rctl_reset(qk_tap_dance_state_t *state, void *user_data) {
     dance_rctl_state = 0;
 }
 
+td_state_t dance_lalt_state = 0;
+
+void dance_lalt_finished(qk_tap_dance_state_t *state, void *user_data) {
+    dance_lalt_state = hold_cur_dance(state);
+    switch (dance_lalt_state) {
+        case TD_SINGLE_TAP:
+            layer_invert(LAYER_NUMPAD);
+            break;
+        case TD_SINGLE_HOLD:
+            register_code(KC_LALT);
+            break;
+        default:
+            break;
+    }
+}
+
+void dance_lalt_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (dance_lalt_state) {
+        case TD_SINGLE_HOLD:
+            unregister_code(KC_LALT);
+            break;
+        default:
+            break;
+    }
+    dance_lalt_state = 0;
+}
+
+td_state_t dance_ralt_state = 0;
+
+void dance_ralt_finished(qk_tap_dance_state_t *state, void *user_data) {
+    dance_ralt_state = hold_cur_dance(state);
+    switch (dance_ralt_state) {
+        case TD_SINGLE_TAP:
+            layer_invert(LAYER_NUMPAD);
+            break;
+        case TD_SINGLE_HOLD:
+            register_code(KC_RALT);
+            break;
+        default:
+            break;
+    }
+}
+
+void dance_ralt_reset(qk_tap_dance_state_t *state, void *user_data) {
+    switch (dance_ralt_state) {
+        case TD_SINGLE_HOLD:
+            unregister_code(KC_RALT);
+            break;
+        default:
+            break;
+    }
+    dance_ralt_state = 0;
+}
+
 // clang-format off
 
 __attribute__((weak)) qk_tap_dance_action_t tap_dance_actions[] = {
@@ -243,6 +297,8 @@ __attribute__((weak)) qk_tap_dance_action_t tap_dance_actions[] = {
     [TAP_DANCE_PLAYPAUSE_SPOTIFY] = ACTION_TAP_DANCE_FN(dance_playpause_spotify),
     [TAP_DANCE_LEADER_LCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lctl_finished, dance_lctl_reset),
     [TAP_DANCE_LEADER_RCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_rctl_finished, dance_rctl_reset),
+    [TAP_DANCE_LEADER_LALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lalt_finished, dance_lalt_reset),
+    [TAP_DANCE_LEADER_RALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_ralt_finished, dance_ralt_reset),
 };
 
 // clang-format on
