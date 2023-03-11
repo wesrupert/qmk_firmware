@@ -1,6 +1,5 @@
-// Copyright 2022 Wes Rupert (@wesrupert)
+// Copyright 2023 Wes Rupert (@wesrupert)
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 #include "ora.h"
 
 #define MC_FNES LT(LAYER_MACFUN, KC_ESC)
@@ -13,21 +12,21 @@
 #define MT_RSSP RSFT_T(KC_SPC)
 #define MT_LSEN LSFT_T(KC_ENT)
 #define MT_RSEN RSFT_T(KC_ENT)
+#define MT_LABS LALT_T(KC_BSPC)
 
 // Expand key groups before passing into layout macro.
 #define L(...) LAYOUT_ergodox_pretty(__VA_ARGS__)
 
-// clang-format off
-
-// __{LAYER} macros so we can use set_single_persistent_default_layer without writing the base layer twice.
+// __{LAYER} macros so we can use OS-variant keys without writing the layers twice.
 // ...Not that it does anything for this profile, it doesn't look like Hotdox v1 has EEPROM support?
+// clang-format off
 
 #define __BASE(OS) \
     KC_DEL,  ______________________QWER__L1______________________,    _____________QWER__R1_____________, KC_LBRC, KC_RBRC, KC_BSPC, \
     KC_TAB,  __________________QWER_L2__________________, KC_MINS,    KC_EQL,  __________________QWER_R2__________________, KC_BSLS, \
     MT_LCES, __________________QWER_L3__________________,                      _____________QWER__R3_____________, KC_QUOT, MT_RCES, \
     MT_LSEN, __________________QWER_L4__________________, KC_GRV,     KC_SCLN, __________________QWER_R4__________________, MT_RSEN, \
-    KC_MEH ,_________MDIA_##OS##_________,KC_LGUI,                                      KC_RGUI, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, \
+    MT_LABS,_________MDIA_##OS##_________,KC_LGUI,                                      KC_RGUI, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, \
                                                  TD_DMC1, TD_LANP,    TD_RANP, TD_DMC2,          \
                                         /*-----\ /-----*/ TD_LCLD,    TD_RCLD, /*-----\ /-----*/ \
                                         MT_LSSP, LT_SYEN,OS##_FNES,  OS##_FNES,LT_SYEN, MT_RSSP
@@ -94,5 +93,3 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 // clang-format off
-
-// vim: foldmethod=marker cursorcolumn

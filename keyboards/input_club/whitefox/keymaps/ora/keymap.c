@@ -1,6 +1,5 @@
-// Copyright 2022 Wes Rupert (@wesrupert)
+// Copyright 2023 Wes Rupert (@wesrupert)
 // SPDX-License-Identifier: GPL-3.0-or-later
-
 #include "ora.h"
 
 #define MC_FNES LT(LAYER_MACFUN, KC_ESC)
@@ -15,9 +14,8 @@
 // XY_ABCD alternates
 #define _M_ KC_NO
 
+// __{LAYER} macros so we can use OS-variant keys without writing the layers twice.
 // clang-format off
-
-// __{LAYER} macros so we can use set_single_persistent_default_layer without writing the base layer twice.
 
 #define __BASE(OS) \
     KC_GRV,  ______________________QWER__L1______________________, _____________QWER__R1_____________, KC_MINS, KC_EQL , KC_BSPC, KC_DEL , TD_DMC1, \
@@ -72,5 +70,3 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 // clang-format on
-
-// vim: foldmethod=marker cursorcolumn

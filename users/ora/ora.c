@@ -136,32 +136,84 @@ td_state_t hold_cur_dance(tap_dance_state_t *state) {
     return TD_UNKNOWN;
 }
 
-void dance_dynamic_macro_1(tap_dance_state_t *state, void *user_data) {
+td_state_t dance_dm1_state = 0;
+
+void dance_dm1_finished(tap_dance_state_t *state, void *user_data) {
+    dance_dm1_state = hold_cur_dance(state);
     keyrecord_t kr;
-    if (state->count == 1) {
-        kr.event.pressed = false;
-        process_dynamic_macro(DM_PLY1, &kr);
-    } else if (state->count == 2) {
-        kr.event.pressed = true;
-        process_dynamic_macro(DM_RSTP, &kr);
-    } else if (state->count == 3) {
-        kr.event.pressed = false;
-        process_dynamic_macro(DM_REC1, &kr);
+    kr.event.pressed = false;
+    switch (dance_dm1_state) {
+        case TD_SINGLE_HOLD:
+            register_code(KC_LSFT);
+            register_code(KC_LCTL);
+            register_code(KC_LALT);
+            break;
+        case TD_SINGLE_TAP:
+            process_dynamic_macro(DM_PLY1, &kr);
+            break;
+        case TD_DOUBLE_TAP:
+            kr.event.pressed = true;
+            process_dynamic_macro(DM_RSTP, &kr);
+            break;
+        case TD_TRIPLE_TAP:
+            process_dynamic_macro(DM_REC1, &kr);
+            break;
+        default:
+            break;
     }
 }
 
-void dance_dynamic_macro_2(tap_dance_state_t *state, void *user_data) {
-    keyrecord_t kr;
-    if (state->count == 1) {
-        kr.event.pressed = false;
-        process_dynamic_macro(DM_PLY2, &kr);
-    } else if (state->count == 2) {
-        kr.event.pressed = true;
-        process_dynamic_macro(DM_RSTP, &kr);
-    } else if (state->count == 3) {
-        kr.event.pressed = false;
-        process_dynamic_macro(DM_REC2, &kr);
+void dance_dm1_reset(tap_dance_state_t *state, void *user_data) {
+    switch (dance_dm1_state) {
+        case TD_SINGLE_HOLD:
+            unregister_code(KC_LSFT);
+            unregister_code(KC_LCTL);
+            unregister_code(KC_LALT);
+            break;
+        default:
+            break;
     }
+    dance_dm1_state = 0;
+}
+
+td_state_t dance_dm2_state = 0;
+
+void dance_dm2_finished(tap_dance_state_t *state, void *user_data) {
+    dance_dm2_state = hold_cur_dance(state);
+    keyrecord_t kr;
+    kr.event.pressed = false;
+    switch (dance_dm2_state) {
+        case TD_SINGLE_HOLD:
+            register_code(KC_RSFT);
+            register_code(KC_RCTL);
+            register_code(KC_RALT);
+            break;
+        case TD_SINGLE_TAP:
+            process_dynamic_macro(DM_PLY2, &kr);
+            break;
+        case TD_DOUBLE_TAP:
+            kr.event.pressed = true;
+            process_dynamic_macro(DM_RSTP, &kr);
+            break;
+        case TD_TRIPLE_TAP:
+            process_dynamic_macro(DM_REC2, &kr);
+            break;
+        default:
+            break;
+    }
+}
+
+void dance_dm2_reset(tap_dance_state_t *state, void *user_data) {
+    switch (dance_dm2_state) {
+        case TD_SINGLE_HOLD:
+            unregister_code(KC_RSFT);
+            unregister_code(KC_RCTL);
+            unregister_code(KC_RALT);
+            break;
+        default:
+            break;
+    }
+    dance_dm2_state = 0;
 }
 
 void dance_playpause_spotify(tap_dance_state_t *state, void *user_data) {
@@ -287,8 +339,8 @@ void dance_ralt_reset(tap_dance_state_t *state, void *user_data) {
 // clang-format off
 
 __attribute__((weak)) tap_dance_action_t tap_dance_actions[] = {
-    [TAP_DANCE_DYN_MACRO_1] = ACTION_TAP_DANCE_FN(dance_dynamic_macro_1),
-    [TAP_DANCE_DYN_MACRO_2] = ACTION_TAP_DANCE_FN(dance_dynamic_macro_2),
+    [TAP_DANCE_DYN_MACRO_1] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_dm1_finished, dance_dm1_reset),
+    [TAP_DANCE_DYN_MACRO_2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_dm2_finished, dance_dm2_reset),
     [TAP_DANCE_PLAYPAUSE_SPOTIFY] = ACTION_TAP_DANCE_FN(dance_playpause_spotify),
     [TAP_DANCE_LEADER_LCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lctl_finished, dance_lctl_reset),
     [TAP_DANCE_LEADER_RCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_rctl_finished, dance_rctl_reset),
