@@ -50,8 +50,8 @@ typedef struct {
     td_state_t state;
 } td_tap_t;
 
-td_state_t cur_dance(qk_tap_dance_state_t *state);
-td_state_t hold_cur_dance(qk_tap_dance_state_t *state);
+td_state_t cur_dance(tap_dance_state_t *state);
+td_state_t hold_cur_dance(tap_dance_state_t *state);
 
 
 #endif // TAP_DANCE_ENABLE
@@ -97,7 +97,7 @@ enum layers {
 #define MC_VOLD KC_KB_VOLUME_DOWN
 #define MC_VOLU KC_KB_VOLUME_UP
 
-#define WN_LAUNCH SS_TAP(X_LGUI)
+#define WN_LAUNCH SS_LGUI(" ")
 #define WN_COPY LCTL(KC_C)
 #define WN_CUT LCTL(KC_X)
 #define WN_SALL LCTL(KC_A)
@@ -113,9 +113,6 @@ enum layers {
 #define WN_PSCR KC_PSCR
 #define WN_VOLD KC_VOLD
 #define WN_VOLU KC_VOLU
-
-#define DM_RCRD DYN_REC_START1
-#define DM_STOP DYN_REC_STOP
 
 #define TD_DMC1 TD(TAP_DANCE_DYN_MACRO_1)
 #define TD_DMC2 TD(TAP_DANCE_DYN_MACRO_2)
@@ -209,7 +206,7 @@ enum layers {
 // Numpad Layer Left
 //        NumLk     /        *        -
 #define ______________NMPD_1______________ \
-        KC_NLCK, KC_PSLS, KC_PAST, KC_PMNS
+        KC_NUM , KC_PSLS, KC_PAST, KC_PMNS
 //         7        8        9        +
 #define ______________NMPD_2______________ \
         KC_P7  , KC_P8  , KC_P9  , KC_PPLS

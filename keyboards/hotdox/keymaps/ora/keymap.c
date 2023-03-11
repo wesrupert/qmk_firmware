@@ -1,9 +1,7 @@
 // Copyright 2022 Wes Rupert (@wesrupert)
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include QMK_KEYBOARD_H
 #include "ora.h"
-#include "version.h"
 
 #define MC_FNES LT(LAYER_MACFUN, KC_ESC)
 #define WN_FNES LT(LAYER_WINFUN, KC_ESC)
