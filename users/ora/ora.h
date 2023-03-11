@@ -44,7 +44,6 @@ typedef enum {
 } td_state_t;
 
 // clang-format on
-
 typedef struct {
     bool       is_press_action;
     td_state_t state;
@@ -53,15 +52,18 @@ typedef struct {
 td_state_t cur_dance(tap_dance_state_t *state);
 td_state_t hold_cur_dance(tap_dance_state_t *state);
 
-
 #endif // TAP_DANCE_ENABLE
+
+// clang-format off
 
 enum layers {
     LAYER_WIN = 0, LAYER_MAC,
     LAYER_GAMES, LAYER_NUMPAD, LAYER_SYMBOLS,
-    LAYER_MACFUN, LAYER_WINFUN,
+    LAYER_WINFUN, LAYER_MACFUN,
     LAYER_ENUM_END
 };
+
+// clang-format on
 
 #define LAUNCH_APP_RET(WNAPP, MCAPP)  \
     do {                              \

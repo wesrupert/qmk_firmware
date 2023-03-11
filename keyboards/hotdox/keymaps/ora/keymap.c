@@ -18,6 +18,7 @@
 #define L(...) LAYOUT_ergodox_pretty(__VA_ARGS__)
 
 // __{LAYER} macros so we can use OS-variant keys without writing the layers twice.
+// Layers are copies instead of layered so we can use set_single_persistent_default_layer.
 // ...Not that it does anything for this profile, it doesn't look like Hotdox v1 has EEPROM support?
 // clang-format off
 
