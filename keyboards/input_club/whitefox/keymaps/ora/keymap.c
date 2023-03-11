@@ -15,6 +15,7 @@
 #define _M_ KC_NO
 
 // __{LAYER} macros so we can use OS-variant keys without writing the layers twice.
+// Layers are copies instead of layered so we can use set_single_persistent_default_layer.
 // clang-format off
 
 #define __BASE(OS) \
