@@ -68,9 +68,9 @@
     KC_ESC,  ______________________FUNC__L1______________________,    ______________________FUNC__R1______________________, KC_DEL,  \
     XXXXXXX, XXXXXXX, _____________FUNC__L2_____________, XXXXXXX,    XXXXXXX, _____________FUNC__R2_____________,OS##_PSCR,KC_CAPS, \
     KC_CAPS,OS##_SALL,_____________FUNC__L3_____________,                      _____________FUNC__R3_____________,OS##_PSCF,KC_RCTL, \
-    _______,OS##_UNDO,XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, TT_NMPD, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, \
+    CW_TOGG,OS##_UNDO,XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, TT_NMPD, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, CW_TOGG, \
     _______,_________VOLM_##OS##_________,_______,                                  TD_PLPS,OS##_MPRV,OS##_VOLD,OS##_VOLU,OS##_MNXT, \
-                                                 _______, _______,    _______,OS##_LOCK,         \
+                                                OS##_LOCK,_______,    _______,OS##_LOCK,         \
                                         /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/ \
                                         _______, _______, _______,    _______, _______, _______
 
