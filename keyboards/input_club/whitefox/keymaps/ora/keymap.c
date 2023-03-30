@@ -20,9 +20,9 @@
 
 #define __BASE(OS) \
     KC_GRV,  ______________________QWER__L1______________________, _____________QWER__R1_____________, KC_MINS, KC_EQL , KC_BSPC, KC_DEL , TD_DMC1, \
-    KC_TAB,    __________________QWER_L2__________________, __________________QWER_R2__________________, KC_LBRC, KC_RBRC,     KC_BSLS,    OS##_MPLY, \
-    OS##_FNES,   __________________QWER_L3__________________, _____________QWER__R3_____________, KC_SCLN, KC_QUOT,    _M_, LT_SYEN,       OS##_MNXT, \
-    KC_LSFT, _M_,   __________________QWER_L4__________________, __________________QWER_R4__________________,      KC_RSFT,       KC_UP,   OS##_MPRV, \
+    KC_TAB,    __________________QWER_L2__________________, __________________QWER_R2__________________, KC_LBRC, KC_RBRC,     KC_BSLS,   OS##_MPLY,\
+    OS##_FNES,   __________________QWER_L3__________________, _____________QWER__R3_____________, KC_SCLN, KC_QUOT,    _M_, LT_SYEN,      OS##_MNXT,\
+    KC_LSFT, _M_,   __________________QWER_L4__________________, __________________QWER_R4__________________,      KC_RSFT,       KC_UP,  OS##_MPRV,\
     TD_LCLD,   TD_LANP,   KC_LGUI,                        KC_SPC,                         KC_RGUI,   TD_RCLD,    _M_,    KC_LEFT, KC_DOWN, KC_RGHT
 
 #define __NUMPAD \
@@ -47,10 +47,10 @@
     _______,   _______,   _______,                        _______,                        _______,   _______,    _M_,    _______, _______, _______  \
 
 #define __FUNCTION(OS) \
-    OS##_LOCK,______________________FUNC__L1______________________,______________________FUNC__R1______________________, KC_DEL , TD_DMC2, OS##_LOCK, \
-    KC_CAPS,   XXXXXXX, _____________FUNC__L2_____________, _____________FUNC__R2_____________,OS##_PSCR,OS##_PSCF,XXXXXXX,    XXXXXXX,    OS##_MUTE, \
-    XXXXXXX,   OS##_SALL, _____________FUNC__L3_____________, _____________FUNC__R3_____________, XXXXXXX, XXXXXXX,    _M_, _______,       OS##_VOLU, \
-    _______, _M_, OS##_UNDO, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TT_NMPD, XXXXXXX, _________VOLM_##MC##_________,  _______,       KC_PGUP, OS##_VOLD, \
+    OS##_LOCK,______________________FUNC__L1______________________,______________________FUNC__R1______________________, KC_DEL , TD_DMC2,OS##_LOCK,\
+    KC_CAPS,   XXXXXXX, _____________FUNC__L2_____________, _____________FUNC__R2_____________,OS##_PSCR,OS##_PSCF,XXXXXXX,    XXXXXXX,   OS##_MUTE,\
+    XXXXXXX,   OS##_SALL, _____________FUNC__L3_____________, _____________FUNC__R3_____________, XXXXXXX, XXXXXXX,    _M_, _______,      OS##_VOLU,\
+    _______, _M_, OS##_UNDO, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TT_NMPD, XXXXXXX, _________VOLM_##MC##_________,  _______,       KC_PGUP,OS##_VOLD,\
     _______,   _______,   _______,                        _______,                        _______,   _______,    _M_,    KC_HOME, KC_PGDN, KC_END
 
 /* #define __LAYER \
