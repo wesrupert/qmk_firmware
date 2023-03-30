@@ -130,86 +130,6 @@ td_state_t hold_cur_dance(tap_dance_state_t *state) {
 
 // clang-format off
 
-td_state_t dance_dm1_state = 0;
-
-void dance_dm1_finished(tap_dance_state_t *state, void *user_data) {
-    dance_dm1_state = hold_cur_dance(state);
-    keyrecord_t kr;
-    kr.event.pressed = false;
-    switch (dance_dm1_state) {
-        case TD_SINGLE_HOLD:
-            register_code(KC_LSFT);
-            register_code(KC_LCTL);
-            register_code(KC_LALT);
-            break;
-        case TD_SINGLE_TAP:
-            process_dynamic_macro(DM_PLY1, &kr);
-            break;
-        case TD_DOUBLE_TAP:
-            kr.event.pressed = true;
-            process_dynamic_macro(DM_RSTP, &kr);
-            break;
-        case TD_TRIPLE_TAP:
-            process_dynamic_macro(DM_REC1, &kr);
-            break;
-        default:
-            break;
-    }
-}
-
-void dance_dm1_reset(tap_dance_state_t *state, void *user_data) {
-    switch (dance_dm1_state) {
-        case TD_SINGLE_HOLD:
-            unregister_code(KC_LSFT);
-            unregister_code(KC_LCTL);
-            unregister_code(KC_LALT);
-            break;
-        default:
-            break;
-    }
-    dance_dm1_state = 0;
-}
-
-td_state_t dance_dm2_state = 0;
-
-void dance_dm2_finished(tap_dance_state_t *state, void *user_data) {
-    dance_dm2_state = hold_cur_dance(state);
-    keyrecord_t kr;
-    kr.event.pressed = false;
-    switch (dance_dm2_state) {
-        case TD_SINGLE_HOLD:
-            register_code(KC_RSFT);
-            register_code(KC_RCTL);
-            register_code(KC_RALT);
-            break;
-        case TD_SINGLE_TAP:
-            process_dynamic_macro(DM_PLY2, &kr);
-            break;
-        case TD_DOUBLE_TAP:
-            kr.event.pressed = true;
-            process_dynamic_macro(DM_RSTP, &kr);
-            break;
-        case TD_TRIPLE_TAP:
-            process_dynamic_macro(DM_REC2, &kr);
-            break;
-        default:
-            break;
-    }
-}
-
-void dance_dm2_reset(tap_dance_state_t *state, void *user_data) {
-    switch (dance_dm2_state) {
-        case TD_SINGLE_HOLD:
-            unregister_code(KC_RSFT);
-            unregister_code(KC_RCTL);
-            unregister_code(KC_RALT);
-            break;
-        default:
-            break;
-    }
-    dance_dm2_state = 0;
-}
-
 void dance_playpause_spotify(tap_dance_state_t *state, void *user_data) {
     if (state->count == 1) {
         if (IS_LAYER_ON(LAYER_WIN)) {
@@ -222,113 +142,100 @@ void dance_playpause_spotify(tap_dance_state_t *state, void *user_data) {
     }
 }
 
-td_state_t dance_lctl_state = 0;
-
-void dance_lctl_finished(tap_dance_state_t *state, void *user_data) {
-    dance_lctl_state = hold_cur_dance(state);
-    switch (dance_lctl_state) {
-        case TD_SINGLE_TAP:
-            leader_start();
-            break;
-        case TD_SINGLE_HOLD:
-            register_code(KC_LCTL);
-            break;
-        default:
-            break;
-    }
+#define DANCE_DM(LR, NO)                                                  \
+td_state_t dance_dm##NO##_state = 0;                                      \
+void dance_dm##NO##_finished(tap_dance_state_t *state, void *user_data) { \
+    dance_dm##NO##_state = hold_cur_dance(state);                         \
+    keyrecord_t kr;                                                       \
+    kr.event.pressed = false;                                             \
+    switch (dance_dm##NO##_state) {                                       \
+        case TD_SINGLE_HOLD:                                              \
+            register_code(KC_##LR##SFT);                                  \
+            register_code(KC_##LR##CTL);                                  \
+            break;                                                        \
+        case TD_SINGLE_TAP:                                               \
+            process_dynamic_macro(DM_PLY##NO, &kr);                       \
+            break;                                                        \
+        case TD_DOUBLE_TAP:                                               \
+            kr.event.pressed = true;                                      \
+            process_dynamic_macro(DM_RSTP, &kr);                          \
+            break;                                                        \
+        case TD_TRIPLE_TAP:                                               \
+            process_dynamic_macro(DM_REC##NO, &kr);                       \
+            break;                                                        \
+        default:                                                          \
+            break;                                                        \
+    }                                                                     \
+}                                                                         \
+void dance_dm##NO##_reset(tap_dance_state_t *state, void *user_data) {    \
+    switch (dance_dm##NO##_state) {                                       \
+        case TD_SINGLE_HOLD:                                              \
+            unregister_code(KC_##LR##SFT);                                \
+            unregister_code(KC_##LR##CTL);                                \
+            break;                                                        \
+        default:                                                          \
+            break;                                                        \
+    }                                                                     \
+    dance_dm##NO##_state = 0;                                             \
 }
+DANCE_DM(L, 1)
+DANCE_DM(R, 2)
 
-void dance_lctl_reset(tap_dance_state_t *state, void *user_data) {
-    switch (dance_lctl_state) {
-        case TD_SINGLE_HOLD:
-            unregister_code(KC_LCTL);
-            break;
-        default:
-            break;
-    }
-    dance_lctl_state = 0;
+#define DANCE_LEAD(lr, LR)                                                 \
+td_state_t dance_##lr##ctl_state = 0;                                      \
+void dance_##lr##ctl_finished(tap_dance_state_t *state, void *user_data) { \
+    dance_##lr##ctl_state = hold_cur_dance(state);                         \
+    switch (dance_##lr##ctl_state) {                                       \
+        case TD_SINGLE_TAP:                                                \
+            leader_start();                                                \
+            break;                                                         \
+        case TD_SINGLE_HOLD:                                               \
+            register_code(KC_##LR##CTL);                                   \
+            break;                                                         \
+        default:                                                           \
+            break;                                                         \
+    }                                                                      \
+}                                                                          \
+void dance_##lr##ctl_reset(tap_dance_state_t *state, void *user_data) {    \
+    switch (dance_##lr##ctl_state) {                                       \
+        case TD_SINGLE_HOLD:                                               \
+            unregister_code(KC_##LR##CTL);                                 \
+            break;                                                         \
+        default:                                                           \
+            break;                                                         \
+    }                                                                      \
+    dance_##lr##ctl_state = 0;                                             \
 }
+DANCE_LEAD(l, L)
+DANCE_LEAD(r, R)
 
-td_state_t dance_rctl_state = 0;
-
-void dance_rctl_finished(tap_dance_state_t *state, void *user_data) {
-    dance_rctl_state = hold_cur_dance(state);
-    switch (dance_rctl_state) {
-        case TD_SINGLE_TAP:
-            leader_start();
-            break;
-        case TD_SINGLE_HOLD:
-            register_code(KC_RCTL);
-            break;
-        default:
-            break;
-    }
+#define DANCE_NUMP(lr, LR)                                                 \
+td_state_t dance_##lr##alt_state = 0;                                      \
+void dance_##lr##alt_finished(tap_dance_state_t *state, void *user_data) { \
+    dance_##lr##alt_state = hold_cur_dance(state);                         \
+    switch (dance_##lr##alt_state) {                                       \
+        case TD_SINGLE_TAP:                                                \
+            layer_invert(LAYER_NUMPAD);                                    \
+            break;                                                         \
+        case TD_SINGLE_HOLD:                                               \
+            register_code(KC_##LR##ALT);                                   \
+            break;                                                         \
+        default:                                                           \
+            break;                                                         \
+    }                                                                      \
+}                                                                          \
+void dance_##lr##alt_reset(tap_dance_state_t *state, void *user_data) {    \
+    switch (dance_##lr##alt_state) {                                       \
+        case TD_SINGLE_HOLD:                                               \
+            unregister_code(KC_##LR##ALT);                                 \
+            break;                                                         \
+        default:                                                           \
+            break;                                                         \
+    }                                                                      \
+    dance_##lr##alt_state = 0;                                             \
 }
-
-void dance_rctl_reset(tap_dance_state_t *state, void *user_data) {
-    switch (dance_rctl_state) {
-        case TD_SINGLE_HOLD:
-            unregister_code(KC_RCTL);
-            break;
-        default:
-            break;
-    }
-    dance_rctl_state = 0;
-}
-
-td_state_t dance_lalt_state = 0;
-
-void dance_lalt_finished(tap_dance_state_t *state, void *user_data) {
-    dance_lalt_state = hold_cur_dance(state);
-    switch (dance_lalt_state) {
-        case TD_SINGLE_TAP:
-            layer_invert(LAYER_NUMPAD);
-            break;
-        case TD_SINGLE_HOLD:
-            register_code(KC_LALT);
-            break;
-        default:
-            break;
-    }
-}
-
-void dance_lalt_reset(tap_dance_state_t *state, void *user_data) {
-    switch (dance_lalt_state) {
-        case TD_SINGLE_HOLD:
-            unregister_code(KC_LALT);
-            break;
-        default:
-            break;
-    }
-    dance_lalt_state = 0;
-}
-
-td_state_t dance_ralt_state = 0;
-
-void dance_ralt_finished(tap_dance_state_t *state, void *user_data) {
-    dance_ralt_state = hold_cur_dance(state);
-    switch (dance_ralt_state) {
-        case TD_SINGLE_TAP:
-            layer_invert(LAYER_NUMPAD);
-            break;
-        case TD_SINGLE_HOLD:
-            register_code(KC_RALT);
-            break;
-        default:
-            break;
-    }
-}
-
-void dance_ralt_reset(tap_dance_state_t *state, void *user_data) {
-    switch (dance_ralt_state) {
-        case TD_SINGLE_HOLD:
-            unregister_code(KC_RALT);
-            break;
-        default:
-            break;
-    }
-    dance_ralt_state = 0;
-}
+DANCE_NUMP(l, L)
+DANCE_NUMP(r, R)
 
 // clang-format off
 
