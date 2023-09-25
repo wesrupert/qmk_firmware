@@ -21,36 +21,13 @@ enum keycodes {
 
 #if defined(TAP_DANCE_ENABLE)
 
-// clang-format off
+#define WN_PLPS TD(TAP_DANCE_PLAY_PAUSE_SPOTIFY)
+#define MC_PLPS WN_PLPS
 
-enum tap_dances {
-    TAP_DANCE_LAYERS = 0,
-    TAP_DANCE_DYN_MACRO_1,
-    TAP_DANCE_DYN_MACRO_2,
-    TAP_DANCE_PLAYPAUSE_SPOTIFY,
-    TAP_DANCE_LEADER_LCTL,
-    TAP_DANCE_LEADER_RCTL,
-    TAP_DANCE_LEADER_LALT,
-    TAP_DANCE_LEADER_RALT,
-    X_TAP_DANCE
-};
+#else
 
-typedef enum {
-    TD_NONE, TD_UNKNOWN,
-    TD_SINGLE_TAP, TD_SINGLE_HOLD,
-    TD_DOUBLE_TAP, TD_DOUBLE_HOLD,
-    TD_DOUBLE_SINGLE_TAP,
-    TD_TRIPLE_TAP, TD_TRIPLE_HOLD
-} td_state_t;
-
-// clang-format on
-typedef struct {
-    bool       is_press_action;
-    td_state_t state;
-} td_tap_t;
-
-td_state_t cur_dance(tap_dance_state_t *state);
-td_state_t hold_cur_dance(tap_dance_state_t *state);
+#define WN_PLPS WN_MPLY
+#define MC_PLPS MC_MPLY
 
 #endif // TAP_DANCE_ENABLE
 
@@ -81,6 +58,34 @@ enum layers {
         return;                       \
     } while (false)
 
+// Common tap keys
+#define LT_SYEN LT(LAYER_SYMBOLS, KC_ENT)
+#define LT_SYES LT(LAYER_SYMBOLS, KC_ESC)
+#define LT_SYSP LT(LAYER_SYMBOLS, KC_SPC)
+#define TT_NMPD TT(LAYER_NUMPAD)
+#define MT_LABS LALT_T(KC_BSPC)
+
+#define MT_LCEN LCTL_T(KC_ENT)
+#define MT_LCES LCTL_T(KC_ESC)
+#define MT_LCSP LCTL_T(KC_SPC)
+#define MT_RCEN RCTL_T(KC_ENT)
+#define MT_RCES RCTL_T(KC_ESC)
+#define MT_RCSP RCTL_T(KC_SPC)
+
+#define MT_LAEN LALT_T(KC_ENT)
+#define MT_LAES LALT_T(KC_ESC)
+#define MT_LASP LALT_T(KC_SPC)
+#define MT_RAEN RALT_T(KC_ENT)
+#define MT_RAES RALT_T(KC_ESC)
+#define MT_RASP RALT_T(KC_SPC)
+
+#define MT_LSEN LSFT_T(KC_ENT)
+#define MT_LSES LSFT_T(KC_ESC)
+#define MT_LSSP LSFT_T(KC_SPC)
+#define MT_RSEN RSFT_T(KC_ENT)
+#define MT_RSES RSFT_T(KC_ESC)
+#define MT_RSSP RSFT_T(KC_SPC)
+
 // Platform-specific keys
 #define MC_LAUNCH SS_LGUI(" ")
 #define MC_COPY LGUI(KC_C)
@@ -98,6 +103,9 @@ enum layers {
 #define MC_PSCR LGUI(LCTL(LSFT(KC_4)))
 #define MC_VOLD KC_KB_VOLUME_DOWN
 #define MC_VOLU KC_KB_VOLUME_UP
+#define MC_FNES LT(LAYER_MACFUN, KC_ESC)
+#define MC_FNEN LT(LAYER_MACFUN, KC_ENT)
+#define MC_FNSP LT(LAYER_MACFUN, KC_SPC)
 
 #define WN_LAUNCH SS_LGUI(" ")
 #define WN_COPY LCTL(KC_C)
@@ -115,14 +123,9 @@ enum layers {
 #define WN_PSCR KC_PSCR
 #define WN_VOLD KC_VOLD
 #define WN_VOLU KC_VOLU
-
-#define TD_DMC1 TD(TAP_DANCE_DYN_MACRO_1)
-#define TD_DMC2 TD(TAP_DANCE_DYN_MACRO_2)
-#define TD_PLPS TD(TAP_DANCE_PLAYPAUSE_SPOTIFY)
-#define TD_LCLD TD(TAP_DANCE_LEADER_LCTL)
-#define TD_RCLD TD(TAP_DANCE_LEADER_RCTL)
-#define TD_LANP TD(TAP_DANCE_LEADER_LALT)
-#define TD_RANP TD(TAP_DANCE_LEADER_RALT)
+#define WN_FNES LT(LAYER_WINFUN, KC_ESC)
+#define WN_FNEN LT(LAYER_WINFUN, KC_ENT)
+#define WN_FNSP LT(LAYER_WINFUN, KC_SPC)
 
 // Common key groupings
 // clang-format off
@@ -148,10 +151,10 @@ enum layers {
 // Media
 //        PREV    PAUSE     NEXT
 #define _________MDIA_MC_________ \
-        MC_MPRV, TD_PLPS, MC_MNXT
+        MC_MPRV, MC_PLPS, MC_MNXT
 //        PREV    PAUSE     NEXT
 #define _________MDIA_WN_________ \
-        WN_MPRV, TD_PLPS, WN_MNXT
+        WN_MPRV, WN_PLPS, WN_MNXT
 //        VOLU     MUTE     VOLD
 #define _________VOLM_MC_________ \
         MC_VOLD, MC_MUTE, MC_VOLU
@@ -186,10 +189,10 @@ enum layers {
 //         &        *        (        )      {\n}    ()=>{}
 #define ______________________SYMB__R1______________________ \
         KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, MA_BRNL, MA_LMBD
-//         !        +        *        &       &&
+//        ||        |        /        -        ?
 #define __________________SYMB_L2__________________ \
         MA_OR  , KC_PIPE, KC_SLSH, KC_MINS, KC_QUES
-//        ||        |        /        -        ?
+//         !        +        *        &       &&
 #define __________________SYMB_R2__________________ \
         KC_EXLM, KC_PLUS, KC_ASTR, KC_AMPR, MA_AND
 //         &&       [        {        (        <
@@ -223,3 +226,128 @@ enum layers {
         KC_PDOT, KC_P0
 
 // clang-format on
+
+#if defined(TAP_DANCE_ENABLE)
+
+typedef enum {
+    TD_NONE, TD_UNKNOWN,
+    TD_SINGLE_TAP, TD_SINGLE_HOLD,
+    TD_DOUBLE_TAP, TD_DOUBLE_HOLD,
+    TD_DOUBLE_SINGLE_TAP,
+    TD_TRIPLE_TAP, TD_TRIPLE_HOLD
+} td_state_t;
+
+// clang-format on
+typedef struct {
+    bool       is_press_action;
+    td_state_t state;
+} td_tap_t;
+
+td_state_t cur_dance(tap_dance_state_t *state);
+td_state_t hold_cur_dance(tap_dance_state_t *state);
+
+// clang-format off
+
+#define DANCE_SPOTIFY \
+        void dance_playpause_spotify(tap_dance_state_t *state, void *user_data) { \
+            if (state->count == 1) { \
+                if (IS_LAYER_ON(LAYER_WIN)) { \
+                    tap_code(WN_MPLY); \
+                } else { \
+                    tap_code(MC_MPLY); \
+                } \
+            } else if (state->count == 2) { \
+                LAUNCH_APP_RET("spotify", "spotify"); \
+            } \
+        } \
+
+#define DANCE_MCRO(NR, hand, HAND, mod, MOD) \
+        td_state_t dance_dm_##NR##_##hand##_##mod##_state = 0; \
+        void dance_dm_##NR##_##hand##_##mod##_finished(tap_dance_state_t *state, void *user_data) { \
+            dance_dm_##NR##_##hand##_##mod##_state = hold_cur_dance(state); \
+            keyrecord_t kr; \
+            kr.event.pressed = false; \
+            switch (dance_dm_##NR##_##hand##_##mod##_state) { \
+                case TD_SINGLE_HOLD: \
+                    register_code(KC_##HAND##MOD); \
+                    break; \
+                case TD_SINGLE_TAP: \
+                    process_dynamic_macro(DM_PLY##NR, &kr); \
+                    break; \
+                case TD_DOUBLE_TAP: \
+                    kr.event.pressed = true; \
+                    process_dynamic_macro(DM_RSTP, &kr); \
+                    break; \
+                case TD_TRIPLE_TAP: \
+                    process_dynamic_macro(DM_REC##NR, &kr); \
+                    break; \
+                default: \
+                    break; \
+            } \
+        } \
+        void dance_dm_##NR##_##hand##_##mod##_reset(tap_dance_state_t *state, void *user_data) { \
+            switch (dance_dm_##NR##_##hand##_##mod##_state) { \
+                case TD_SINGLE_HOLD: \
+                    unregister_code(KC_##HAND##MOD); \
+                    break; \
+                default: \
+                    break; \
+            } \
+            dance_dm_##NR##_##hand##_##mod##_state = 0; \
+        }
+
+#define DANCE_LEAD(hand, HAND, mod, MOD) \
+        td_state_t dance_lead_##hand##_##mod##_state = 0; \
+        void dance_lead_##hand##_##mod##_finished(tap_dance_state_t *state, void *user_data) { \
+            dance_lead_##hand##_##mod##_state = hold_cur_dance(state); \
+            switch (dance_lead_##hand##_##mod##_state) { \
+                case TD_SINGLE_TAP: \
+                    leader_start(); \
+                    break; \
+                case TD_SINGLE_HOLD: \
+                    register_code(KC_##HAND##MOD); \
+                    break; \
+                default: \
+                    break; \
+            } \
+        } \
+        void dance_lead_##hand##_##mod##_reset(tap_dance_state_t *state, void *user_data) { \
+            switch (dance_lead_##hand##_##mod##_state) { \
+                case TD_SINGLE_HOLD: \
+                    unregister_code(KC_##HAND##MOD); \
+                    break; \
+                default: \
+                    break; \
+            } \
+            dance_lead_##hand##_##mod##_state = 0; \
+        }
+
+#define DANCE_NUMP(hand, HAND, mod, MOD) \
+        td_state_t dance_nump_##hand##_##mod##_state = 0; \
+        void dance_nump_##hand##_##mod##_finished(tap_dance_state_t *state, void *user_data) { \
+            dance_nump_##hand##_##mod##_state = hold_cur_dance(state); \
+            switch (dance_nump_##hand##_##mod##_state) { \
+                case TD_SINGLE_TAP: \
+                    layer_invert(LAYER_NUMPAD); \
+                    break; \
+                case TD_SINGLE_HOLD: \
+                    register_code(KC_##HAND##MOD); \
+                    break; \
+                default: \
+                    break; \
+            } \
+        } \
+        void dance_nump_##hand##_##mod##_reset(tap_dance_state_t *state, void *user_data) { \
+            switch (dance_nump_##hand##_##mod##_state) { \
+                case TD_SINGLE_HOLD: \
+                    unregister_code(KC_##HAND##MOD); \
+                    break; \
+                default: \
+                    break; \
+            } \
+            dance_nump_##hand##_##mod##_state = 0; \
+        }
+
+// clang-format on
+
+#endif // TAP_DANCE_ENABLE
