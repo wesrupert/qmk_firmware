@@ -149,81 +149,81 @@ enum layers {
         KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH
 
 // Media
-//        PREV    PAUSE     NEXT
 #define _________MDIA_MC_________ \
         MC_MPRV, MC_PLPS, MC_MNXT
 //        PREV    PAUSE     NEXT
 #define _________MDIA_WN_________ \
         WN_MPRV, WN_PLPS, WN_MNXT
-//        VOLU     MUTE     VOLD
+//        PREV    PAUSE     NEXT
 #define _________VOLM_MC_________ \
         MC_VOLD, MC_MUTE, MC_VOLU
 //        VOLU     MUTE     VOLD
 #define _________VOLM_WN_________ \
         WN_VOLD, WN_MUTE, WN_VOLU
+//        VOLU     MUTE     VOLD
 
 // Function Layer
-//        F1       F2       F3       F4       F5       F6
 #define ______________________FUNC__L1______________________ \
         KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6
-//        F7       F8       F9       F10      F11      F12
+//        F1       F2       F3       F4       F5       F6
 #define ______________________FUNC__R1______________________ \
         KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12
-//       HOME     PGUP     PGDN      END
+//        F7       F8       F9       F10      F11      F12
 #define _____________FUNC__L2_____________ \
         KC_HOME, KC_PGUP, KC_PGDN, KC_END
-//       HOME     PGDN     PGUP      END
+//       HOME     PGUP     PGDN      END
 #define _____________FUNC__R2_____________ \
         KC_HOME, KC_PGDN, KC_PGUP, KC_END
-//       LEFT      UP      DOWN     RIGHT
+//       HOME     PGDN     PGUP      END
 #define _____________FUNC__L3_____________ \
         KC_LEFT, KC_UP  , KC_DOWN, KC_RGHT
-//       LEFT     DOWN      UP      RIGHT
+//       LEFT      UP      DOWN     RIGHT
 #define _____________FUNC__R3_____________ \
         KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT
+//       LEFT     DOWN      UP      RIGHT
 
 // Symbol Layer
-//         !        @        #        $        %        ^
 #define ______________________SYMB__L1______________________ \
         KC_EXLM, KC_AT  , KC_HASH, KC_DLR , KC_PERC, KC_CIRC
-//         &        *        (        )      {\n}    ()=>{}
+//         !        @        #        $        %        ^
 #define ______________________SYMB__R1______________________ \
         KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, MA_BRNL, MA_LMBD
-//        ||        |        /        -        ?
+//         &        *        (        )      {\n}    ()=>{}
 #define __________________SYMB_L2__________________ \
-        MA_OR  , KC_PIPE, KC_SLSH, KC_MINS, KC_QUES
-//         !        +        *        &       &&
+        MA_AND , KC_AMPR, KC_SLSH, KC_MINS, KC_UNDS
+//        &&        &        /        -        _
 #define __________________SYMB_R2__________________ \
-        KC_EXLM, KC_PLUS, KC_ASTR, KC_AMPR, MA_AND
-//         &&       [        {        (        <
+        KC_EQL,  KC_PLUS, KC_ASTR, KC_PIPE, MA_OR
+//         =        +        *        |       ||
 #define __________________SYMB_L3__________________ \
         MA_AND , KC_LBRC, KC_LCBR, KC_LPRN, KC_LABK
-//         >        )        }        ]        ||
+//         &&       [        {        (        <
 #define __________________SYMB_R3__________________ \
         KC_RABK, KC_RPRN, KC_RCBR, KC_RBRC, MA_OR
-//       /*   */     []      {   }     ()      <>
+//         >        )        }        ]        ||
 #define __________________SYMB_L4__________________ \
         MA_PCMT, MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK
-//         <>       ()      {   }      []    /*  */
+//       /*   */     []      {   }     ()      <>
 #define __________________SYMB_R4__________________ \
         MA_PABK, MA_PPRN, MA_PCBR, MA_PBRC, MA_PCMT
+//         <>       ()      {   }      []    /*  */
 
 // Numpad Layer Left
-//        NumLk     /        *        -
 #define ______________NMPD_1______________ \
         KC_NUM , KC_PSLS, KC_PAST, KC_PMNS
-//         7        8        9        +
+//
 #define ______________NMPD_2______________ \
         KC_P7  , KC_P8  , KC_P9  , KC_PPLS
-//         4        5        6      enter
+//         7        8        9        +
 #define ______________NMPD_3______________ \
         KC_P4  , KC_P5  , KC_P6  , KC_PENT
-//         1        2        3
+//         4        5        6      enter
 #define __________NMPD_4_________ \
         KC_P1  , KC_P2  , KC_P3
-//         0        .
+//         1        2        3
 #define _____NMPD_5_____ \
         KC_PDOT, KC_P0
+//         0        .
 
 // clang-format on
 
