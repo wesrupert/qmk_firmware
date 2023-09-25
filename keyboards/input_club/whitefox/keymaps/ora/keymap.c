@@ -9,7 +9,24 @@
 
 // Expand key groups before passing into layout macro.
 #define L(...) LAYOUT(__VA_ARGS__)
-#define MT_LCLA C(KC_LALT)
+#define MT_LCRA C(KC_LALT)
+
+enum tap_dances {
+    TAP_DANCE_PLAY_PAUSE_SPOTIFY = 0,
+    TAP_DANCE_DYN_MACRO_1,
+    TAP_DANCE_DYN_MACRO_2,
+    TAP_DANCE_LEADER_LCTL,
+    TAP_DANCE_LEADER_RCTL,
+    TAP_DANCE_NUMPAD_LALT,
+    X_TAP_DANCE
+};
+
+// Common tap dances
+#define TD_DMC1 TD(TAP_DANCE_DYN_MACRO_1)
+#define TD_DMC2 TD(TAP_DANCE_DYN_MACRO_2)
+#define TD_LCLD TD(TAP_DANCE_LEADER_LCTL)
+#define TD_RCLD TD(TAP_DANCE_LEADER_RCTL)
+#define TD_LANP TD(TAP_DANCE_NUMPAD_LALT)
 
 // XY_ABCD alternates
 #define _M_ KC_NO
@@ -37,7 +54,7 @@
     _______,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,     _______,    _______, \
     KC_LCTL,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,    _M_, _______,       _______, \
     KC_LSFT, _M_,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,       _______, _______, \
-    KC_LALT,   KC_MEH ,   MT_LCLA,                        _______,                        KC_RGUI,   TD_RCLD,    _M_,    _______, _______, _______
+    KC_MEH,    KC_LALT,   MT_LCRA,                        _______,                        KC_RGUI,   TD_RCLD,    _M_,    _______, _______, _______
 
 #define __SYMBOLS \
     KC_TILD, ______________________SYMB__L1______________________, ______________________SYMB__R1______________________, _______, _______, _______, \
@@ -71,3 +88,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 // clang-format on
+
+DANCE_SPOTIFY
+DANCE_MCRO(1, l, L, gui, GUI)
+DANCE_MCRO(2, r, R, gui, GUI)
+DANCE_LEAD(l, L, ctl, CTL)
+DANCE_LEAD(r, R, ctl, CTL)
+DANCE_NUMP(l, L, alt, ALT)
+
+tap_dance_action_t tap_dance_actions[] = {
+    [TAP_DANCE_PLAY_PAUSE_SPOTIFY] = ACTION_TAP_DANCE_FN(dance_playpause_spotify),
+    [TAP_DANCE_DYN_MACRO_1] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_dm_1_l_gui_finished, dance_dm_1_l_gui_reset),
+    [TAP_DANCE_DYN_MACRO_2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_dm_2_r_gui_finished, dance_dm_2_r_gui_reset),
+    [TAP_DANCE_LEADER_LCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lead_l_ctl_finished, dance_lead_l_ctl_reset),
+    [TAP_DANCE_LEADER_RCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lead_r_ctl_finished, dance_lead_r_ctl_reset),
+    [TAP_DANCE_NUMPAD_LALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_nump_l_alt_finished, dance_nump_l_alt_reset),
+};
