@@ -8,7 +8,7 @@ __attribute__((weak)) bool process_record_keymap(uint16_t keycode, keyrecord_t *
     return true;
 }
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+__attribute__((weak)) bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_dynamic_macro(keycode, record)) {
         return false;
     }
@@ -64,29 +64,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 // clang-format off
 
-void leader_end_user(void) {
-    /* Calendar */ if (leader_sequence_one_key(KC_C)) { LAUNCH_APP_RET("google calendar", "google calendar"); }
-    /* Edit     */ if (leader_sequence_one_key(KC_E)) { LAUNCH_APP_RET("goneovim", "goneovim"); }
-    /* Notes    */ if (leader_sequence_one_key(KC_N)) { LAUNCH_APP_RET("obsidian", "obsidian"); }
-    /* Mail     */ if (leader_sequence_one_key(KC_M)) { LAUNCH_APP_RET("gmail", "gmail"); }
-    /* Play     */ if (leader_sequence_one_key(KC_P)) { LAUNCH_APP_RET("spotify", "spotify"); }
-    /* Slack    */ if (leader_sequence_one_key(KC_S)) { LAUNCH_APP_RET("slack", "slack"); }
-    /* Term     */ if (leader_sequence_one_key(KC_T)) { LAUNCH_APP_RET("terminal", "iterm"); }
-    /* Web      */ if (leader_sequence_one_key(KC_W)) { LAUNCH_APP_RET("firefox", "firefox"); }
+bool base_leader_end_user(void) {
+    /* Calendar */ if (leader_sequence_one_key(KC_C)) { LAUNCH_APP_RET_TRUE("google calendar", "google calendar"); }
+    /* Edit     */ if (leader_sequence_one_key(KC_E)) { LAUNCH_APP_RET_TRUE("goneovim", "goneovim"); }
+    /* Notes    */ if (leader_sequence_one_key(KC_N)) { LAUNCH_APP_RET_TRUE("obsidian", "obsidian"); }
+    /* Mail     */ if (leader_sequence_one_key(KC_M)) { LAUNCH_APP_RET_TRUE("gmail", "gmail"); }
+    /* Play     */ if (leader_sequence_one_key(KC_P)) { LAUNCH_APP_RET_TRUE("spotify", "spotify"); }
+    /* Slack    */ if (leader_sequence_one_key(KC_S)) { LAUNCH_APP_RET_TRUE("slack", "slack"); }
+    /* Term     */ if (leader_sequence_one_key(KC_T)) { LAUNCH_APP_RET_TRUE("terminal", "iterm"); }
+    /* Web      */ if (leader_sequence_one_key(KC_W)) { LAUNCH_APP_RET_TRUE("firefox", "firefox"); }
 
-    /* Layer: Games */ if (leader_sequence_two_keys(KC_L, KC_G)) { layer_move(LAYER_WIN); layer_on(LAYER_GAMES); return; }
-    /* Layer:   Mac */ if (leader_sequence_two_keys(KC_L, KC_M)) { layer_move(LAYER_MAC); return; }
-    /* Layer:   Win */ if (leader_sequence_two_keys(KC_L, KC_W)) { layer_move(LAYER_WIN); return; }
-    /* L(Keep): Mac */ if (leader_sequence_two_keys(KC_K, KC_M)) { layer_move(LAYER_MAC); set_single_persistent_default_layer(LAYER_MAC); return; }
-    /* L(Keep): Win */ if (leader_sequence_two_keys(KC_K, KC_W)) { layer_move(LAYER_WIN); set_single_persistent_default_layer(LAYER_WIN); return; }
+    /* Layer: Games */ if (leader_sequence_two_keys(KC_L, KC_G)) { layer_move(LAYER_WIN); layer_on(LAYER_GAMES); return true; }
+    /* Layer:   Mac */ if (leader_sequence_two_keys(KC_L, KC_M)) { layer_move(LAYER_MAC); return true; }
+    /* Layer:   Win */ if (leader_sequence_two_keys(KC_L, KC_W)) { layer_move(LAYER_WIN); return true; }
+    /* L(Keep): Mac */ if (leader_sequence_two_keys(KC_K, KC_M)) { layer_move(LAYER_MAC); set_single_persistent_default_layer(LAYER_MAC); return true; }
+    /* L(Keep): Win */ if (leader_sequence_two_keys(KC_K, KC_W)) { layer_move(LAYER_WIN); set_single_persistent_default_layer(LAYER_WIN); return true; }
 
-    /* L(1H):   Mac */ if (leader_sequence_two_keys(KC_L, KC_O)) { layer_move(LAYER_MAC); return; }
-    /* L(1H):   Win */ if (leader_sequence_two_keys(KC_L, KC_L)) { layer_move(LAYER_WIN); return; }
-    /* L(1H): Games */ if (leader_sequence_two_keys(KC_L, KC_DOT)) { layer_move(LAYER_WIN); layer_on(LAYER_GAMES); return; }
-    /* D(1H):   Mac */ if (leader_sequence_two_keys(KC_K, KC_O)) { layer_move(LAYER_MAC); set_single_persistent_default_layer(LAYER_MAC); return; }
-    /* D(1H):   Win */ if (leader_sequence_two_keys(KC_K, KC_L)) { layer_move(LAYER_WIN); set_single_persistent_default_layer(LAYER_WIN); return; }
+    /* L(1H):   Mac */ if (leader_sequence_two_keys(KC_L, KC_O)) { layer_move(LAYER_MAC); return true; }
+    /* L(1H):   Win */ if (leader_sequence_two_keys(KC_L, KC_L)) { layer_move(LAYER_WIN); return true; }
+    /* L(1H): Games */ if (leader_sequence_two_keys(KC_L, KC_DOT)) { layer_move(LAYER_WIN); layer_on(LAYER_GAMES); return true; }
+    /* D(1H):   Mac */ if (leader_sequence_two_keys(KC_K, KC_O)) { layer_move(LAYER_MAC); set_single_persistent_default_layer(LAYER_MAC); return true; }
+    /* D(1H):   Win */ if (leader_sequence_two_keys(KC_K, KC_L)) { layer_move(LAYER_WIN); set_single_persistent_default_layer(LAYER_WIN); return true; }
 
-    /* None:        */ tap_code(KC_DEL);
+    return false;
+}
+
+__attribute__((weak)) void leader_end_user(void) {
+    if (base_leader_end_user()) return;
+    tap_code(KC_DEL);
 }
 
 // clang-format on
@@ -95,7 +100,7 @@ void leader_end_user(void) {
 
 // Get easy combo state enum from the current state object.
 // @see docs\feature_tap_dance.md
-td_state_t cur_dance(tap_dance_state_t *state) {
+__attribute__((weak)) td_state_t cur_dance(tap_dance_state_t *state) {
     if (state->count == 1) {
         if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
         // Key has not been interrupted, but the key is still held. Means you want to send a 'HOLD'.
@@ -119,7 +124,7 @@ td_state_t cur_dance(tap_dance_state_t *state) {
 }
 
 // Prioritizes held combos. Useful for infrequently-tapped keys.
-td_state_t hold_cur_dance(tap_dance_state_t *state) {
+__attribute__((weak)) td_state_t hold_cur_dance(tap_dance_state_t *state) {
     if (state->count == 1) return state->pressed ? TD_SINGLE_HOLD : TD_SINGLE_TAP;
     if (state->count == 2) return state->pressed ? TD_DOUBLE_HOLD : TD_DOUBLE_TAP;
     if (state->count == 3) return state->pressed ? TD_TRIPLE_HOLD : TD_TRIPLE_TAP;
@@ -130,7 +135,7 @@ td_state_t hold_cur_dance(tap_dance_state_t *state) {
 
 #if defined(COMBO_SHOULD_TRIGGER)
 
-bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
+__attribute__((weak)) bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
     if (layer_state_is(LAYER_GAMES)) {
         return false;
     } else if (layer_state_is(LAYER_NUMPAD)) {
