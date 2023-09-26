@@ -42,20 +42,38 @@ enum layers {
 
 // clang-format on
 
-#define LAUNCH_APP_RET(WNAPP, MCAPP)  \
+
+bool base_leader_end_user(void);
+
+#define LAUNCH_APP_RET(WN, MC)        \
     do {                              \
         if (IS_LAYER_ON(LAYER_WIN)) { \
             SEND_STRING(WN_LAUNCH);   \
             wait_ms(250);             \
-            SEND_STRING(WNAPP);       \
+            SEND_STRING(WN);          \
         } else {                      \
             SEND_STRING(MC_LAUNCH);   \
             wait_ms(250);             \
-            SEND_STRING(MCAPP);       \
+            SEND_STRING(MC);          \
         }                             \
         wait_ms(250);                 \
         SEND_STRING(SS_TAP(X_ENTER)); \
-        return;                       \
+    } while (false)
+
+#define LAUNCH_APP_RET_TRUE(WN, MC)   \
+    do {                              \
+        if (IS_LAYER_ON(LAYER_WIN)) { \
+            SEND_STRING(WN_LAUNCH);   \
+            wait_ms(250);             \
+            SEND_STRING(WN);          \
+        } else {                      \
+            SEND_STRING(MC_LAUNCH);   \
+            wait_ms(250);             \
+            SEND_STRING(MC);          \
+        }                             \
+        wait_ms(250);                 \
+        SEND_STRING(SS_TAP(X_ENTER)); \
+        return true;                  \
     } while (false)
 
 // Common tap keys
@@ -95,17 +113,19 @@ enum layers {
 #define MC_UNDO LGUI(KC_Z)
 
 #define MC_LOCK LGUI(LCTL(KC_Q))
+#define MC_PSCF LGUI(LSFT(KC_4))
+#define MC_PSCR LGUI(LCTL(LSFT(KC_4)))
+#define MC_FNES LT(LAYER_MACFUN, KC_ESC)
+#define MC_FNEN LT(LAYER_MACFUN, KC_ENT)
+#define MC_FNSP LT(LAYER_MACFUN, KC_SPC)
+#define MC_TABW G(KC_TAB)
+
 #define MC_MNXT KC_MFFD
 #define MC_MPLY KC_MPLY
 #define MC_MPRV KC_MRWD
 #define MC_MUTE KC_KB_MUTE
-#define MC_PSCF LGUI(LSFT(KC_4))
-#define MC_PSCR LGUI(LCTL(LSFT(KC_4)))
 #define MC_VOLD KC_KB_VOLUME_DOWN
 #define MC_VOLU KC_KB_VOLUME_UP
-#define MC_FNES LT(LAYER_MACFUN, KC_ESC)
-#define MC_FNEN LT(LAYER_MACFUN, KC_ENT)
-#define MC_FNSP LT(LAYER_MACFUN, KC_SPC)
 
 #define WN_LAUNCH SS_LGUI(" ")
 #define WN_COPY LCTL(KC_C)
@@ -115,17 +135,19 @@ enum layers {
 #define WN_UNDO LGUI(KC_Z)
 
 #define WN_LOCK LGUI(KC_L)
+#define WN_PSCF LGUI(KC_PSCR)
+#define WN_PSCR KC_PSCR
+#define WN_FNES LT(LAYER_WINFUN, KC_ESC)
+#define WN_FNEN LT(LAYER_WINFUN, KC_ENT)
+#define WN_FNSP LT(LAYER_WINFUN, KC_SPC)
+#define WN_TABW A(KC_TAB)
+
 #define WN_MNXT KC_MNXT
 #define WN_MPLY KC_MPLY
 #define WN_MPRV KC_MPRV
 #define WN_MUTE KC_MUTE
-#define WN_PSCF LGUI(KC_PSCR)
-#define WN_PSCR KC_PSCR
 #define WN_VOLD KC_VOLD
 #define WN_VOLU KC_VOLU
-#define WN_FNES LT(LAYER_WINFUN, KC_ESC)
-#define WN_FNEN LT(LAYER_WINFUN, KC_ENT)
-#define WN_FNSP LT(LAYER_WINFUN, KC_SPC)
 
 // Common key groupings
 // clang-format off
@@ -193,8 +215,8 @@ enum layers {
         MA_AND , KC_AMPR, KC_SLSH, KC_MINS, KC_UNDS
 //        &&        &        /        -        _
 #define __________________SYMB_R2__________________ \
-        KC_EQL,  KC_PLUS, KC_ASTR, KC_PIPE, MA_OR
-//         =        +        *        |       ||
+        KC_EQL,  KC_PLUS, KC_BSLS, KC_PIPE, MA_OR
+//         =        +        \        |       ||
 #define __________________SYMB_L3__________________ \
         MA_AND , KC_LBRC, KC_LCBR, KC_LPRN, KC_LABK
 //         &&       [        {        (        <
@@ -320,6 +342,10 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
                     break; \
             } \
             dance_lead_##hand##_##mod##_state = 0; \
+        } \
+        void leader_end_user(void) { \
+            if (base_leader_end_user()) return; \
+            tap_code(KC_##HAND##MOD); \
         }
 
 #define DANCE_NUMP(hand, HAND, mod, MOD) \

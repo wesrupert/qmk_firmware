@@ -24,23 +24,23 @@ enum tap_dances {
 
 #define __BASE(OS) \
     KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC, \
-    KC_TAB,  __________________QWER_L2__________________,                      __________________QWER_R2__________________, KC_BSLS, \
-    MT_LCES, __________________QWER_L3__________________,                      _____________QWER__R3_____________, KC_SCLN, KC_QUOT, \
+    KC_TAB,  __________________QWER_L2__________________,                      __________________QWER_R2__________________, KC_MINS, \
+    MT_LCES, __________________QWER_L3__________________,                      _____________QWER__R3_____________, KC_QUOT, KC_SCLN, \
     TD_LGLD, __________________QWER_L4__________________,                      __________________QWER_R4__________________, TD_RAMC, \
                                                  MT_LSSP, OS##_FNES,  LT_SYEN, MT_RSSP
 
 #define __FUNCTION(OS) \
-    KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                        KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_DEL,  \
-    KC_DEL,  KC_ESC,  _____________FUNC__L2_____________,                      _____________FUNC__R2_____________,OS##_PSCR,KC_F12,  \
-    CW_TOGG,OS##_SALL,_____________FUNC__L3_____________,                      _____________FUNC__R3_____________,OS##_PSCF,CW_TOGG, \
-    KC_CAPS,OS##_UNDO,_________VOLM_##OS##_________,OS##_LOCK,              OS##_LOCK,_________MDIA_##OS##_________,TT_NMPD,KC_RALT, \
+    KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                        KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  \
+   OS##_TABW,KC_ESC,  _____________FUNC__L2_____________,                      _____________FUNC__R2_____________,OS##_PSCR,KC_F12,  \
+    KC_CAPS,OS##_SALL,_____________FUNC__L3_____________,                      _____________FUNC__R3_____________,OS##_PSCF,CW_TOGG, \
+    KC_LGUI,OS##_UNDO,_________VOLM_##OS##_________,OS##_LOCK,            OS##_LOCK,_________MDIA_##OS##_________,OS##_MUTE,KC_RALT, \
                                                  CW_TOGG, KC_TRNS,    KC_BSPC, KC_DEL
 
 #define __SYMBOLS \
     KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PLUS, \
     XXXXXXX, __________________SYMB_L2__________________,                      __________________SYMB_R2__________________, KC_UNDS, \
-    CW_TOGG, __________________SYMB_L3__________________,                      __________________SYMB_R3__________________, KC_DQUO, \
-    TT_NMPD, __________________SYMB_L4__________________,                      __________________SYMB_R4__________________, KC_PIPE, \
+    CW_TOGG, __________________SYMB_L3__________________,                      __________________SYMB_R3__________________, KC_COLN, \
+    TT_NMPD, __________________SYMB_L4__________________,                      __________________SYMB_R4__________________, TT_NMPD, \
                                                  KC_DEL,  KC_BSPC,    KC_TRNS, CW_TOGG
 
 #define __NUMPAD \
@@ -124,7 +124,7 @@ enum tap_dances {
 
 #define __FUNCTION(OS) \
     KC_ESC,  ______________________FUNC__L1______________________,    ______________________FUNC__R1______________________, KC_DEL,  \
-    XXXXXXX, XXXXXXX, _____________FUNC__L2_____________, XXXXXXX,    XXXXXXX, _____________FUNC__R2_____________,OS##_PSCR,KC_CAPS, \
+  OS##_TABW, XXXXXXX, _____________FUNC__L2_____________, XXXXXXX,    XXXXXXX, _____________FUNC__R2_____________,OS##_PSCR,KC_CAPS, \
     KC_CAPS,OS##_SALL,_____________FUNC__L3_____________,                      _____________FUNC__R3_____________,OS##_PSCF,KC_RCTL, \
     CW_TOGG,OS##_UNDO,XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, TT_NMPD, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, CW_TOGG, \
     _______,_________VOLM_##OS##_________,_______,                                  TD_PLPS,OS##_MPRV,OS##_VOLD,OS##_VOLU,OS##_MNXT, \
