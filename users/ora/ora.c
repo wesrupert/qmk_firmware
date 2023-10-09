@@ -4,6 +4,15 @@
 #include "ora.h"
 #include "g/keymap_combo.h"
 
+#if defined(OS_DETECTION_ENABLE)
+#include "os_detection.h"
+#endif
+
+bool force_mac_maps = false;
+bool force_win_maps = false;
+bool is_tab_switcher_active = false;
+uint16_t tab_switcher_timer = 0;
+
 __attribute__((weak)) bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
@@ -13,85 +22,68 @@ __attribute__((weak)) bool process_record_user(uint16_t keycode, keyrecord_t *re
         return false;
     }
     switch (keycode) {
-        case MA_OR:
-            if (record->event.pressed) {
-                SEND_STRING(" || ");
+        case PK_TABN:
+          if (record->event.pressed) {
+            if (!is_tab_switcher_active) {
+              is_tab_switcher_active = true;
+              if (PLATFORM_IS_MAC) register_code(KC_LGUI); else register_code(KC_LALT);
             }
-            break;
-        case MA_AND:
-            if (record->event.pressed) {
-                SEND_STRING(" && ");
-            }
-            break;
-        case MA_PBRC:
-            if (record->event.pressed) {
-                SEND_STRING("[]" SS_TAP(X_LEFT));
-            }
-            break;
-        case MA_PCBR:
-            if (record->event.pressed) {
-                SEND_STRING("{  }" SS_TAP(X_LEFT) SS_TAP(X_LEFT));
-            }
-            break;
-        case MA_PPRN:
-            if (record->event.pressed) {
-                SEND_STRING("()" SS_TAP(X_LEFT));
-            }
-            break;
-        case MA_PABK:
-            if (record->event.pressed) {
-                SEND_STRING("<>" SS_TAP(X_LEFT));
-            }
-            break;
-        case MA_PCMT:
-            if (record->event.pressed) {
-                SEND_STRING("/*  */" SS_TAP(X_LEFT) SS_TAP(X_LEFT) SS_TAP(X_LEFT));
-            }
-            break;
-        case MA_LMBD:
-            if (record->event.pressed) {
-                SEND_STRING("() => {  }" SS_TAP(X_LEFT) SS_TAP(X_LEFT));
-            }
-            break;
-        case MA_BRNL:
-            if (record->event.pressed) {
-                SEND_STRING("{" SS_TAP(X_ENTER) SS_TAP(X_ENTER) "}" SS_TAP(X_UP) SS_TAP(X_END));
-            }
-            break;
+            tab_switcher_timer = timer_read();
+            register_code(KC_TAB);
+          } else {
+            unregister_code(KC_TAB);
+          }
+          break;
+        MACRO_SEND_PLAT_ON_PRESS(PK_LOCK, SS_LGUI("l"), SS_LGUI(SS_LCTL("q")));
+        MACRO_SEND_PLAT_ON_PRESS(PK_PSCF, SS_DOWN(X_LGUI)SS_TAP(X_PSCR)SS_UP(X_LGUI), SS_LGUI(SS_LSFT("4")));
+        MACRO_SEND_PLAT_ON_PRESS(PK_PSCR, SS_TAP(X_PSCR), SS_LGUI(SS_LCTL(SS_LSFT("4"))));
+        MACRO_SEND_PLAT_ON_PRESS(PK_MNXT, SS_TAP(X_MNXT), SS_TAP(X_MFFD));
+        MACRO_SEND_PLAT_ON_PRESS(PK_MPRV, SS_TAP(X_MPRV), SS_TAP(X_MRWD));
+        MACRO_SEND_PLAT_ON_PRESS(PK_VOLU, SS_TAP(X_VOLU), SS_TAP(X_KB_VOLUME_UP));
+        MACRO_SEND_PLAT_ON_PRESS(PK_VOLD, SS_TAP(X_VOLD), SS_TAP(X_KB_VOLUME_DOWN));
+        MACRO_SEND_PLAT_ON_PRESS(PK_MUTE, SS_TAP(X_MUTE), SS_TAP(X_KB_MUTE));
+        MACRO_SEND_PLAT_ON_PRESS(PK_MONT, SS_DOWN(X_LCTL)SS_DOWN(X_LSFT)SS_TAP(X_ESC)SS_UP(X_LSFT)SS_UP(X_LCTL), SS_DOWN(X_LGUI)SS_DOWN(X_LALT)SS_TAP(X_ESC)SS_UP(X_LALT)SS_UP(X_LGUI));
+        MACRO_SEND_PLAT_ON_PRESS(PK_SYST, SS_DOWN(X_LCTL)SS_DOWN(X_LALT)SS_TAP(X_DEL)SS_UP(X_LALT)SS_UP(X_LCTL), SS_DOWN(X_LGUI)SS_DOWN(X_LALT)SS_TAP(X_ESC)SS_UP(X_LALT)SS_UP(X_LGUI));
+        MACRO_SEND_ON_PRESS(MA_LAUNCH, SS_LGUI(" "));
+        MACRO_SEND_ON_PRESS(MA_OR,   " || ");
+        MACRO_SEND_ON_PRESS(MA_AND,  " && ");
+        MACRO_SEND_ON_PRESS(MA_PBRC, "[]"SS_TAP(X_LEFT));
+        MACRO_SEND_ON_PRESS(MA_PCBR, "{  }"SS_TAP(X_LEFT)SS_TAP(X_LEFT));
+        MACRO_SEND_ON_PRESS(MA_PPRN, "()"SS_TAP(X_LEFT));
+        MACRO_SEND_ON_PRESS(MA_PABK, "<>"SS_TAP(X_LEFT));
+        MACRO_SEND_ON_PRESS(MA_PCMT, "/*  */"SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT));
+        MACRO_SEND_ON_PRESS(MA_LMBD, "() => {  }"SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT));
+        MACRO_SEND_ON_PRESS(MA_BRNL, "{"SS_TAP(X_ENTER)SS_TAP(X_ENTER)"}"SS_TAP(X_UP)SS_TAP(X_END));
     }
     return true;
+}
+
+void matrix_scan_user(void) {
+  if (is_tab_switcher_active) {
+    if (timer_elapsed(tab_switcher_timer) > SUPER_TAB_SWITCHER_TERM) {
+      if (PLATFORM_IS_MAC) unregister_code(KC_LGUI); else unregister_code(KC_LALT);
+      is_tab_switcher_active = false;
+    }
+  }
 }
 
 // clang-format off
 
 bool base_leader_end_user(void) {
-    /* Calendar */ if (leader_sequence_one_key(KC_C)) { LAUNCH_APP_RET_TRUE("google calendar", "google calendar"); }
-    /* Edit     */ if (leader_sequence_one_key(KC_E)) { LAUNCH_APP_RET_TRUE("goneovim", "goneovim"); }
-    /* Notes    */ if (leader_sequence_one_key(KC_N)) { LAUNCH_APP_RET_TRUE("obsidian", "obsidian"); }
-    /* Mail     */ if (leader_sequence_one_key(KC_M)) { LAUNCH_APP_RET_TRUE("gmail", "gmail"); }
-    /* Play     */ if (leader_sequence_one_key(KC_P)) { LAUNCH_APP_RET_TRUE("spotify", "spotify"); }
-    /* Slack    */ if (leader_sequence_one_key(KC_S)) { LAUNCH_APP_RET_TRUE("slack", "slack"); }
-    /* Term     */ if (leader_sequence_one_key(KC_T)) { LAUNCH_APP_RET_TRUE("terminal", "iterm"); }
-    /* Web      */ if (leader_sequence_one_key(KC_W)) { LAUNCH_APP_RET_TRUE("firefox", "firefox"); }
-
-    /* Layer: Games */ if (leader_sequence_two_keys(KC_L, KC_G)) { layer_move(LAYER_WIN); layer_on(LAYER_GAMES); return true; }
-    /* Layer:   Mac */ if (leader_sequence_two_keys(KC_L, KC_M)) { layer_move(LAYER_MAC); return true; }
-    /* Layer:   Win */ if (leader_sequence_two_keys(KC_L, KC_W)) { layer_move(LAYER_WIN); return true; }
-    /* L(Keep): Mac */ if (leader_sequence_two_keys(KC_K, KC_M)) { layer_move(LAYER_MAC); set_single_persistent_default_layer(LAYER_MAC); return true; }
-    /* L(Keep): Win */ if (leader_sequence_two_keys(KC_K, KC_W)) { layer_move(LAYER_WIN); set_single_persistent_default_layer(LAYER_WIN); return true; }
-
-    /* L(1H):   Mac */ if (leader_sequence_two_keys(KC_L, KC_O)) { layer_move(LAYER_MAC); return true; }
-    /* L(1H):   Win */ if (leader_sequence_two_keys(KC_L, KC_L)) { layer_move(LAYER_WIN); return true; }
-    /* L(1H): Games */ if (leader_sequence_two_keys(KC_L, KC_DOT)) { layer_move(LAYER_WIN); layer_on(LAYER_GAMES); return true; }
-    /* D(1H):   Mac */ if (leader_sequence_two_keys(KC_K, KC_O)) { layer_move(LAYER_MAC); set_single_persistent_default_layer(LAYER_MAC); return true; }
-    /* D(1H):   Win */ if (leader_sequence_two_keys(KC_K, KC_L)) { layer_move(LAYER_WIN); set_single_persistent_default_layer(LAYER_WIN); return true; }
+    /* Caps lock    */ if (leader_sequence_one_key(KC_C)) { tap_code(KC_CAPS); return true; }
+    /* Layer: Base  */ if (leader_sequence_two_keys(KC_L, KC_B) || leader_sequence_two_keys(KC_L, KC_L)) { layer_move(LAYER_BASE); return true; }
+    /* Layer: Games */ if (leader_sequence_two_keys(KC_L, KC_G) || leader_sequence_two_keys(KC_L, KC_O)) { layer_move(LAYER_BASE); layer_on(LAYER_GAMES); return true; }
+    /* Lock:  Base  */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_K)) { force_mac_maps = false; force_win_maps = false; return true; }
+    /* Lock:  Mac   */ if (leader_sequence_two_keys(KC_L, KC_M) || leader_sequence_two_keys(KC_L, KC_I)) { force_mac_maps = !force_mac_maps; force_win_maps = false; return true; }
+    /* Lock:  Win   */ if (leader_sequence_two_keys(KC_L, KC_W) || leader_sequence_two_keys(KC_L, KC_COMMA)) { force_mac_maps = false; force_win_maps = !force_win_maps; return true; }
+    /* Layer: Print */ if (leader_sequence_two_keys(KC_L, KC_P)) { if (PLATFORM_IS_MAC) SEND_STRING("mac"); else SEND_STRING("win"); return true; }
 
     return false;
 }
 
 __attribute__((weak)) void leader_end_user(void) {
     if (base_leader_end_user()) return;
-    tap_code(KC_DEL);
+    tap_code(KC_ESC);
 }
 
 // clang-format on

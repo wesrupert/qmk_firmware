@@ -10,73 +10,46 @@
 #include "action.h"
 #include "version.h"
 
-// clang-format off
-
-enum keycodes {
-    QWERTY = SAFE_RANGE, COLEMAK, DVORAK, PLOVER, LOWER, RAISE, BACKLIT, EXT_PLV,
-    MA_OR, MA_AND, MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK, MA_LMBD, MA_BRNL, MA_PCMT
-};
-
-// clang-format on
-
-#if defined(TAP_DANCE_ENABLE)
-
-#define WN_PLPS TD(TAP_DANCE_PLAY_PAUSE_SPOTIFY)
-#define MC_PLPS WN_PLPS
-
-#else
-
-#define WN_PLPS WN_MPLY
-#define MC_PLPS MC_MPLY
-
-#endif // TAP_DANCE_ENABLE
+#if !defined(SUPER_TAB_SWITCHER_TERM)
+#define SUPER_TAB_SWITCHER_TERM 500
+#endif
 
 // clang-format off
 
 enum layers {
-    LAYER_WIN = 0, LAYER_MAC,
-    LAYER_GAMES, LAYER_NUMPAD, LAYER_SYMBOLS,
-    LAYER_WINFUN, LAYER_MACFUN,
+    LAYER_BASE = 0,
+    LAYER_GAMES, LAYER_NUMPAD,
+    LAYER_SYMBOLS, LAYER_FUNCTION,
     LAYER_ENUM_END
+};
+
+enum keycodes {
+    // Platform keys
+    PK_LOCK = SAFE_RANGE,
+    PK_TABN,
+    PK_PSCF, PK_PSCR,
+    PK_MPRV, PK_MNXT,
+    PK_VOLD, PK_MUTE, PK_VOLU,
+    PK_MONT, PK_SYST,
+
+    // General macros
+    MA_LAUNCH,
+    MA_OR, MA_AND,
+    MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK,
+    MA_LMBD, MA_BRNL, MA_PCMT,
 };
 
 // clang-format on
 
-
 bool base_leader_end_user(void);
 
-#define LAUNCH_APP_RET(WN, MC)        \
-    do {                              \
-        if (IS_LAYER_ON(LAYER_WIN)) { \
-            SEND_STRING(WN_LAUNCH);   \
-            wait_ms(250);             \
-            SEND_STRING(WN);          \
-        } else {                      \
-            SEND_STRING(MC_LAUNCH);   \
-            wait_ms(250);             \
-            SEND_STRING(MC);          \
-        }                             \
-        wait_ms(250);                 \
-        SEND_STRING(SS_TAP(X_ENTER)); \
-    } while (false)
-
-#define LAUNCH_APP_RET_TRUE(WN, MC)   \
-    do {                              \
-        if (IS_LAYER_ON(LAYER_WIN)) { \
-            SEND_STRING(WN_LAUNCH);   \
-            wait_ms(250);             \
-            SEND_STRING(WN);          \
-        } else {                      \
-            SEND_STRING(MC_LAUNCH);   \
-            wait_ms(250);             \
-            SEND_STRING(MC);          \
-        }                             \
-        wait_ms(250);                 \
-        SEND_STRING(SS_TAP(X_ENTER)); \
-        return true;                  \
-    } while (false)
-
 // Common tap keys
+#define LC_TAB C(KC_TAB)
+#define CS_TAB C(S(KC_TAB))
+
+#define LT_FNEN LT(LAYER_FUNCTION, KC_ENT)
+#define LT_FNES LT(LAYER_FUNCTION, KC_ESC)
+#define LT_FNSP LT(LAYER_FUNCTION, KC_SPC)
 #define LT_SYEN LT(LAYER_SYMBOLS, KC_ENT)
 #define LT_SYES LT(LAYER_SYMBOLS, KC_ESC)
 #define LT_SYSP LT(LAYER_SYMBOLS, KC_SPC)
@@ -86,77 +59,37 @@ bool base_leader_end_user(void);
 #define MT_LCEN LCTL_T(KC_ENT)
 #define MT_LCES LCTL_T(KC_ESC)
 #define MT_LCSP LCTL_T(KC_SPC)
+#define MT_LCTB LCTL_T(KC_TAB)
 #define MT_RCEN RCTL_T(KC_ENT)
 #define MT_RCES RCTL_T(KC_ESC)
 #define MT_RCSP RCTL_T(KC_SPC)
+#define MT_RCTB RCTL_T(KC_TAB)
 
 #define MT_LAEN LALT_T(KC_ENT)
 #define MT_LAES LALT_T(KC_ESC)
 #define MT_LASP LALT_T(KC_SPC)
+#define MT_LATB LALT_T(KC_TAB)
 #define MT_RAEN RALT_T(KC_ENT)
 #define MT_RAES RALT_T(KC_ESC)
 #define MT_RASP RALT_T(KC_SPC)
+#define MT_RATB RALT_T(KC_TAB)
 
 #define MT_LSEN LSFT_T(KC_ENT)
 #define MT_LSES LSFT_T(KC_ESC)
 #define MT_LSSP LSFT_T(KC_SPC)
+#define MT_LSTB LSFT_T(KC_TAB)
 #define MT_RSEN RSFT_T(KC_ENT)
 #define MT_RSES RSFT_T(KC_ESC)
 #define MT_RSSP RSFT_T(KC_SPC)
+#define MT_RSTB RSFT_T(KC_TAB)
 
-// Platform-specific keys
-#define MC_LAUNCH SS_LGUI(" ")
-#define MC_COPY LGUI(KC_C)
-#define MC_CUT LGUI(KC_X)
-#define MC_SALL LGUI(KC_A)
-#define MC_PSTE LGUI(KC_V)
-#define MC_UNDO LGUI(KC_Z)
-
-#define MC_LOCK LGUI(LCTL(KC_Q))
-#define MC_PSCF LGUI(LSFT(KC_4))
-#define MC_PSCR LGUI(LCTL(LSFT(KC_4)))
-#define MC_FNES LT(LAYER_MACFUN, KC_ESC)
-#define MC_FNEN LT(LAYER_MACFUN, KC_ENT)
-#define MC_FNSP LT(LAYER_MACFUN, KC_SPC)
-#define MC_TABW G(KC_TAB)
-
-#define MC_MNXT KC_MFFD
-#define MC_MPLY KC_MPLY
-#define MC_MPRV KC_MRWD
-#define MC_MUTE KC_KB_MUTE
-#define MC_VOLD KC_KB_VOLUME_DOWN
-#define MC_VOLU KC_KB_VOLUME_UP
-
-#define WN_LAUNCH SS_LGUI(" ")
-#define WN_COPY LCTL(KC_C)
-#define WN_CUT LCTL(KC_X)
-#define WN_SALL LCTL(KC_A)
-#define WN_PSTE LCTL(KC_V)
-#define WN_UNDO LGUI(KC_Z)
-
-#define WN_LOCK LGUI(KC_L)
-#define WN_PSCF LGUI(KC_PSCR)
-#define WN_PSCR KC_PSCR
-#define WN_FNES LT(LAYER_WINFUN, KC_ESC)
-#define WN_FNEN LT(LAYER_WINFUN, KC_ENT)
-#define WN_FNSP LT(LAYER_WINFUN, KC_SPC)
-#define WN_TABW A(KC_TAB)
-
-#define WN_MNXT KC_MNXT
-#define WN_MPLY KC_MPLY
-#define WN_MPRV KC_MPRV
-#define WN_MUTE KC_MUTE
-#define WN_VOLD KC_VOLD
-#define WN_VOLU KC_VOLU
-
-// Common key groupings
 // clang-format off
 
 // Base Layer
-#define ______________________QWER__L1______________________ \
-        KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , KC_6
-#define _____________QWER__R1_____________ \
-        KC_7   , KC_8   , KC_9   , KC_0
+#define __________________QWER_L1__________________ \
+        KC_1   , KC_2   , KC_3   , KC_4   , KC_5
+#define __________________QWER_R1__________________ \
+        KC_6,    KC_7   , KC_8   , KC_9   , KC_0
 #define __________________QWER_L2__________________ \
         KC_Q   , KC_W   , KC_E   , KC_R   , KC_T
 #define __________________QWER_R2__________________ \
@@ -171,26 +104,26 @@ bool base_leader_end_user(void);
         KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH
 
 // Media
-#define _________MDIA_MC_________ \
-        MC_MPRV, MC_PLPS, MC_MNXT
+#define __________MEDIA__________ \
+        PK_MPRV, KC_MPLY, PK_MNXT
 //        PREV    PAUSE     NEXT
-#define _________MDIA_WN_________ \
-        WN_MPRV, WN_PLPS, WN_MNXT
-//        PREV    PAUSE     NEXT
-#define _________VOLM_MC_________ \
-        MC_VOLD, MC_MUTE, MC_VOLU
-//        VOLU     MUTE     VOLD
-#define _________VOLM_WN_________ \
-        WN_VOLD, WN_MUTE, WN_VOLU
+#define __________VOLUM__________ \
+        PK_VOLD, PK_MUTE, PK_VOLU
 //        VOLU     MUTE     VOLD
 
 // Function Layer
-#define ______________________FUNC__L1______________________ \
-        KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6
-//        F1       F2       F3       F4       F5       F6
-#define ______________________FUNC__R1______________________ \
-        KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12
-//        F7       F8       F9       F10      F11      F12
+#define __________________FUNC_L1__________________ \
+        KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5
+//        F1       F2       F3       F4       F5
+#define __________________FUNC_R1__________________ \
+        KC_F6,   KC_F7  , KC_F8  , KC_F9  , KC_F10
+//        F6,      F7       F8       F9       F10
+#define FUNC_11 \
+        KC_F11
+//        F11
+#define FUNC_12 \
+        KC_F12
+//        F12
 #define _____________FUNC__L2_____________ \
         KC_HOME, KC_PGUP, KC_PGDN, KC_END
 //       HOME     PGUP     PGDN      END
@@ -205,18 +138,24 @@ bool base_leader_end_user(void);
 //       LEFT     DOWN      UP      RIGHT
 
 // Symbol Layer
-#define ______________________SYMB__L1______________________ \
-        KC_EXLM, KC_AT  , KC_HASH, KC_DLR , KC_PERC, KC_CIRC
-//         !        @        #        $        %        ^
-#define ______________________SYMB__R1______________________ \
-        KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, MA_BRNL, MA_LMBD
-//         &        *        (        )      {\n}    ()=>{}
+#define __________________SYMB_L1__________________ \
+        KC_EXLM, KC_AT  , KC_HASH, KC_DLR , KC_PERC
+//         !        @        #        $        %
+#define __________________SYMB_R1__________________ \
+        KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN
+//          ^       &        *        (        )
+#define SYM_SL1 \
+        MA_BRNL
+//       {\n}
+#define SYM_SR1 \
+        MA_LMBD
+//      ()=>{}
 #define __________________SYMB_L2__________________ \
-        MA_AND , KC_AMPR, KC_SLSH, KC_MINS, KC_UNDS
-//        &&        &        /        -        _
+        MA_AND , KC_SLSH, KC_AMPR, KC_MINS, KC_UNDS
+//        &&        /        &        -        _
 #define __________________SYMB_R2__________________ \
-        KC_EQL,  KC_PLUS, KC_BSLS, KC_PIPE, MA_OR
-//         =        +        \        |       ||
+        KC_EQL,  KC_PLUS, KC_PIPE, KC_BSLS, MA_OR
+//         =        +        |        \       ||
 #define __________________SYMB_L3__________________ \
         MA_AND , KC_LBRC, KC_LCBR, KC_LPRN, KC_LABK
 //         &&       [        {        (        <
@@ -231,21 +170,18 @@ bool base_leader_end_user(void);
 //         <>       ()      {   }      []    /*  */
 
 // Numpad Layer Left
-#define ______________NMPD_1______________ \
-        KC_NUM , KC_PSLS, KC_PAST, KC_PMNS
-//
-#define ______________NMPD_2______________ \
-        KC_P7  , KC_P8  , KC_P9  , KC_PPLS
-//         7        8        9        +
-#define ______________NMPD_3______________ \
-        KC_P4  , KC_P5  , KC_P6  , KC_PENT
-//         4        5        6      enter
-#define __________NMPD_4_________ \
+#define __________NMPD_1_________ \
+        KC_P7  , KC_P8  , KC_P9
+//         7        8        9
+#define __________NMPD_2_________ \
+        KC_P4  , KC_P5  , KC_P6
+//         4        5        6
+#define __________NMPD_3_________ \
         KC_P1  , KC_P2  , KC_P3
 //         1        2        3
-#define _____NMPD_5_____ \
-        KC_PDOT, KC_P0
-//         0        .
+#define NMPD__4 \
+        KC_P0
+//         0
 
 // clang-format on
 
@@ -270,18 +206,16 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
 
 // clang-format off
 
-#define DANCE_SPOTIFY \
-        void dance_playpause_spotify(tap_dance_state_t *state, void *user_data) { \
-            if (state->count == 1) { \
-                if (IS_LAYER_ON(LAYER_WIN)) { \
-                    tap_code(WN_MPLY); \
-                } else { \
-                    tap_code(MC_MPLY); \
-                } \
-            } else if (state->count == 2) { \
-                LAUNCH_APP_RET("spotify", "spotify"); \
-            } \
-        } \
+#define PLATFORM_IS_MAC !force_win_maps && (force_mac_maps || OS_MACOS == detected_host_os())
+
+#define MACRO_SEND_ON_PRESS(KEY, STRING) \
+    case KEY: if (record->event.pressed) { SEND_STRING(STRING); } break
+
+#define MACRO_SEND_PLAT_ON_PRESS(KEY, WIN, MAC) \
+    case KEY: if (record->event.pressed) { \
+        if (PLATFORM_IS_MAC) SEND_STRING(MAC); \
+        else SEND_STRING(WIN); \
+    } break
 
 #define DANCE_MCRO(NR, hand, HAND, mod, MOD) \
         td_state_t dance_dm_##NR##_##hand##_##mod##_state = 0; \
@@ -343,10 +277,6 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
             } \
             dance_lead_##hand##_##mod##_state = 0; \
         } \
-        void leader_end_user(void) { \
-            if (base_leader_end_user()) return; \
-            tap_code(KC_##HAND##MOD); \
-        }
 
 #define DANCE_NUMP(hand, HAND, mod, MOD) \
         td_state_t dance_nump_##hand##_##mod##_state = 0; \
