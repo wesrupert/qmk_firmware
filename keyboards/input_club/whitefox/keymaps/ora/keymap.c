@@ -2,11 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #include "ora.h"
 
-#define MC_FNES LT(LAYER_MACFUN, KC_ESC)
-#define WN_FNES LT(LAYER_WINFUN, KC_ESC)
-#define LT_SYEN LT(LAYER_SYMBOLS, KC_ENT)
-#define TT_NMPD TT(LAYER_NUMPAD)
-
 // Expand key groups before passing into layout macro.
 #define L(...) LAYOUT(__VA_ARGS__)
 #define MT_LCRA C(KC_LALT)
@@ -31,15 +26,13 @@ enum tap_dances {
 // XY_ABCD alternates
 #define _M_ KC_NO
 
-// __{LAYER} macros so we can use OS-variant keys without writing the layers twice.
-// Layers are copies instead of layered so we can use set_single_persistent_default_layer.
 // clang-format off
 
-#define __BASE(OS) \
+#define __BASE \
     KC_GRV,  ______________________QWER__L1______________________, _____________QWER__R1_____________, KC_MINS, KC_EQL , KC_BSPC, KC_DEL , TD_DMC1, \
-    KC_TAB,    __________________QWER_L2__________________, __________________QWER_R2__________________, KC_LBRC, KC_RBRC,     KC_BSLS,   OS##_MPLY,\
-    OS##_FNES,   __________________QWER_L3__________________, _____________QWER__R3_____________, KC_SCLN, KC_QUOT,    _M_, LT_SYEN,      OS##_MNXT,\
-    KC_LSFT, _M_,   __________________QWER_L4__________________, __________________QWER_R4__________________,      KC_RSFT,       KC_UP,  OS##_MPRV,\
+    KC_TAB,    __________________QWER_L2__________________, __________________QWER_R2__________________, KC_LBRC, KC_RBRC,     KC_BSLS,    KC_MPLY, \
+    LT_FNES,     __________________QWER_L3__________________, _____________QWER__R3_____________, KC_SCLN, KC_QUOT,    _M_, LT_SYEN,       PK_MNXT, \
+    KC_LSFT, _M_,   __________________QWER_L4__________________, __________________QWER_R4__________________,      KC_RSFT,       KC_UP,   PK_MPRV, \
     TD_LCLD,   TD_LANP,   KC_LGUI,                        KC_SPC,                         KC_RGUI,   TD_RCLD,    _M_,    KC_LEFT, KC_DOWN, KC_RGHT
 
 #define __NUMPAD \
@@ -63,11 +56,11 @@ enum tap_dances {
     _______, _M_,   __________________SYMB_L4__________________, __________________SYMB_R4__________________,      _______,       _______, _______, \
     _______,   _______,   _______,                        _______,                        _______,   _______,    _M_,    _______, _______, _______  \
 
-#define __FUNCTION(OS) \
-    OS##_LOCK,______________________FUNC__L1______________________,______________________FUNC__R1______________________, KC_DEL , TD_DMC2,OS##_LOCK,\
-    KC_CAPS,   XXXXXXX, _____________FUNC__L2_____________, _____________FUNC__R2_____________,OS##_PSCR,OS##_PSCF,XXXXXXX,    XXXXXXX,   OS##_MUTE,\
-    XXXXXXX,   OS##_SALL, _____________FUNC__L3_____________, _____________FUNC__R3_____________, XXXXXXX, XXXXXXX,    _M_, _______,      OS##_VOLU,\
-    _______, _M_, OS##_UNDO, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TT_NMPD, XXXXXXX, _________VOLM_##MC##_________,  _______,       KC_PGUP,OS##_VOLD,\
+#define __FUNCTION \
+    PK_LOCK, ______________________FUNC__L1______________________, ______________________FUNC__R1______________________, KC_DEL , TD_DMC2, PK_LOCK, \
+    KC_CAPS,   XXXXXXX, _____________FUNC__L2_____________, _____________FUNC__R2_____________,  PK_PSCR,  PK_PSCF,XXXXXXX,    XXXXXXX,    PK_MUTE, \
+    XXXXXXX,     XXXXXXX, _____________FUNC__L3_____________, _____________FUNC__R3_____________, XXXXXXX, XXXXXXX,    _M_, _______,       PK_VOLU, \
+    _______, _M_,   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TT_NMPD, XXXXXXX, __________VOLUM__________,      _______,       KC_PGUP, PK_VOLD, \
     _______,   _______,   _______,                        _______,                        _______,   _______,    _M_,    KC_HOME, KC_PGDN, KC_END
 
 /* #define __LAYER \
@@ -78,13 +71,11 @@ enum tap_dances {
     _______,   _______,   _______,                        _______,                        _______,   _______,    _M_,    _______, _______, _______ */
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [LAYER_WIN] = L(__BASE(WN)),
-    [LAYER_MAC] = L(__BASE(MC)),
+    [LAYER_BASE] = L(__BASE),
     [LAYER_NUMPAD] = L(__NUMPAD),
     [LAYER_GAMES] = L(__GAMES),
     [LAYER_SYMBOLS] = L(__SYMBOLS),
-    [LAYER_WINFUN] = L(__FUNCTION(WN)),
-    [LAYER_MACFUN] = L(__FUNCTION(MC))
+    [LAYER_FUNCTION] = L(__FUNCTION),
 };
 
 // clang-format on
