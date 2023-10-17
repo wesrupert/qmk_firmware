@@ -3,25 +3,25 @@
 
 #pragma once
 
-#define COMBO_SHOULD_TRIGGER
-
 #include QMK_KEYBOARD_H
 #include "quantum.h"
 #include "action.h"
 #include "version.h"
 
+#if defined(OS_DETECTION_ENABLE)
+#include "os_detection.h"
+#endif
+
 #if !defined(SUPER_TAB_SWITCHER_TERM)
 #define SUPER_TAB_SWITCHER_TERM 500
 #endif
 
-// clang-format off
+bool force_mac_maps;
+bool force_win_maps;
+bool is_tab_switcher_active;
+uint16_t tab_switcher_timer;
 
-enum layers {
-    LAYER_BASE = 0,
-    LAYER_GAMES, LAYER_NUMPAD,
-    LAYER_SYMBOLS, LAYER_FUNCTION,
-    LAYER_ENUM_END
-};
+// clang-format off
 
 enum keycodes {
     // Platform keys
@@ -47,15 +47,7 @@ bool base_leader_end_user(void);
 #define LC_TAB C(KC_TAB)
 #define CS_TAB C(S(KC_TAB))
 
-#define LT_FNEN LT(LAYER_FUNCTION, KC_ENT)
-#define LT_FNES LT(LAYER_FUNCTION, KC_ESC)
-#define LT_FNSP LT(LAYER_FUNCTION, KC_SPC)
-#define LT_SYEN LT(LAYER_SYMBOLS, KC_ENT)
-#define LT_SYES LT(LAYER_SYMBOLS, KC_ESC)
-#define LT_SYSP LT(LAYER_SYMBOLS, KC_SPC)
-#define TT_NMPD TT(LAYER_NUMPAD)
 #define MT_LABS LALT_T(KC_BSPC)
-
 #define MT_LCEN LCTL_T(KC_ENT)
 #define MT_LCES LCTL_T(KC_ESC)
 #define MT_LCSP LCTL_T(KC_SPC)
@@ -163,11 +155,11 @@ bool base_leader_end_user(void);
         KC_RABK, KC_RPRN, KC_RCBR, KC_RBRC, MA_OR
 //         >        )        }        ]        ||
 #define __________________SYMB_L4__________________ \
-        MA_PCMT, MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK
-//       /*   */     []      {   }     ()      <>
+        KC_1,    KC_2,    KC_3,    KC_4,    KC_5
+//         1        2        3        4        5
 #define __________________SYMB_R4__________________ \
-        MA_PABK, MA_PPRN, MA_PCBR, MA_PBRC, MA_PCMT
-//         <>       ()      {   }      []    /*  */
+        KC_6,    KC_7,    KC_8,    KC_9,    KC_0
+//         6        7        8        9        0
 
 // Numpad Layer Left
 #define __________NMPD_1_________ \
@@ -217,15 +209,15 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
         else SEND_STRING(WIN); \
     } break
 
-#define DANCE_MCRO(NR, hand, HAND, mod, MOD) \
-        td_state_t dance_dm_##NR##_##hand##_##mod##_state = 0; \
-        void dance_dm_##NR##_##hand##_##mod##_finished(tap_dance_state_t *state, void *user_data) { \
-            dance_dm_##NR##_##hand##_##mod##_state = hold_cur_dance(state); \
+#define DANCE_MACRO_MOD(NR, MOD) \
+        td_state_t dance_DMCRO##NR##_##MOD##_state = 0; \
+        void dance_DMCRO##NR##_##MOD##_finished(tap_dance_state_t *state, void *user_data) { \
+            dance_DMCRO##NR##_##MOD##_state = hold_cur_dance(state); \
             keyrecord_t kr; \
             kr.event.pressed = false; \
-            switch (dance_dm_##NR##_##hand##_##mod##_state) { \
+            switch (dance_DMCRO##NR##_##MOD##_state) { \
                 case TD_SINGLE_HOLD: \
-                    register_code(KC_##HAND##MOD); \
+                    register_code(KC_##MOD); \
                     break; \
                 case TD_SINGLE_TAP: \
                     process_dynamic_macro(DM_PLY##NR, &kr); \
@@ -241,67 +233,74 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
                     break; \
             } \
         } \
-        void dance_dm_##NR##_##hand##_##mod##_reset(tap_dance_state_t *state, void *user_data) { \
-            switch (dance_dm_##NR##_##hand##_##mod##_state) { \
+        void dance_DMCRO##NR##_##MOD##_reset(tap_dance_state_t *state, void *user_data) { \
+            switch (dance_DMCRO##NR##_##MOD##_state) { \
                 case TD_SINGLE_HOLD: \
-                    unregister_code(KC_##HAND##MOD); \
+                    unregister_code(KC_##MOD); \
                     break; \
                 default: \
                     break; \
             } \
-            dance_dm_##NR##_##hand##_##mod##_state = 0; \
+            dance_DMCRO##NR##_##MOD##_state = 0; \
         }
 
-#define DANCE_LEAD(hand, HAND, mod, MOD) \
-        td_state_t dance_lead_##hand##_##mod##_state = 0; \
-        void dance_lead_##hand##_##mod##_finished(tap_dance_state_t *state, void *user_data) { \
-            dance_lead_##hand##_##mod##_state = hold_cur_dance(state); \
-            switch (dance_lead_##hand##_##mod##_state) { \
+#define DANCE_LEADER_MOD(MOD) \
+        td_state_t dance_LEADER_##MOD##_state = 0; \
+        void dance_LEADER_##MOD##_finished(tap_dance_state_t *state, void *user_data) { \
+            dance_LEADER_##MOD##_state = hold_cur_dance(state); \
+            switch (dance_LEADER_##MOD##_state) { \
                 case TD_SINGLE_TAP: \
                     leader_start(); \
                     break; \
+                case TD_DOUBLE_TAP: \
+                    tap_code(KC_ESC); \
+                    break; \
+                case TD_TRIPLE_TAP: \
+                    if (PLATFORM_IS_MAC) SEND_STRING(SS_LGUI(SS_LCTL("q"))); \
+                    else SEND_STRING(SS_LGUI("l")); \
+                    break; \
                 case TD_SINGLE_HOLD: \
-                    register_code(KC_##HAND##MOD); \
+                    register_code(KC_##MOD); \
                     break; \
                 default: \
                     break; \
             } \
         } \
-        void dance_lead_##hand##_##mod##_reset(tap_dance_state_t *state, void *user_data) { \
-            switch (dance_lead_##hand##_##mod##_state) { \
+        void dance_LEADER_##MOD##_reset(tap_dance_state_t *state, void *user_data) { \
+            switch (dance_LEADER_##MOD##_state) { \
                 case TD_SINGLE_HOLD: \
-                    unregister_code(KC_##HAND##MOD); \
+                    unregister_code(KC_##MOD); \
                     break; \
                 default: \
                     break; \
             } \
-            dance_lead_##hand##_##mod##_state = 0; \
+            dance_LEADER_##MOD##_state = 0; \
         } \
 
-#define DANCE_NUMP(hand, HAND, mod, MOD) \
-        td_state_t dance_nump_##hand##_##mod##_state = 0; \
-        void dance_nump_##hand##_##mod##_finished(tap_dance_state_t *state, void *user_data) { \
-            dance_nump_##hand##_##mod##_state = hold_cur_dance(state); \
-            switch (dance_nump_##hand##_##mod##_state) { \
+#define DANCE_LAYER_MOD(LAYER, MOD) \
+        td_state_t dance_##LAYER##_##MOD##_state = 0; \
+        void dance_##LAYER##_##MOD##_finished(tap_dance_state_t *state, void *user_data) { \
+            dance_##LAYER##_##MOD##_state = hold_cur_dance(state); \
+            switch (dance_##LAYER##_##MOD##_state) { \
                 case TD_SINGLE_TAP: \
-                    layer_invert(LAYER_NUMPAD); \
+                    layer_invert(LAYER); \
                     break; \
                 case TD_SINGLE_HOLD: \
-                    register_code(KC_##HAND##MOD); \
+                    register_code(KC_##MOD); \
                     break; \
                 default: \
                     break; \
             } \
         } \
-        void dance_nump_##hand##_##mod##_reset(tap_dance_state_t *state, void *user_data) { \
-            switch (dance_nump_##hand##_##mod##_state) { \
+        void dance_##LAYER##_##MOD##_reset(tap_dance_state_t *state, void *user_data) { \
+            switch (dance_##LAYER##_##MOD##_state) { \
                 case TD_SINGLE_HOLD: \
-                    unregister_code(KC_##HAND##MOD); \
+                    unregister_code(KC_##MOD); \
                     break; \
                 default: \
                     break; \
             } \
-            dance_nump_##hand##_##mod##_state = 0; \
+            dance_##LAYER##_##MOD##_state = 0; \
         }
 
 // clang-format on

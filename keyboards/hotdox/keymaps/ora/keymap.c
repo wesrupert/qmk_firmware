@@ -3,79 +3,105 @@
 #include "ora.h"
 #include "./wrappers.h"
 
+enum layers {
+    LAYER_BASE = 0,
+    LAYER_GAMES,
+    LAYER_NUMPAD,
+    LAYER_SYMFUN_L,
+    LAYER_SYMFUN_R,
+    LAYER_ENUM_END
+};
+
 enum tap_dances {
-    TAP_DANCE_DMACRO_LGUI = 0,
-    TAP_DANCE_DMACRO_RGUI,
-    TAP_DANCE_LEADER_LCTL,
-    TAP_DANCE_LEADER_RCTL,
-    TAP_DANCE_NUMPAD_LALT,
-    TAP_DANCE_NUMPAD_RALT,
+    TAP_DANCE_LEADER_LGUI = 0,
+    TAP_DANCE_LEADER_RGUI,
+    TAP_DANCE_DMACRO_LALT,
+    TAP_DANCE_DMACRO_RALT,
+    TAP_DANCE_NUMPAD_LCTL,
+    TAP_DANCE_NUMPAD_RCTL,
     X_TAP_DANCE
 };
 
 // Advance key aliases
-#define TD_LGMC TD(TAP_DANCE_DMACRO_LGUI)
-#define TD_RGMC TD(TAP_DANCE_DMACRO_RGUI)
-#define TD_LCLD TD(TAP_DANCE_LEADER_LCTL)
-#define TD_RCLD TD(TAP_DANCE_LEADER_RCTL)
-#define TD_LANP TD(TAP_DANCE_NUMPAD_LALT)
-#define TD_RANP TD(TAP_DANCE_NUMPAD_RALT)
+#define LT_FLEN LT(LAYER_SYMFUN_L, KC_ENT)
+#define LT_FREN LT(LAYER_SYMFUN_R, KC_ENT)
+#define MO_FNSL MO(LAYER_SYMFUN_L)
+#define MO_FNSR MO(LAYER_SYMFUN_R)
+#define TT_NMPD TT(LAYER_NUMPAD)
+
+#define MT_LCES LCTL_T(KC_ESC)
+#define MT_RCEN RCTL_T(KC_ENT)
+#define MT_MHES MEH_T(KC_ESC)
+
+#define TD_LGLD TD(TAP_DANCE_LEADER_LGUI)
+#define TD_RGLD TD(TAP_DANCE_LEADER_RGUI)
+#define TD_LAMC TD(TAP_DANCE_DMACRO_LALT)
+#define TD_RAMC TD(TAP_DANCE_DMACRO_RALT)
+#define TD_LCNP TD(TAP_DANCE_NUMPAD_LCTL)
+#define TD_RCNP TD(TAP_DANCE_NUMPAD_RCTL)
+
+#define ____________HOTDOX_VOLUME_SYSTEM___________ \
+        PK_MONT, __________VOLUM__________, PK_SYST
+#define ____________HOTDOX_VOLUME_MEDIA____________ \
+        PK_MPRV, PK_VOLD, PK_VOLU, PK_MNXT, KC_MPLY
 
 // clang-format off
+
+// TODO: Investigate "Instant tap" mod taps for home-row mods:
+// https://github.com/filterpaper/qmk_userspace/blob/11cb3970e89760039b940f5de84e31c08aea4b68/readme.md?#contextual-mod-taps
 
 // Expand key groups before passing into layout macro.
 #define L(...) LAYOUT_ergodox_pretty(__VA_ARGS__)
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-
 [LAYER_BASE] = L(
     KC_DEL,  __________________QWER_L1__________________, KC_LBRC,    KC_RBRC, __________________QWER_R1__________________, KC_BSPC,
-    KC_TAB,  __________________QWER_L2__________________, KC_GRV,     KC_EQL,  __________________QWER_R2__________________, KC_BSLS,
-    KC_LCTL, __________________QWER_L3__________________,                      _____________QWER__R3_____________, KC_QUOT, KC_RCTL,
-    KC_LSFT, __________________QWER_L4__________________, KC_SCLN,    KC_MINS, __________________QWER_R4__________________, KC_RSFT,
-    KC_LALT, KC_LGUI, __________MEDIA__________,                                        KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_RALT,
-                                                 TD_LGMC, TD_LANP,    TD_RANP, TD_RGMC,
-                                        /*-----\ /-----*/ TD_LCLD,    TD_RCLD, /*-----\ /-----*/
-                                        MT_LSSP, LT_SYEN, LT_FNES,    LT_FNES, LT_SYEN, MT_RSSP),
+    KC_TAB,  __________________QWER_L2__________________, KC_MINS,    KC_EQL,  __________________QWER_R2__________________, KC_BSLS,
+    MT_LCES, __________________QWER_L3__________________,                      _____________QWER__R3_____________, KC_QUOT, MT_RCEN,
+    KC_LSFT, __________________QWER_L4__________________, KC_GRV,     KC_SCLN, __________________QWER_R4__________________, KC_RSFT,
+    KC_LALT, __________MEDIA__________, KC_LGUI,                                        KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_RALT,
+                                                 TD_LGLD, TD_LAMC,    TD_RAMC, TD_RGLD,
+                                        /*-----\ /-----*/ TD_LCNP,    TD_RCNP, /*-----\ /-----*/
+                                        MT_LSSP, LT_FLEN, MT_MHES,    MT_MHES, LT_FREN, MT_RSSP),
 
 [LAYER_NUMPAD] = L(
-    KC_NUM,  KC_PAST, __________NMPD_1_________, KC_PPLS, XXXXXXX,     XXXXXXX, KC_PPLS, __________NMPD_1_________, KC_PAST, KC_NUM,
-    KC_BSPC, KC_PSLS, __________NMPD_2_________, KC_PMNS, XXXXXXX,     XXXXXXX, KC_PMNS, __________NMPD_2_________, KC_PSLS, KC_BSPC,
-    KC_DEL,  KC_UP,   __________NMPD_3_________, KC_PEQL,                       KC_PEQL, __________NMPD_3_________, KC_UP,   KC_DEL,
-    KC_LEFT, KC_DOWN, KC_RGHT, NMPD__4, KC_PDOT, KC_TAB,  XXXXXXX,     XXXXXXX, KC_TAB,  KC_PDOT, KC_P0,   KC_LEFT, KC_DOWN, KC_RGHT,
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                                  XXXXXXX, TT_NMPD,    TT_NMPD, XXXXXXX,
-                                         /*-----\ /-----*/ XXXXXXX,    XXXXXXX, /*-----\ /-----*/
-                                         KC_SPC,  KC_PENT, XXXXXXX,    XXXXXXX, KC_PENT, KC_SPC),
+    KC_NUM,  KC_PAST, __________NMPD_1_________, KC_PPLS, _______,    _______, KC_PPLS, __________NMPD_1_________, KC_PAST, KC_NUM,
+    KC_BSPC, KC_PSLS, __________NMPD_2_________, KC_PMNS, _______,    _______, KC_PMNS, __________NMPD_2_________, KC_PSLS, KC_BSPC,
+    KC_DEL,  KC_UP,   __________NMPD_3_________, KC_PEQL,                      KC_PEQL, __________NMPD_3_________, KC_UP,   KC_DEL,
+    KC_LEFT, KC_DOWN, KC_RGHT, NMPD__4, KC_PDOT, KC_TAB,  _______,    _______, KC_TAB,  KC_PDOT, KC_P0,   KC_LEFT, KC_DOWN, KC_RGHT,
+    PK_VOLD, __________MEDIA__________, PK_VOLU,                                        ____________HOTDOX_VOLUME_MEDIA____________,
+                                                 _______, _______,    _______, _______,
+                                        /*-----\ /-----*/ TT_NMPD,    TT_NMPD, /*-----\ /-----*/
+                                        KC_SPC,  KC_PENT, _______,    _______, KC_PENT, KC_SPC),
 
 [LAYER_GAMES] = L(
-    KC_F12,  _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, _______,
-    KC_TAB,  _______, _______, _______, _______, _______, KC_F10,     _______, _______, _______, _______, _______, _______, _______,
+    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,       KC_MINS, _______, _______, _______, _______, _______, _______,
+    KC_TAB,  _______, _______, _______, _______, _______, KC_7,       _______, _______, _______, _______, _______, _______, _______,
     KC_LCTL, _______, _______, _______, _______, _______,                      _______, _______, _______, _______, _______, _______,
-    KC_LSFT, _______, _______, _______, _______, _______, KC_F11,     _______, _______, _______, _______, _______, _______, _______,
-    KC_LALT, KC_F1,   KC_F2,   KC_F3,   KC_F4,                                          _______, _______, _______, _______, _______,
-                                                 KC_F6,   KC_F7,      KC_MPLY, PK_MNXT,
-                                        /*-----\ /-----*/ KC_F8,      TD_RCLD, /*-----\ /-----*/
-                                        KC_SPC,  KC_F5,   KC_F9,      KC_ESC,  LT_FNEN, _______),
+    KC_LSFT, _______, _______, _______, _______, _______, KC_8,       _______, _______, _______, _______, _______, _______, _______,
+    KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_LALT,                                        _______, _______, _______, _______, _______,
+                                                 KC_F5,   KC_F6,      KC_MPLY, PK_MNXT,
+                                        /*-----\ /-----*/ KC_F7,      LT_FLEN, /*-----\ /-----*/
+                                        KC_SPC,  KC_ENT,  KC_F8,      TD_RGLD, _______, _______),
 
-[LAYER_SYMBOLS] = L(
-    KC_ESC,  __________________SYMB_L1__________________, SYM_SL1,    SYM_SR1, __________________SYMB_R1__________________, KC_DEL,
-    PK_TABN, __________________SYMB_L2__________________, KC_TILD,    KC_PLUS, __________________SYMB_R2__________________, PK_TABN,
-    LC_TAB,  __________________SYMB_L3__________________,                      __________________SYMB_R3__________________, LC_TAB,
-    CS_TAB,  __________________SYMB_L4__________________, KC_COLN,    KC_UNDS, __________________SYMB_R4__________________, CS_TAB,
-    PK_MONT, PK_SYST, __________VOLUM__________,                                        PK_MPRV, PK_VOLD, PK_VOLU, PK_MNXT, KC_MPLY,
-                                                 PK_LOCK, TT_NMPD,    TT_NMPD, PK_LOCK,
-                                        /*-----\ /-----*/ XXXXXXX,    XXXXXXX, /*-----\ /-----*/
-                                        KC_DEL,  KC_TRNS, CW_TOGG,    CW_TOGG, KC_TRNS, KC_BSPC),
+[LAYER_SYMFUN_L] = L( //                     Same Hand = Function L   Cross Hand = Symbols R
+    KC_ESC,  __________________FUNC_L1__________________, FUNC_11,    SYM_SR1, __________________SYMB_R1__________________, KC_DEL,
+    PK_TABN, XXXXXXX, _____________FUNC__L2_____________, XXXXXXX,    KC_PLUS, __________________SYMB_R2__________________, PK_TABN,
+    LC_TAB,  XXXXXXX, _____________FUNC__L3_____________,                      __________________SYMB_R3__________________, LC_TAB,
+    CS_TAB,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    KC_COLN, __________________SYMB_R4__________________, CS_TAB,
+    ____________HOTDOX_VOLUME_SYSTEM___________,                                        ____________HOTDOX_VOLUME_MEDIA____________,
+                                                 XXXXXXX, XXXXXXX,    _______, _______,
+                                        /*-----\ /-----*/ XXXXXXX,    _______, /*-----\ /-----*/
+                                        KC_SPC,  _______, XXXXXXX,    _______, KC_DEL,  CW_TOGG),
 
-[LAYER_FUNCTION] = L(
-    KC_ESC,  __________________FUNC_L1__________________, FUNC_11,    FUNC_12, __________________FUNC_R1__________________, KC_DEL,
-    PK_TABN, XXXXXXX, _____________FUNC__L2_____________, XXXXXXX,    XXXXXXX, _____________FUNC__R2_____________, PK_PSCR, PK_TABN,
-    LC_TAB,  XXXXXXX, _____________FUNC__L3_____________,                      _____________FUNC__R3_____________, PK_PSCF, LC_TAB,
-    CS_TAB,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, CS_TAB,
-    PK_MONT, PK_SYST, __________VOLUM__________,                                        PK_MPRV, PK_VOLD, PK_VOLU, PK_MNXT, KC_MPLY,
-                                                 PK_LOCK, TT_NMPD,    TT_NMPD, PK_LOCK,
-                                        /*-----\ /-----*/ XXXXXXX,    XXXXXXX, /*-----\ /-----*/
-                                        KC_DEL,  CW_TOGG, KC_TRNS,    KC_TRNS, CW_TOGG, KC_BSPC),
+[LAYER_SYMFUN_R] = L( //                   Cross Hand = Symbols L     Same Hand = Function R
+    KC_ESC,  __________________SYMB_L1__________________, SYM_SL1,    FUNC_12, __________________FUNC_R1__________________, KC_DEL,
+    PK_TABN, __________________SYMB_L2__________________, KC_UNDS,    XXXXXXX, _____________FUNC__R2_____________, PK_PSCR, PK_TABN,
+    LC_TAB,  __________________SYMB_L3__________________,                      _____________FUNC__R3_____________, PK_PSCF, LC_TAB,
+    CS_TAB,  __________________SYMB_L4__________________, KC_TILD,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, CS_TAB,
+    ____________HOTDOX_VOLUME_SYSTEM___________,                                        ____________HOTDOX_VOLUME_MEDIA____________,
+                                                 _______, _______,    XXXXXXX, XXXXXXX,
+                                        /*-----\ /-----*/ _______,    XXXXXXX, /*-----\ /-----*/
+                                        CW_TOGG, KC_BSPC, _______,    XXXXXXX, _______, KC_SPC),
 
 /* [LAYER_] = L(
     _______, _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______, _______,
@@ -91,18 +117,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 // clang-format on
 
-DANCE_MCRO(1, l, L, gui, GUI)
-DANCE_MCRO(2, r, R, gui, GUI)
-DANCE_LEAD(l, L, ctl, CTL)
-DANCE_LEAD(r, R, ctl, CTL)
-DANCE_NUMP(l, L, alt, ALT)
-DANCE_NUMP(r, R, alt, ALT)
+void leader_end_user(void) {
+    if (base_leader_end_user()) return;
+    if (leader_sequence_two_keys(KC_L, KC_G) || leader_sequence_two_keys(KC_L, KC_O)) { // Layer: Games
+        layer_move(LAYER_BASE);
+        layer_on(LAYER_GAMES);
+        return;
+    }
+    tap_code(KC_ESC);
+}
+
+DANCE_LEADER_MOD(LGUI)
+DANCE_LEADER_MOD(RGUI)
+DANCE_MACRO_MOD(1, LALT)
+DANCE_MACRO_MOD(2, RALT)
+DANCE_LAYER_MOD(LAYER_NUMPAD, LCTL)
+DANCE_LAYER_MOD(LAYER_NUMPAD, RCTL)
 
 tap_dance_action_t tap_dance_actions[] = {
-    [TAP_DANCE_DMACRO_LGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_dm_1_l_gui_finished, dance_dm_1_l_gui_reset),
-    [TAP_DANCE_DMACRO_RGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_dm_2_r_gui_finished, dance_dm_2_r_gui_reset),
-    [TAP_DANCE_LEADER_LCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lead_l_ctl_finished, dance_lead_l_ctl_reset),
-    [TAP_DANCE_LEADER_RCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_lead_r_ctl_finished, dance_lead_r_ctl_reset),
-    [TAP_DANCE_NUMPAD_LALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_nump_l_alt_finished, dance_nump_l_alt_reset),
-    [TAP_DANCE_NUMPAD_RALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_nump_r_alt_finished, dance_nump_r_alt_reset),
+    [TAP_DANCE_LEADER_LGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_LEADER_LGUI_finished, dance_LEADER_LGUI_reset),
+    [TAP_DANCE_LEADER_RGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_LEADER_RGUI_finished, dance_LEADER_RGUI_reset),
+    [TAP_DANCE_DMACRO_LALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_DMCRO1_LALT_finished, dance_DMCRO1_LALT_reset),
+    [TAP_DANCE_DMACRO_RALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_DMCRO2_RALT_finished, dance_DMCRO2_RALT_reset),
+    [TAP_DANCE_NUMPAD_LCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_LAYER_NUMPAD_LCTL_finished, dance_LAYER_NUMPAD_LCTL_reset),
+    [TAP_DANCE_NUMPAD_RCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_LAYER_NUMPAD_RCTL_finished, dance_LAYER_NUMPAD_RCTL_reset),
 };
