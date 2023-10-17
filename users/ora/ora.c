@@ -4,10 +4,6 @@
 #include "ora.h"
 #include "g/keymap_combo.h"
 
-#if defined(OS_DETECTION_ENABLE)
-#include "os_detection.h"
-#endif
-
 bool force_mac_maps = false;
 bool force_win_maps = false;
 bool is_tab_switcher_active = false;
@@ -67,17 +63,16 @@ void matrix_scan_user(void) {
   }
 }
 
+#if defined(LEADER_ENABLE)
 // clang-format off
 
 bool base_leader_end_user(void) {
-    /* Caps lock    */ if (leader_sequence_one_key(KC_C)) { tap_code(KC_CAPS); return true; }
-    /* Layer: Base  */ if (leader_sequence_two_keys(KC_L, KC_B) || leader_sequence_two_keys(KC_L, KC_L)) { layer_move(LAYER_BASE); return true; }
-    /* Layer: Games */ if (leader_sequence_two_keys(KC_L, KC_G) || leader_sequence_two_keys(KC_L, KC_O)) { layer_move(LAYER_BASE); layer_on(LAYER_GAMES); return true; }
-    /* Lock:  Base  */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_K)) { force_mac_maps = false; force_win_maps = false; return true; }
-    /* Lock:  Mac   */ if (leader_sequence_two_keys(KC_L, KC_M) || leader_sequence_two_keys(KC_L, KC_I)) { force_mac_maps = !force_mac_maps; force_win_maps = false; return true; }
-    /* Lock:  Win   */ if (leader_sequence_two_keys(KC_L, KC_W) || leader_sequence_two_keys(KC_L, KC_COMMA)) { force_mac_maps = false; force_win_maps = !force_win_maps; return true; }
-    /* Layer: Print */ if (leader_sequence_two_keys(KC_L, KC_P)) { if (PLATFORM_IS_MAC) SEND_STRING("mac"); else SEND_STRING("win"); return true; }
-
+    /* Key:  Caps */ if (leader_sequence_one_key(KC_C)) { tap_code(KC_CAPS); return true; }
+    /* Layr: Base */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_L)) { layer_move(/* LAYER_BASE */ 0); return true; }
+    /* Plat: Infr */ if (leader_sequence_two_keys(KC_P, KC_D) || leader_sequence_two_keys(KC_L, KC_K)) { force_mac_maps = false; force_win_maps = false; return true; }
+    /* Plat: Mac  */ if (leader_sequence_two_keys(KC_P, KC_M) || leader_sequence_two_keys(KC_L, KC_I)) { force_mac_maps = !force_mac_maps; force_win_maps = false; return true; }
+    /* Plat: Win  */ if (leader_sequence_two_keys(KC_P, KC_W) || leader_sequence_two_keys(KC_L, KC_COMMA)) { force_mac_maps = false; force_win_maps = !force_win_maps; return true; }
+    /* Plat: Prnt */ if (leader_sequence_two_keys(KC_P, KC_P)) { if (PLATFORM_IS_MAC) SEND_STRING("mac"); else SEND_STRING("win"); return true; }
     return false;
 }
 
@@ -87,6 +82,7 @@ __attribute__((weak)) void leader_end_user(void) {
 }
 
 // clang-format on
+#endif // LEADER_ENABLED
 
 #if defined(TAP_DANCE_ENABLE)
 
@@ -128,9 +124,7 @@ __attribute__((weak)) td_state_t hold_cur_dance(tap_dance_state_t *state) {
 #if defined(COMBO_SHOULD_TRIGGER)
 
 __attribute__((weak)) bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
-    if (layer_state_is(LAYER_GAMES)) {
-        return false;
-    } else if (layer_state_is(LAYER_NUMPAD)) {
+    if (get_highest_layer(layer_state) > 0) {
         return false;
     } else {
         return true;
