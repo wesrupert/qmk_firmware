@@ -7,8 +7,8 @@ enum layers {
     LAYER_BASE = 0,
     LAYER_GAMES,
     LAYER_NUMPAD,
-    LAYER_SYMFUN_L,
-    LAYER_SYMFUN_R,
+    LAYER_SYMBOLS,
+    LAYER_FUNCTION,
     LAYER_ENUM_END
 };
 
@@ -23,11 +23,9 @@ enum tap_dances {
 };
 
 // Advance key aliases
-#define LT_FLEN LT(LAYER_SYMFUN_L, KC_ENT)
-#define LT_FREN LT(LAYER_SYMFUN_R, KC_ENT)
-#define MO_FNSL MO(LAYER_SYMFUN_L)
-#define MO_FNSR MO(LAYER_SYMFUN_R)
 #define TT_NMPD TT(LAYER_NUMPAD)
+#define TT_FUNC TT(LAYER_FUNCTION)
+#define LT_SYEN LT(LAYER_SYMBOLS, KC_ENT)
 
 #define MT_LCES LCTL_T(KC_ESC)
 #define MT_RCEN RCTL_T(KC_ENT)
@@ -61,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LALT, __________MEDIA__________, KC_LGUI,                                        KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_RALT,
                                                  TD_LGLD, TD_LAMC,    TD_RAMC, TD_RGLD,
                                         /*-----\ /-----*/ TD_LCNP,    TD_RCNP, /*-----\ /-----*/
-                                        MT_LSSP, LT_FLEN, MT_MHES,    MT_MHES, LT_FREN, MT_RSSP),
+                                        MT_LSSP, LT_SYEN, MT_MHES,    MT_MHES, LT_SYEN, MT_RSSP),
 
 [LAYER_NUMPAD] = L(
     KC_NUM,  KC_PAST, __________NMPD_1_________, KC_PPLS, _______,    _______, KC_PPLS, __________NMPD_1_________, KC_PAST, KC_NUM,
@@ -83,25 +81,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                         /*-----\ /-----*/ KC_F7,      _______, /*-----\ /-----*/
                                         KC_SPC,  KC_LSFT, KC_F8,      _______, _______, _______),
 
-[LAYER_SYMFUN_L] = L( //                     Same Hand = Function L   Cross Hand = Symbols R
-    KC_ESC,  __________________FUNC_L1__________________, FUNC_11,    SYM_SR1, __________________SYMB_R1__________________, KC_DEL,
-    PK_TABN, XXXXXXX, _____________FUNC__L2_____________, XXXXXXX,    KC_PLUS, __________________SYMB_R2__________________, PK_TABN,
-    LC_TAB,  XXXXXXX, _____________FUNC__L3_____________,                      __________________SYMB_R3__________________, LC_TAB,
-    CS_TAB,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    KC_COLN, __________________SYMB_R4__________________, CS_TAB,
+[LAYER_SYMBOLS] = L(
+    KC_BSPC, __________________SYMB_L1__________________, SYM_SL1,    SYM_SR1, __________________SYMB_R1__________________, KC_DEL,
+    PK_TABN, __________________SYMB_L2__________________, KC_UNDS,    KC_PLUS, __________________SYMB_R2__________________, PK_TABN,
+    LC_TAB,  __________________SYMB_L3__________________,                      __________________SYMB_R3__________________, LC_TAB,
+    CS_TAB,  __________________SYMB_L4__________________, KC_TILD,    KC_COLN, __________________SYMB_R4__________________, CS_TAB,
     ____________HOTDOX_VOLUME_SYSTEM___________,                                        ____________HOTDOX_VOLUME_MEDIA____________,
-                                                 XXXXXXX, XXXXXXX,    _______, _______,
-                                        /*-----\ /-----*/ XXXXXXX,    _______, /*-----\ /-----*/
-                                        KC_SPC,  _______, XXXXXXX,    _______, KC_DEL,  CW_TOGG),
+                                                 _______, _______,    _______, _______,
+                                        /*-----\ /-----*/ _______,    _______, /*-----\ /-----*/
+                                        KC_BSPC, TT_FUNC, _______,    _______, TT_FUNC, KC_DEL),
 
-[LAYER_SYMFUN_R] = L( //                   Cross Hand = Symbols L     Same Hand = Function R
-    KC_ESC,  __________________SYMB_L1__________________, SYM_SL1,    FUNC_12, __________________FUNC_R1__________________, KC_DEL,
-    PK_TABN, __________________SYMB_L2__________________, KC_UNDS,    XXXXXXX, _____________FUNC__R2_____________, PK_PSCR, PK_TABN,
-    LC_TAB,  __________________SYMB_L3__________________,                      _____________FUNC__R3_____________, PK_PSCF, LC_TAB,
-    CS_TAB,  __________________SYMB_L4__________________, KC_TILD,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, CS_TAB,
+[LAYER_FUNCTION] = L(
+    KC_ESC,  __________________FUNC_L1__________________, FUNC_11,    FUNC_12, __________________FUNC_R1__________________, KC_ESC,
+    PK_TABN, XXXXXXX, _____________FUNC__L2_____________, XXXXXXX,    XXXXXXX, _____________FUNC__R2_____________, PK_PSCR, PK_TABN,
+    LC_TAB,  XXXXXXX, _____________FUNC__L3_____________,                      _____________FUNC__R3_____________, PK_PSCF, LC_TAB,
+    CS_TAB,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, CS_TAB,
     ____________HOTDOX_VOLUME_SYSTEM___________,                                        ____________HOTDOX_VOLUME_MEDIA____________,
-                                                 _______, _______,    XXXXXXX, XXXXXXX,
-                                        /*-----\ /-----*/ _______,    XXXXXXX, /*-----\ /-----*/
-                                        CW_TOGG, KC_BSPC, _______,    XXXXXXX, _______, KC_SPC),
+                                                 KC_LGUI, PK_LOCK,    PK_LOCK, KC_RGUI,
+                                        /*-----\ /-----*/ KC_LCTL,    KC_RCTL, /*-----\ /-----*/
+                                        KC_SPC,  CW_TOGG, KC_ESC,     KC_ESC,  CW_TOGG, KC_SPC),
 
 /* [LAYER_] = L(
     _______, _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______, _______,
@@ -116,6 +114,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 // clang-format on
+
+layer_state_t last_layer_state;
+layer_state_t layer_state_set_user(layer_state_t state) {
+    if (!layer_state_cmp(state, LAYER_SYMBOLS) && layer_state_cmp(last_layer_state, LAYER_SYMBOLS)) {
+        // Double up done => "tri"-layer state off
+        state = state & ~((layer_state_t)1 << LAYER_FUNCTION);
+    }
+    return last_layer_state = state;
+}
 
 void leader_end_user(void) {
     if (base_leader_end_user()) return;
