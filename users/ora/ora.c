@@ -19,17 +19,18 @@ __attribute__((weak)) bool process_record_user(uint16_t keycode, keyrecord_t *re
     }
     switch (keycode) {
         case PK_TABN:
-          if (record->event.pressed) {
-            if (!is_tab_switcher_active) {
-              is_tab_switcher_active = true;
-              if (PLATFORM_IS_MAC) register_code(KC_LGUI); else register_code(KC_LALT);
+            if (record->event.pressed) {
+                if (!is_tab_switcher_active) {
+                    is_tab_switcher_active = true;
+                    if (PLATFORM_IS_MAC) register_code(KC_LGUI); else register_code(KC_LALT);
+                }
+                tab_switcher_timer = timer_read();
+                register_code(KC_TAB);
+            } else {
+                unregister_code(KC_TAB);
             }
-            tab_switcher_timer = timer_read();
-            register_code(KC_TAB);
-          } else {
-            unregister_code(KC_TAB);
-          }
-          break;
+            return false;
+
         MACRO_SEND_PLAT_ON_PRESS(PK_LOCK, SS_LGUI("l"), SS_LGUI(SS_LCTL("q")));
         MACRO_SEND_PLAT_ON_PRESS(PK_PSCF, SS_DOWN(X_LGUI)SS_TAP(X_PSCR)SS_UP(X_LGUI), SS_LGUI(SS_LSFT("4")));
         MACRO_SEND_PLAT_ON_PRESS(PK_PSCR, SS_TAP(X_PSCR), SS_LGUI(SS_LCTL(SS_LSFT("4"))));
