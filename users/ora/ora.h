@@ -201,13 +201,14 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
 #define PLATFORM_IS_MAC !force_win_maps && (force_mac_maps || OS_MACOS == detected_host_os())
 
 #define MACRO_SEND_ON_PRESS(KEY, STRING) \
-    case KEY: if (record->event.pressed) { SEND_STRING(STRING); } break
+    case KEY: if (record->event.pressed) { SEND_STRING(STRING); return false; } return true
 
 #define MACRO_SEND_PLAT_ON_PRESS(KEY, WIN, MAC) \
     case KEY: if (record->event.pressed) { \
         if (PLATFORM_IS_MAC) SEND_STRING(MAC); \
         else SEND_STRING(WIN); \
-    } break
+        return false; \
+    } return true
 
 #define DANCE_MACRO_MOD(NR, MOD) \
         td_state_t dance_DMCRO##NR##_##MOD##_state = 0; \
@@ -277,7 +278,7 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
             dance_LEADER_##MOD##_state = 0; \
         } \
 
-#define DANCE_LAYER_MOD(LAYER, MOD) \
+#define DANCE_MOD_TAP_LAYER_TOGGLE(MOD, LAYER) \
         td_state_t dance_##LAYER##_##MOD##_state = 0; \
         void dance_##LAYER##_##MOD##_finished(tap_dance_state_t *state, void *user_data) { \
             dance_##LAYER##_##MOD##_state = hold_cur_dance(state); \
