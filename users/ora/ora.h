@@ -23,6 +23,12 @@ uint16_t tab_switcher_timer;
 
 // clang-format off
 
+enum base_layers {
+    LAYER_BASE = 0,
+    LAYER_GAMES,
+    BASE_LAYER_ENUM_END
+};
+
 enum keycodes {
     // Platform keys
     PK_LOCK = SAFE_RANGE,
@@ -256,14 +262,12 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
                 case TD_DOUBLE_TAP: \
                     tap_code(KC_ESC); \
                     break; \
-                case TD_TRIPLE_TAP: \
-                    if (PLATFORM_IS_MAC) SEND_STRING(SS_LGUI(SS_LCTL("q"))); \
-                    else SEND_STRING(SS_LGUI("l")); \
-                    break; \
                 case TD_SINGLE_HOLD: \
                     register_code(KC_##MOD); \
                     break; \
-                default: \
+                default: /* PK_LOCK */ \
+                    if (PLATFORM_IS_MAC) SEND_STRING(SS_LGUI(SS_LCTL("q"))); \
+                    else SEND_STRING(SS_LGUI("l")); \
                     break; \
             } \
         } \
