@@ -69,7 +69,7 @@ void matrix_scan_user(void) {
 
 bool base_leader_end_user(void) {
     /* Key:  Caps */ if (leader_sequence_one_key(KC_C)) { tap_code(KC_CAPS); return true; }
-    /* Layr: Base */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_L)) { layer_move(/* LAYER_BASE */ 0); return true; }
+    /* Layr: Base */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_L)) { layer_move(LAYER_BASE); return true; }
     /* Layr: Game */ // (leader_sequence_two_keys(KC_L, KC_G) || leader_sequence_two_keys(KC_L, KC_O)) -> Add this case to the map-local leader_end_user method.
     /* Plat: Infr */ if (leader_sequence_two_keys(KC_P, KC_D) || leader_sequence_two_keys(KC_L, KC_K)) { force_mac_maps = false; force_win_maps = false; return true; }
     /* Plat: Mac  */ if (leader_sequence_two_keys(KC_P, KC_M) || leader_sequence_two_keys(KC_L, KC_I)) { force_mac_maps = !force_mac_maps; force_win_maps = false; return true; }

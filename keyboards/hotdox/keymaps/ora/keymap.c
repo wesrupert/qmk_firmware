@@ -1,12 +1,9 @@
 // Copyright 2023 Wes Rupert (@wesrupert)
 // SPDX-License-Identifier: GPL-3.0-or-later
 #include "ora.h"
-#include "./wrappers.h"
 
 enum layers {
-    LAYER_BASE = 0,
-    LAYER_GAMES,
-    LAYER_NUMPAD,
+    LAYER_NUMPAD = BASE_LAYER_ENUM_END,
     LAYER_SYMBOLS,
     LAYER_FUNCTION,
     LAYER_ENUM_END
@@ -26,6 +23,7 @@ enum tap_dances {
 #define TT_NMPD TT(LAYER_NUMPAD)
 #define TT_FUNC TT(LAYER_FUNCTION)
 #define LT_SYEN LT(LAYER_SYMBOLS, KC_ENT)
+#define LT_SYES LT(LAYER_SYMBOLS, KC_ESC)
 
 #define MT_LCES LCTL_T(KC_ESC)
 #define MT_RCEN RCTL_T(KC_ENT)
@@ -59,17 +57,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LALT, __________MEDIA__________, KC_LGUI,                                        KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_RALT,
                                                  TD_LGLD, TD_LAMC,    TD_RAMC, TD_RGLD,
                                         /*-----\ /-----*/ TD_LCNP,    TD_RCNP, /*-----\ /-----*/
-                                        MT_LSSP, LT_SYEN, MT_MHES,    MT_MHES, LT_SYEN, MT_RSSP),
-
-[LAYER_NUMPAD] = L(
-    KC_NUM,  KC_PAST, __________NMPD_1_________, KC_PPLS, _______,    _______, KC_PPLS, __________NMPD_1_________, KC_PAST, KC_NUM,
-    KC_BSPC, KC_PSLS, __________NMPD_2_________, KC_PMNS, _______,    _______, KC_PMNS, __________NMPD_2_________, KC_PSLS, KC_BSPC,
-    KC_DEL,  KC_UP,   __________NMPD_3_________, KC_PEQL,                      KC_PEQL, __________NMPD_3_________, KC_UP,   KC_DEL,
-    KC_LEFT, KC_DOWN, KC_RGHT, NMPD__4, KC_PDOT, KC_TAB,  _______,    _______, KC_TAB,  KC_PDOT, KC_P0,   KC_LEFT, KC_DOWN, KC_RGHT,
-    PK_VOLD, __________MEDIA__________, PK_VOLU,                                        ____________HOTDOX_VOLUME_MEDIA____________,
-                                                 _______, _______,    _______, _______,
-                                        /*-----\ /-----*/ TT_NMPD,    TT_NMPD, /*-----\ /-----*/
-                                        KC_SPC,  KC_PENT, _______,    _______, KC_PENT, KC_SPC),
+                                        MT_LSSP, LT_SYES, MT_MHES,    MT_MHES, LT_SYEN, MT_RSSP),
 
 [LAYER_GAMES] = L(
     KC_0,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    _______,    _______, _______, _______, _______, _______, _______, _______,
@@ -80,6 +68,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                  KC_F5,   KC_F6,      _______, _______,
                                         /*-----\ /-----*/ KC_F7,      _______, /*-----\ /-----*/
                                         KC_SPC,  KC_LSFT, KC_F8,      _______, _______, _______),
+
+[LAYER_NUMPAD] = L(
+    KC_NUM,  KC_PAST, __________NMPD_1_________, KC_PPLS, _______,    _______, KC_PPLS, __________NMPD_1_________, KC_PAST, KC_NUM,
+    KC_BSPC, KC_PSLS, __________NMPD_2_________, KC_PMNS, _______,    _______, KC_PMNS, __________NMPD_2_________, KC_PSLS, KC_BSPC,
+    KC_DEL,  KC_UP,   __________NMPD_3_________, KC_PEQL,                      KC_PEQL, __________NMPD_3_________, KC_UP,   KC_DEL,
+    KC_LEFT, KC_DOWN, KC_RGHT, NMPD__4, KC_PDOT, KC_TAB,  _______,    _______, KC_TAB,  KC_PDOT, KC_P0,   KC_LEFT, KC_DOWN, KC_RGHT,
+    PK_VOLD, __________MEDIA__________, PK_VOLU,                                        ____________HOTDOX_VOLUME_MEDIA____________,
+                                                 _______, _______,    _______, _______,
+                                        /*-----\ /-----*/ TT_NMPD,    TT_NMPD, /*-----\ /-----*/
+                                        KC_SPC,  KC_PENT, _______,    _______, KC_PENT, KC_SPC),
 
 [LAYER_SYMBOLS] = L(
     KC_BSPC, __________________SYMB_L1__________________, SYM_SL1,    SYM_SR1, __________________SYMB_R1__________________, KC_DEL,
@@ -99,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ____________HOTDOX_VOLUME_SYSTEM___________,                                        ____________HOTDOX_VOLUME_MEDIA____________,
                                                  KC_LGUI, PK_LOCK,    PK_LOCK, KC_RGUI,
                                         /*-----\ /-----*/ KC_LCTL,    KC_RCTL, /*-----\ /-----*/
-                                        KC_SPC,  CW_TOGG, KC_ESC,     KC_ESC,  CW_TOGG, KC_SPC),
+                                        CW_TOGG, TT_FUNC, KC_ESC,     KC_ESC,  TT_FUNC, CW_TOGG),
 
 /* [LAYER_] = L(
     _______, _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______, _______,
