@@ -23,7 +23,6 @@ enum tap_dances {
 #define TT_NMPD TT(LAYER_NUMPAD)
 #define TT_FUNC TT(LAYER_FUNCTION)
 #define LT_SYEN LT(LAYER_SYMBOLS, KC_ENT)
-#define LT_SYES LT(LAYER_SYMBOLS, KC_ESC)
 
 #define MT_LCES LCTL_T(KC_ESC)
 #define MT_RCEN RCTL_T(KC_ENT)
@@ -57,7 +56,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LALT, __________MEDIA__________, KC_LGUI,                                        KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_RALT,
                                                  TD_LGLD, TD_LAMC,    TD_RAMC, TD_RGLD,
                                         /*-----\ /-----*/ TD_LCNP,    TD_RCNP, /*-----\ /-----*/
-                                        MT_LSSP, LT_SYES, MT_MHES,    MT_MHES, LT_SYEN, MT_RSSP),
+                                        MT_LSSP, LT_SYEN, MT_MHES,    MT_MHES, LT_SYEN, MT_RSSP),
 
 [LAYER_GAMES] = L(
     KC_0,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    _______,    _______, _______, _______, _______, _______, _______, _______,
