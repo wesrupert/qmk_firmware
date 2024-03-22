@@ -1,6 +1,7 @@
 // Copyright 2023 Wes Rupert (@wesrupert)
 // SPDX-License-Identifier: GPL-3.0-or-later
 #include "ora.h"
+#include "g/keymap_combo.h"
 
 enum layers {
     LAYER_NUMPAD = BASE_LAYER_ENUM_END,
