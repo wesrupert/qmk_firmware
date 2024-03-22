@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "ora.h"
-#include "g/keymap_combo.h"
 
 bool force_mac_maps = false;
 bool force_win_maps = false;
