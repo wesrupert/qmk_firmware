@@ -1,0 +1,3 @@
+MOUSEKEY_ENABLE      = yes
+TRI_LAYER_ENABLE     = yes
+AUTO_TRANSPORT_LAYER = yes

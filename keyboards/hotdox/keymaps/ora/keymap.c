@@ -4,10 +4,10 @@
 #include "g/keymap_combo.h"
 
 enum layers {
-    LAYER_NUMPAD = BASE_LAYER_ENUM_END,
-    LAYER_SYMBOLS,
+    LAYER_SYMBOLS = LAYER_ENUM_END_USER,
     LAYER_FUNCTION,
-    LAYER_ENUM_END
+    LAYER_NUMPAD,
+    LAYER_ENUM_END,
 };
 
 enum tap_dances {
@@ -138,16 +138,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         state = state & ~((layer_state_t)1 << LAYER_FUNCTION);
     }
     return last_layer_state = state;
-}
-
-void leader_end_user(void) {
-    if (base_leader_end_user()) return;
-    if (leader_sequence_two_keys(KC_L, KC_G) || leader_sequence_two_keys(KC_L, KC_O)) { // Layer: Games
-        layer_move(LAYER_BASE);
-        layer_on(LAYER_GAMES);
-        return;
-    }
-    tap_code(KC_ESC);
 }
 
 DANCE_LEADER_MOD(LGUI)
