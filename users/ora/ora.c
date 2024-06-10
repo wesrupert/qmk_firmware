@@ -8,14 +8,42 @@ bool force_win_maps = false;
 bool is_tab_switcher_active = false;
 uint16_t tab_switcher_timer = 0;
 
+__attribute__((weak)) bool keyboard_post_init_keymap(void) {
+    return true;
+}
+
+void keyboard_post_init_user(void) {
+    if (!keyboard_post_init_keymap()) return;
+}
+
+
+#if defined(AUTO_TRANSPORT_LAYER)
+bool last_is_transport_connected = true;
+#endif // AUTO_TRANSPORT_LAYER
+
+__attribute__((weak)) bool housekeeping_task_keymap(void) {
+    return true;
+}
+
+void housekeeping_task_user(void) {
+    if (!housekeeping_task_keymap()) return;
+#if defined(AUTO_TRANSPORT_LAYER)
+    bool next_is_transport_connected = is_transport_connected();
+    if (last_is_transport_connected != next_is_transport_connected) {
+        last_is_transport_connected = next_is_transport_connected;
+        layer_move(LAYER_BASE);
+        if (!next_is_transport_connected) layer_on(LAYER_GAMES);
+    }
+#endif // AUTO_TRANSPORT_LAYER
+}
+
 __attribute__((weak)) bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-__attribute__((weak)) bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (!process_dynamic_macro(keycode, record)) {
-        return false;
-    }
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (!process_record_keymap(keycode, record)) return false;
+    if (!process_dynamic_macro(keycode, record)) return false;
     switch (keycode) {
         case PK_TABN:
             if (record->event.pressed) {
@@ -29,6 +57,18 @@ __attribute__((weak)) bool process_record_user(uint16_t keycode, keyrecord_t *re
                 unregister_code(KC_TAB);
             }
             return false;
+#if defined(RGB_MATRIX_ENABLE)
+        case LI_VALU: rgb_matrix_increase_val();   return false;
+        case LI_VALD: rgb_matrix_decrease_val();   return false;
+        case LI_HUEU: rgb_matrix_increase_hue();   return false;
+        case LI_HUED: rgb_matrix_decrease_hue();   return false;
+        case LI_SATU: rgb_matrix_increase_sat();   return false;
+        case LI_SATD: rgb_matrix_decrease_sat();   return false;
+        case LI_NEXT: rgb_matrix_step();           return false;
+        case LI_PREV: rgb_matrix_step_reverse();   return false;
+        case LI_FAST: rgb_matrix_increase_speed(); return false;
+        case LI_SLOW: rgb_matrix_decrease_speed(); return false;
+#endif // RGB_MATRIX_ENABLE
 
         MACRO_SEND_PLAT_ON_PRESS(PK_LOCK, SS_LGUI("l"), SS_LGUI(SS_LCTL("q")));
         MACRO_SEND_PLAT_ON_PRESS(PK_PSCF, SS_DOWN(X_LGUI)SS_TAP(X_PSCR)SS_UP(X_LGUI), SS_LGUI(SS_LSFT("4")));
@@ -48,38 +88,51 @@ __attribute__((weak)) bool process_record_user(uint16_t keycode, keyrecord_t *re
         MACRO_SEND_ON_PRESS(MA_PPRN, "()"SS_TAP(X_LEFT));
         MACRO_SEND_ON_PRESS(MA_PABK, "<>"SS_TAP(X_LEFT));
         MACRO_SEND_ON_PRESS(MA_PCMT, "/*  */"SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT));
-        MACRO_SEND_ON_PRESS(MA_LMBD, "() => {  }"SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT));
+        MACRO_SEND_ON_PRESS(MA_LMBD, "() => ");
+        MACRO_SEND_ON_PRESS(MA_LMBP, "() => "SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT)SS_TAP(X_LEFT));
         MACRO_SEND_ON_PRESS(MA_BRNL, "{"SS_TAP(X_ENTER)SS_TAP(X_ENTER)"}"SS_TAP(X_UP)SS_TAP(X_END));
     }
     return true;
 }
 
+__attribute__((weak)) bool matrix_scan_keymap(void) {
+    return true;
+}
+
 void matrix_scan_user(void) {
-  if (is_tab_switcher_active) {
-    if (timer_elapsed(tab_switcher_timer) > SUPER_TAB_SWITCHER_TERM) {
-      if (PLATFORM_IS_MAC) unregister_code(KC_LGUI); else unregister_code(KC_LALT);
-      is_tab_switcher_active = false;
+    if (!matrix_scan_keymap()) return;
+
+    if (is_tab_switcher_active) {
+        if (timer_elapsed(tab_switcher_timer) > SUPER_TAB_SWITCHER_TERM) {
+        if (PLATFORM_IS_MAC) unregister_code(KC_LGUI); else unregister_code(KC_LALT);
+            is_tab_switcher_active = false;
+        }
     }
-  }
 }
 
 #if defined(LEADER_ENABLE)
 // clang-format off
 
-bool base_leader_end_user(void) {
-    /* Key:  Caps */ if (leader_sequence_one_key(KC_C)) { tap_code(KC_CAPS); return true; }
-    /* Layr: Base */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_L)) { layer_move(LAYER_BASE); return true; }
-    /* Layr: Game */ // (leader_sequence_two_keys(KC_L, KC_G) || leader_sequence_two_keys(KC_L, KC_O)) -> Add this case to the map-local leader_end_user method.
-    /* Plat: Infr */ if (leader_sequence_two_keys(KC_P, KC_D) || leader_sequence_two_keys(KC_L, KC_K)) { force_mac_maps = false; force_win_maps = false; return true; }
-    /* Plat: Mac  */ if (leader_sequence_two_keys(KC_P, KC_M) || leader_sequence_two_keys(KC_L, KC_I)) { force_mac_maps = !force_mac_maps; force_win_maps = false; return true; }
-    /* Plat: Win  */ if (leader_sequence_two_keys(KC_P, KC_W) || leader_sequence_two_keys(KC_L, KC_COMMA)) { force_mac_maps = false; force_win_maps = !force_win_maps; return true; }
-    /* Plat: Prnt */ if (leader_sequence_two_keys(KC_P, KC_P)) { if (PLATFORM_IS_MAC) SEND_STRING("mac"); else SEND_STRING("win"); return true; }
+__attribute__((weak)) bool leader_end_keymap(void) {
     return false;
 }
 
-__attribute__((weak)) void leader_end_user(void) {
-    if (base_leader_end_user()) return;
+void leader_end_user(void) {
+    /* Key:  Caps */ if (leader_sequence_one_key(KC_C)) { tap_code(KC_CAPS); return; }
+    /* Key:  Num  */ if (leader_sequence_one_key(KC_N)) { tap_code(KC_NUM); return; }
+    /* Layr: Base */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_L)) { layer_move(LAYER_BASE); return; }
+    /* Layr: Game */ if (leader_sequence_two_keys(KC_L, KC_G) || leader_sequence_two_keys(KC_L, KC_O)) { layer_move(LAYER_BASE); layer_on(LAYER_GAMES); return; }
+    /* Plat: Infr */ if (leader_sequence_two_keys(KC_P, KC_D) || leader_sequence_two_keys(KC_L, KC_K)) { force_mac_maps = false; force_win_maps = false; return; }
+    /* Plat: Mac  */ if (leader_sequence_two_keys(KC_P, KC_M) || leader_sequence_two_keys(KC_L, KC_I)) { force_mac_maps = !force_mac_maps; force_win_maps = false; return; }
+    /* Plat: Win  */ if (leader_sequence_two_keys(KC_P, KC_W) || leader_sequence_two_keys(KC_L, KC_COMMA)) { force_mac_maps = false; force_win_maps = !force_win_maps; return; }
+    /* Plat: Prnt */ if (leader_sequence_two_keys(KC_P, KC_P)) { if (PLATFORM_IS_MAC) SEND_STRING("mac"); else SEND_STRING("win"); return; }
+    if (leader_end_keymap()) return;
+#if defined(LEADER_FAILED_CODE)
+    tap_code(LEADER_FAILED_CODE);
+#else
     tap_code(KC_ESC);
+#endif
+    return;
 }
 
 // clang-format on

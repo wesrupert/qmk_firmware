@@ -23,31 +23,40 @@ uint16_t tab_switcher_timer;
 
 // clang-format off
 
-enum base_layers {
+enum layers_user {
     LAYER_BASE = 0,
     LAYER_GAMES,
-    BASE_LAYER_ENUM_END
+    LAYER_ENUM_END_USER,
 };
 
-enum keycodes {
+enum keycodes_user {
+    // General macros
+    MA_LAUNCH = SAFE_RANGE,
+    MA_OR, MA_AND,
+    MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK,
+    MA_LMBD, MA_LMBP, MA_BRNL, MA_PCMT,
+    
     // Platform keys
-    PK_LOCK = SAFE_RANGE,
-    PK_TABN,
+    PK_LOCK, PK_TABN,
     PK_PSCF, PK_PSCR,
     PK_MPRV, PK_MNXT,
     PK_VOLD, PK_MUTE, PK_VOLU,
     PK_MONT, PK_SYST,
 
-    // General macros
-    MA_LAUNCH,
-    MA_OR, MA_AND,
-    MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK,
-    MA_LMBD, MA_BRNL, MA_PCMT,
+#if defined(RGB_MATRIX_ENABLE)
+    LI_VALU, LI_VALD,
+    LI_HUEU, LI_HUED,
+    LI_SATU, LI_SATD,
+    LI_NEXT, LI_PREV,
+    LI_FAST, LI_SLOW,
+#endif // RGB_MATRIX_ENABLE
+
+    SAFE_RANGE_USER,
 };
 
 // clang-format on
 
-bool base_leader_end_user(void);
+#define _TO_DO_ KC_NO
 
 // Common tap keys
 #define LC_TAB C(KC_TAB)
@@ -80,6 +89,60 @@ bool base_leader_end_user(void);
 #define MT_RSES RSFT_T(KC_ESC)
 #define MT_RSSP RSFT_T(KC_SPC)
 #define MT_RSTB RSFT_T(KC_TAB)
+
+// Common colors
+
+#define CV_TRANS 255
+#define HSV_IS_TRANS(hsv) hsv.h == CV_TRANS && hsv.s == CV_TRANS && hsv.v == CV_TRANS
+
+#define C______ { CV_TRANS, CV_TRANS, CV_TRANS }
+#define C_XXXXX { HSV_OFF }
+#define C_TO_DO C_XXXXX
+#define C_RED   { HSV_RED }
+#define C_CORAL { HSV_CORAL }
+#define C_ORANG { HSV_ORANGE }
+#define C_GLDNR { HSV_GOLDENROD }
+#define C_GOLD  { HSV_GOLD }
+#define C_YELLW { HSV_YELLOW }
+#define C_CHTRS { HSV_CHARTREUSE }
+#define C_GREEN { HSV_GREEN }
+#define C_SPGRN { HSV_SPRINGGREEN }
+#define C_TRQUS { HSV_TURQUOISE }
+#define C_TEAL  { HSV_TEAL }
+#define C_CYAN  { HSV_CYAN }
+#define C_AZURE { HSV_AZURE }
+#define C_BLUE  { HSV_BLUE }
+#define C_PRPLE { HSV_PURPLE }
+#define C_MGNTA { HSV_MAGENTA }
+#define C_PINK  { HSV_PINK }
+#define C_BLACK { HSV_BLACK }
+
+#define R_SILVR { 0,   0,   111 }
+#define R_RED   { 0,   255, 255 }
+#define R_ORANG { 13,  255, 255 }
+#define R_YELLW { 41,  255, 255 }
+#define R_YLGRN { 64,  255, 255 }
+#define R_GREEN { 86,  255, 255 }
+#define R_AQGRN { 107, 255, 255 }
+#define R_AQUA  { 129, 255, 255 }
+#define R_AQBLU { 150, 255, 255 }
+#define R_BLUE  { 174, 255, 255 }
+#define R_PURPL { 217, 255, 255 }
+#define R_MGNTA { 246, 255, 255 }
+
+#define CL_BASE R_BLUE
+#define CL_GAME R_GREEN
+#define CL_FUNC R_PURPL
+#define CL_NMPD R_ORANG
+
+#define CK_ALPH R_SILVR
+#define CK_MODS R_BLUE
+#define CK_MODT R_MGNTA
+#define CK_NAVG R_AQGRN
+#define CK_META R_PURPL
+#define CK_MDIA R_AQUA
+#define CK_MOUS R_ORANG
+#define CK_WARN R_RED
 
 // clang-format off
 
@@ -193,7 +256,6 @@ typedef enum {
     TD_TRIPLE_TAP, TD_TRIPLE_HOLD
 } td_state_t;
 
-// clang-format on
 typedef struct {
     bool       is_press_action;
     td_state_t state;
