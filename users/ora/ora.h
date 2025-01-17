@@ -12,19 +12,14 @@
 #include "os_detection.h"
 #endif
 
-#if !defined(SUPER_TAB_SWITCHER_TERM)
-#define SUPER_TAB_SWITCHER_TERM 500
-#endif
-
 bool force_mac_maps;
 bool force_win_maps;
-bool is_tab_switcher_active;
-uint16_t tab_switcher_timer;
 
 // clang-format off
 
 enum layers_user {
     LAYER_BASE = 0,
+    LAYER_GRAPHITE,
     LAYER_GAMES,
     LAYER_ENUM_END_USER,
 };
@@ -35,9 +30,9 @@ enum keycodes_user {
     MA_OR, MA_AND,
     MA_PBRC, MA_PCBR, MA_PPRN, MA_PABK,
     MA_LMBD, MA_LMBP, MA_BRNL, MA_PCMT,
-    
+
     // Platform keys
-    PK_LOCK, PK_TABN,
+    PK_ASST, PK_LOCK,
     PK_PSCF, PK_PSCR,
     PK_MPRV, PK_MNXT,
     PK_VOLD, PK_MUTE, PK_VOLU,
@@ -80,6 +75,15 @@ enum keycodes_user {
 #define MT_RAES RALT_T(KC_ESC)
 #define MT_RASP RALT_T(KC_SPC)
 #define MT_RATB RALT_T(KC_TAB)
+
+#define MT_LGEN LGUI_T(KC_ENT)
+#define MT_LGES LGUI_T(KC_ESC)
+#define MT_LGSP LGUI_T(KC_SPC)
+#define MT_LGTB LGUI_T(KC_TAB)
+#define MT_RGEN RGUI_T(KC_ENT)
+#define MT_RGES RGUI_T(KC_ESC)
+#define MT_RGSP RGUI_T(KC_SPC)
+#define MT_RGTB RGUI_T(KC_TAB)
 
 #define MT_LSEN LSFT_T(KC_ENT)
 #define MT_LSES LSFT_T(KC_ESC)
@@ -139,7 +143,7 @@ enum keycodes_user {
 #define CK_MODS R_BLUE
 #define CK_MODT R_MGNTA
 #define CK_NAVG R_AQGRN
-#define CK_META R_PURPL
+#define CK_META R_YLGRN
 #define CK_MDIA R_AQUA
 #define CK_MOUS R_ORANG
 #define CK_WARN R_RED
@@ -164,6 +168,24 @@ enum keycodes_user {
 #define __________________QWER_R4__________________ \
         KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH
 
+// Base Layer (Graphite)
+#define __________________GRPH_L1__________________ \
+        KC_1   , KC_2   , KC_3   , KC_4   , KC_5
+#define __________________GRPH_R1__________________ \
+        KC_6,    KC_7   , KC_8   , KC_9   , KC_0
+#define __________________GRPH_L2__________________ \
+        KC_B   , KC_L   , KC_D   , KC_W   , KC_Z
+#define __________________GRPH_R2__________________ \
+        KC_MINS, KC_F   , KC_O   , KC_U   , KC_J
+#define __________________GRPH_L3__________________ \
+        KC_N   , KC_R   , KC_T   , KC_S   , KC_G
+#define __________________GRPH_R3__________________ \
+        KC_Y   , KC_H   , KC_A   , KC_E   , KC_I
+#define __________________GRPH_L4__________________ \
+        KC_Q   , KC_X   , KC_M   , KC_C   , KC_V
+#define __________________GRPH_R4__________________ \
+        KC_K   , KC_P   , KC_COMM, KC_DOT , KC_SLSH
+
 // Media
 #define __________MEDIA__________ \
         PK_MPRV, KC_MPLY, PK_MNXT
@@ -186,14 +208,14 @@ enum keycodes_user {
         KC_F12
 //        F12
 #define _____________FUNC__L2_____________ \
-        KC_HOME, KC_PGUP, KC_PGDN, KC_END
-//       HOME     PGUP     PGDN      END
+        KC_LABK, KC_LCBR, KC_RCBR, KC_RABK
+//         <        {        }        >
+#define _____________FUNC__L3_____________ \
+        KC_LBRC, KC_LPRN, KC_RPRN, KC_RBRC
+//         [        (        )        ]
 #define _____________FUNC__R2_____________ \
         KC_HOME, KC_PGDN, KC_PGUP, KC_END
 //       HOME     PGDN     PGUP      END
-#define _____________FUNC__L3_____________ \
-        KC_LEFT, KC_UP  , KC_DOWN, KC_RGHT
-//       LEFT      UP      DOWN     RIGHT
 #define _____________FUNC__R3_____________ \
         KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT
 //       LEFT     DOWN      UP      RIGHT
@@ -275,8 +297,7 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
     case KEY: if (record->event.pressed) { \
         if (PLATFORM_IS_MAC) SEND_STRING(MAC); \
         else SEND_STRING(WIN); \
-        return false; \
-    } return true
+    } return false
 
 #define DANCE_MACRO_MOD(NR, MOD) \
         td_state_t dance_DMCRO##NR##_##MOD##_state = 0; \
@@ -321,15 +342,11 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
                 case TD_SINGLE_TAP: \
                     leader_start(); \
                     break; \
-                case TD_DOUBLE_TAP: \
-                    tap_code(KC_ESC); \
-                    break; \
                 case TD_SINGLE_HOLD: \
                     register_code(KC_##MOD); \
                     break; \
-                default: /* PK_LOCK */ \
-                    if (PLATFORM_IS_MAC) SEND_STRING(SS_LGUI(SS_LCTL("q"))); \
-                    else SEND_STRING(SS_LGUI("l")); \
+                default: \
+                    tap_code16(PK_LOCK); \
                     break; \
             } \
         } \

@@ -5,8 +5,6 @@
 
 bool force_mac_maps = false;
 bool force_win_maps = false;
-bool is_tab_switcher_active = false;
-uint16_t tab_switcher_timer = 0;
 
 __attribute__((weak)) bool keyboard_post_init_keymap(void) {
     return true;
@@ -44,19 +42,8 @@ __attribute__((weak)) bool process_record_keymap(uint16_t keycode, keyrecord_t *
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if (!process_record_keymap(keycode, record)) return false;
     if (!process_dynamic_macro(keycode, record)) return false;
+
     switch (keycode) {
-        case PK_TABN:
-            if (record->event.pressed) {
-                if (!is_tab_switcher_active) {
-                    is_tab_switcher_active = true;
-                    if (PLATFORM_IS_MAC) register_code(KC_LGUI); else register_code(KC_LALT);
-                }
-                tab_switcher_timer = timer_read();
-                register_code(KC_TAB);
-            } else {
-                unregister_code(KC_TAB);
-            }
-            return false;
 #if defined(RGB_MATRIX_ENABLE)
         case LI_VALU: rgb_matrix_increase_val();   return false;
         case LI_VALD: rgb_matrix_decrease_val();   return false;
@@ -69,6 +56,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case LI_FAST: rgb_matrix_increase_speed(); return false;
         case LI_SLOW: rgb_matrix_decrease_speed(); return false;
 #endif // RGB_MATRIX_ENABLE
+
+        case PK_ASST:
+            if (record->event.pressed) {
+                register_code(PLATFORM_IS_MAC ? KC_LPAD : KC_ASST);
+            }  else {
+                unregister_code(PLATFORM_IS_MAC ? KC_LPAD : KC_ASST);
+            }
+            return false;
 
         MACRO_SEND_PLAT_ON_PRESS(PK_LOCK, SS_LGUI("l"), SS_LGUI(SS_LCTL("q")));
         MACRO_SEND_PLAT_ON_PRESS(PK_PSCF, SS_DOWN(X_LGUI)SS_TAP(X_PSCR)SS_UP(X_LGUI), SS_LGUI(SS_LSFT("4")));
@@ -101,32 +96,25 @@ __attribute__((weak)) bool matrix_scan_keymap(void) {
 
 void matrix_scan_user(void) {
     if (!matrix_scan_keymap()) return;
-
-    if (is_tab_switcher_active) {
-        if (timer_elapsed(tab_switcher_timer) > SUPER_TAB_SWITCHER_TERM) {
-        if (PLATFORM_IS_MAC) unregister_code(KC_LGUI); else unregister_code(KC_LALT);
-            is_tab_switcher_active = false;
-        }
-    }
 }
 
 #if defined(LEADER_ENABLE)
 // clang-format off
 
 __attribute__((weak)) bool leader_end_keymap(void) {
-    return false;
+    return true;
 }
 
 void leader_end_user(void) {
+    if (!leader_end_keymap()) return;
     /* Key:  Caps */ if (leader_sequence_one_key(KC_C)) { tap_code(KC_CAPS); return; }
     /* Key:  Num  */ if (leader_sequence_one_key(KC_N)) { tap_code(KC_NUM); return; }
     /* Layr: Base */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_L)) { layer_move(LAYER_BASE); return; }
-    /* Layr: Game */ if (leader_sequence_two_keys(KC_L, KC_G) || leader_sequence_two_keys(KC_L, KC_O)) { layer_move(LAYER_BASE); layer_on(LAYER_GAMES); return; }
-    /* Plat: Infr */ if (leader_sequence_two_keys(KC_P, KC_D) || leader_sequence_two_keys(KC_L, KC_K)) { force_mac_maps = false; force_win_maps = false; return; }
-    /* Plat: Mac  */ if (leader_sequence_two_keys(KC_P, KC_M) || leader_sequence_two_keys(KC_L, KC_I)) { force_mac_maps = !force_mac_maps; force_win_maps = false; return; }
-    /* Plat: Win  */ if (leader_sequence_two_keys(KC_P, KC_W) || leader_sequence_two_keys(KC_L, KC_COMMA)) { force_mac_maps = false; force_win_maps = !force_win_maps; return; }
+    /* Layr: Game */ if (leader_sequence_two_keys(KC_L, KC_G) || leader_sequence_two_keys(KC_L, KC_P)) { layer_move(LAYER_BASE); layer_on(LAYER_GAMES); return; }
+    /* Plat: Infr */ if (leader_sequence_two_keys(KC_P, KC_D) || leader_sequence_two_keys(KC_P, KC_K)) { force_mac_maps = false; force_win_maps = false; return; }
+    /* Plat: Mac  */ if (leader_sequence_two_keys(KC_P, KC_M) || leader_sequence_two_keys(KC_P, KC_I)) { force_mac_maps = !force_mac_maps; force_win_maps = false; return; }
+    /* Plat: Win  */ if (leader_sequence_two_keys(KC_P, KC_W) || leader_sequence_two_keys(KC_P, KC_COMMA)) { force_mac_maps = false; force_win_maps = !force_win_maps; return; }
     /* Plat: Prnt */ if (leader_sequence_two_keys(KC_P, KC_P)) { if (PLATFORM_IS_MAC) SEND_STRING("mac"); else SEND_STRING("win"); return; }
-    if (leader_end_keymap()) return;
 #if defined(LEADER_FAILED_CODE)
     tap_code(LEADER_FAILED_CODE);
 #else
