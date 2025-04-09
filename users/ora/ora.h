@@ -175,8 +175,8 @@ enum keycodes_user {
         KC_6,    KC_7   , KC_8   , KC_9   , KC_0
 #define __________________GRPH_L2__________________ \
         KC_B   , KC_L   , KC_D   , KC_W   , KC_Z
-#define __________________GRPH_R2__________________ \
-        KC_MINS, KC_F   , KC_O   , KC_U   , KC_J
+#define _____________GRPH__R2_____________ \
+        KC_F   , KC_O   , KC_U   , KC_J
 #define __________________GRPH_L3__________________ \
         KC_N   , KC_R   , KC_T   , KC_S   , KC_G
 #define __________________GRPH_R3__________________ \
