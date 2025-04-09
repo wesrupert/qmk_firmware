@@ -1,5 +1,6 @@
 // Copyright 2024 Wes Rupert (@wesrupert)
 // SPDX-License-Identifier: GPL-3.0-or-later
+#include "action_layer.h"
 #include "ora.h"
 
 enum layers {
@@ -24,9 +25,7 @@ enum tap_dances {
 #define LT_FNES LT(LAYER_FUNCTION, KC_ESC)
 #define MT_LAEQ LALT_T(KC_EQL)
 #define MT_LCMN LCTL_T(KC_MINS)
-#define MT_LCQU LCTL_T(KC_QUOT)
 #define MT_RABL RALT_T(KC_BSLS)
-#define MT_RCQU RCTL_T(KC_QUOT)
 #define MT_RCSN RCTL_T(KC_SCLN)
 #define TD_LCM1 TD(TAP_DANCE_DMCRO1_LCTL)
 #define TD_RCM2 TD(TAP_DANCE_DMCRO2_RCTL)
@@ -58,7 +57,7 @@ enum tap_dances {
 #define _KL_BASE [LAYER_BASE] = KL( /*                   BASE                                                   */ \
     KC_DEL,  __________________QWER_L1__________________,    __________________QWER_R1__________________, KC_BSPC, \
     MT_LGTB, __________________QWER_L2__________________,    __________________QWER_R2__________________, TD_RGLD, \
-    MT_LCMN, __________________QWER_L3__________________,    _____________QWER__R3_____________, KC_SCLN, MT_RCQU, \
+    MT_LCMN, __________________QWER_L3__________________,    _____________QWER__R3_____________, KC_QUOT, MT_RCSN, \
     MT_LAEQ, __________________QWER_L4__________________,    __________________QWER_R4__________________, MT_RABL, \
                                         LT_FNES, MT_LSSP,    MT_RSSP, LT_FNEN)
 #define _CL_BASE [LAYER_BASE] = CL(                                                                                \
@@ -68,25 +67,25 @@ enum tap_dances {
     CK_MODT, R_RED,   R_ORANG, R_YELLW, R_YLGRN, R_GREEN,    R_AQGRN, R_AQUA,  R_AQBLU, R_BLUE,  R_PURPL, CK_MODT, \
                                         CL_FUNC, C______,    C______, CL_FUNC,                            CL_BASE)
 
-#define _KL_GRAPHITE [LAYER_GRAPHITE] = KL( /*                 GRAPHITE                                                 */ \
+#define _KL_GRAPHITE [LAYER_GRAPHITE] = KL( /*         GRAPHITE                                                 */ \
     KC_DEL,  __________________GRPH_L1__________________,    __________________GRPH_R1__________________, KC_BSPC, \
-    MT_LGTB, __________________GRPH_L2__________________,    __________________GRPH_R2__________________, TD_RGLD, \
-    MT_LCQU, __________________GRPH_L3__________________,    __________________GRPH_R3__________________, MT_RCSN, \
+    MT_LGTB, __________________GRPH_L2__________________,    KC_QUOT, _____________GRPH__R2_____________, TD_RGLD, \
+    MT_LCMN, __________________GRPH_L3__________________,    __________________GRPH_R3__________________, MT_RCSN, \
     MT_LAEQ, __________________GRPH_L4__________________,    __________________GRPH_R4__________________, MT_RABL, \
                                         LT_FNES, MT_LSSP,    MT_RSSP, LT_FNEN)
-#define _CL_GRAPHITE [LAYER_GRAPHITE] = CL(                                                                                \
-    CK_WARN, R_RED,   R_ORANG, R_YELLW, R_YLGRN, R_GREEN,    R_AQGRN, R_AQUA,  R_AQBLU, R_BLUE,  R_PURPL, CK_WARN, \
-    CK_MODT, R_RED,   R_ORANG, R_YELLW, R_YLGRN, R_GREEN,    R_AQGRN, R_AQUA,  R_AQBLU, R_BLUE,  R_PURPL, CK_META, \
-    CK_MODT, R_RED,   R_ORANG, R_YELLW, R_YLGRN, R_GREEN,    R_AQGRN, R_AQUA,  R_AQBLU, R_BLUE,  R_PURPL, CK_MODT, \
-    CK_MODT, R_RED,   R_ORANG, R_YELLW, R_YLGRN, R_GREEN,    R_AQGRN, R_AQUA,  R_AQBLU, R_BLUE,  R_PURPL, CK_MODT, \
+#define _CL_GRAPHITE [LAYER_GRAPHITE] = CL(                                                                        \
+    CK_WARN, R_PURPL, R_BLUE,  R_AQBLU, R_AQUA,  R_AQGRN,    R_GREEN, R_YLGRN, R_YELLW, R_ORANG, R_RED,   CK_WARN, \
+    CK_MODT, R_PURPL, R_BLUE,  R_AQBLU, R_AQUA,  R_AQGRN,    R_GREEN, R_YLGRN, R_YELLW, R_ORANG, R_RED,   CK_META, \
+    CK_MODT, R_PURPL, R_BLUE,  R_AQBLU, R_AQUA,  R_AQGRN,    R_GREEN, R_YLGRN, R_YELLW, R_ORANG, R_RED,   CK_MODT, \
+    CK_MODT, R_PURPL, R_BLUE,  R_AQBLU, R_AQUA,  R_AQGRN,    R_GREEN, R_YLGRN, R_YELLW, R_ORANG, R_RED,   CK_MODT, \
                                         CL_FUNC, C______,    C______, CL_FUNC,                            CL_BASE)
 
 #define _KL_GAMES [LAYER_GAMES] = KL( /*                 GAME                                                   */ \
-    KC_GRV,  _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, \
-    KC_TAB,  _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, \
-    KC_LCTL, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, KC_QUOT, \
-    KC_LALT, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, KC_BSLS, \
-                                        KC_LSFT, KC_SPC,     _______, _______)
+    KC_GRV,  __________________QWER_L1__________________,    __________________QWER_R1__________________, KC_BSPC, \
+    KC_TAB,  __________________QWER_L2__________________,    __________________QWER_R2__________________, TD_RGLD, \
+    KC_LCTL, __________________QWER_L3__________________,    _____________QWER__R3_____________, KC_QUOT, KC_QUOT, \
+    KC_LALT, __________________QWER_L4__________________,    __________________QWER_R4__________________, KC_BSLS, \
+                                        KC_LSFT, KC_SPC,     MT_RSSP, LT_FNEN)
 #define _CL_GAMES [LAYER_GAMES] = CL(                                                                              \
     R_MGNTA, R_RED,   R_ORANG, R_YELLW, R_YLGRN, R_GREEN,    R_AQGRN, R_AQUA,  R_AQBLU, R_BLUE,  R_PURPL, CK_WARN, \
     R_MGNTA, R_RED,   C______, R_YELLW, R_YLGRN, R_GREEN,    R_AQGRN, R_AQUA,  R_AQBLU, R_BLUE,  R_PURPL, CK_META, \
@@ -174,7 +173,9 @@ bool leader_end_keymap(void) {
 #if defined(COMBO_SHOULD_TRIGGER)
 
 bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
-    if (get_highest_layer(layer_state) == LAYER_BASE) {
+    int layer = get_highest_layer(layer_state);
+    if (layer == LAYER_BASE) layer = get_highest_layer(default_layer_state);
+    if (layer == LAYER_BASE) {
         switch (combo_index) {
         case COMBO_GRPH_AND:
         case COMBO_GRPH_LBRC:
@@ -197,10 +198,11 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
         case COMBO_GRPH_ASTR:
         case COMBO_GRPH_PIPE:
         case COMBO_GRPH_PLUS:
+        case COMBO_GRPH_RSET:
             return false;
         default: return true;
         }
-    } else if (get_highest_layer(layer_state) == LAYER_GRAPHITE) {
+    } else if (layer == LAYER_GRAPHITE) {
         switch (combo_index) {
         case COMBO_QWER_AND:
         case COMBO_QWER_LBRC:
@@ -223,6 +225,7 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
         case COMBO_QWER_ASTR:
         case COMBO_QWER_PIPE:
         case COMBO_QWER_PLUS:
+        case COMBO_QWER_RSET:
             return false;
         default: return true;
         }
@@ -245,6 +248,7 @@ bool rgb_matrix_indicators_user(void) {
     }
 #endif // RGB_MATRIX_TIMEOUT > 0
     int layer = get_highest_layer(layer_state);
+    if (layer == LAYER_BASE) layer = get_highest_layer(default_layer_state);
     if (layer < LAYER_ENUM_END) {
         HSV layer_hsv = {
             .h = pgm_read_byte(&ledmaps[layer][RGB_MATRIX_LED_COUNT][0]),
