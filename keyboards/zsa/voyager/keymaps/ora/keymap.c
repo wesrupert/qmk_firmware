@@ -10,7 +10,7 @@ enum layers {
 };
 
 enum tap_dances {
-    TAP_DANCE_LEADER_RGUI = 0,
+    TAP_DANCE_LEADER_RALT = 0,
     TAP_DANCE_DMCRO1_LCTL,
     TAP_DANCE_DMCRO2_RCTL,
     TAP_DANCE_BS_NMPD_OFF,
@@ -24,12 +24,20 @@ enum tap_dances {
 #define LT_FNEN LT(LAYER_FUNCTION, KC_ENT)
 #define LT_FNES LT(LAYER_FUNCTION, KC_ESC)
 #define MT_LAEQ LALT_T(KC_EQL)
+#define MT_LGEQ LGUI_T(KC_EQL)
+#define MT_LCEQ LCTL_T(KC_EQL)
+#define MT_LAMN LALT_T(KC_MINS)
+#define MT_LGMN LGUI_T(KC_MINS)
 #define MT_LCMN LCTL_T(KC_MINS)
 #define MT_RABL RALT_T(KC_BSLS)
+#define MT_RGBL RGUI_T(KC_BSLS)
+#define MT_RCBL RCTL_T(KC_BSLS)
+#define MT_RASN RALT_T(KC_SCLN)
+#define MT_RGSN RGUI_T(KC_SCLN)
 #define MT_RCSN RCTL_T(KC_SCLN)
 #define TD_LCM1 TD(TAP_DANCE_DMCRO1_LCTL)
 #define TD_RCM2 TD(TAP_DANCE_DMCRO2_RCTL)
-#define TD_RGLD TD(TAP_DANCE_LEADER_RGUI)
+#define TD_RALD TD(TAP_DANCE_LEADER_RALT)
 #define TG_NMPD TG(LAYER_NUMPAD)
 #define TT_FUNC TT(LAYER_FUNCTION)
 #define TT_NUMP TT(LAYER_NUMPAD)
@@ -56,9 +64,9 @@ enum tap_dances {
 
 #define _KL_BASE [LAYER_BASE] = KL( /*                   BASE                                                   */ \
     KC_DEL,  __________________QWER_L1__________________,    __________________QWER_R1__________________, KC_BSPC, \
-    MT_LGTB, __________________QWER_L2__________________,    __________________QWER_R2__________________, TD_RGLD, \
-    MT_LCMN, __________________QWER_L3__________________,    _____________QWER__R3_____________, KC_QUOT, MT_RCSN, \
-    MT_LAEQ, __________________QWER_L4__________________,    __________________QWER_R4__________________, MT_RABL, \
+    MT_LATB, __________________QWER_L2__________________,    __________________QWER_R2__________________, TD_RALD, \
+    MT_LGMN, __________________QWER_L3__________________,    _____________QWER__R3_____________, KC_QUOT, MT_RGSN, \
+    MT_LCEQ, __________________QWER_L4__________________,    __________________QWER_R4__________________, MT_RCBL, \
                                         LT_FNES, MT_LSSP,    MT_RSSP, LT_FNEN)
 #define _CL_BASE [LAYER_BASE] = CL(                                                                                \
     CK_WARN, R_RED,   R_ORANG, R_YELLW, R_YLGRN, R_GREEN,    R_AQGRN, R_AQUA,  R_AQBLU, R_BLUE,  R_PURPL, CK_WARN, \
@@ -69,9 +77,9 @@ enum tap_dances {
 
 #define _KL_GRAPHITE [LAYER_GRAPHITE] = KL( /*         GRAPHITE                                                 */ \
     KC_DEL,  __________________GRPH_L1__________________,    __________________GRPH_R1__________________, KC_BSPC, \
-    MT_LGTB, __________________GRPH_L2__________________,    KC_QUOT, _____________GRPH__R2_____________, TD_RGLD, \
-    MT_LCMN, __________________GRPH_L3__________________,    __________________GRPH_R3__________________, MT_RCSN, \
-    MT_LAEQ, __________________GRPH_L4__________________,    __________________GRPH_R4__________________, MT_RABL, \
+    MT_LATB, __________________GRPH_L2__________________,    KC_QUOT, _____________GRPH__R2_____________, TD_RALD, \
+    MT_LGMN, __________________GRPH_L3__________________,    __________________GRPH_R3__________________, MT_RGSN, \
+    MT_LCEQ, __________________GRPH_L4__________________,    __________________GRPH_R4__________________, MT_RCBL, \
                                         LT_FNES, MT_LSSP,    MT_RSSP, LT_FNEN)
 #define _CL_GRAPHITE [LAYER_GRAPHITE] = CL(                                                                        \
     CK_WARN, R_PURPL, R_BLUE,  R_AQBLU, R_AQUA,  R_AQGRN,    R_GREEN, R_YLGRN, R_YELLW, R_ORANG, R_RED,   CK_WARN, \
@@ -82,8 +90,8 @@ enum tap_dances {
 
 #define _KL_GAMES [LAYER_GAMES] = KL( /*                 GAME                                                   */ \
     KC_GRV,  __________________QWER_L1__________________,    __________________QWER_R1__________________, KC_BSPC, \
-    KC_TAB,  __________________QWER_L2__________________,    __________________QWER_R2__________________, TD_RGLD, \
-    KC_LCTL, __________________QWER_L3__________________,    _____________QWER__R3_____________, KC_QUOT, KC_QUOT, \
+    KC_TAB,  __________________QWER_L2__________________,    __________________QWER_R2__________________, TD_RALD, \
+    KC_LCTL, __________________QWER_L3__________________,    _____________QWER__R3_____________, KC_QUOT, KC_SCLN, \
     KC_LALT, __________________QWER_L4__________________,    __________________QWER_R4__________________, KC_BSLS, \
                                         KC_LSFT, KC_SPC,     MT_RSSP, LT_FNEN)
 #define _CL_GAMES [LAYER_GAMES] = CL(                                                                              \
@@ -140,12 +148,12 @@ const uint8_t PROGMEM ledmaps[][RGB_MATRIX_LED_COUNT+1][3] = { _CL_BASE, _CL_GRA
 
 // clang-format on
 
-DANCE_LEADER_MOD(RGUI)
+DANCE_LEADER_MOD(RALT)
 DANCE_MACRO_MOD(1, LCTL)
 DANCE_MACRO_MOD(2, RCTL)
 
 tap_dance_action_t tap_dance_actions[] = {
-    [TAP_DANCE_LEADER_RGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_LEADER_RGUI_finished, dance_LEADER_RGUI_reset),
+    [TAP_DANCE_LEADER_RALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_LEADER_RALT_finished, dance_LEADER_RALT_reset),
     [TAP_DANCE_DMCRO1_LCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_DMCRO1_LCTL_finished, dance_DMCRO1_LCTL_reset),
     [TAP_DANCE_DMCRO2_RCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_DMCRO2_RCTL_finished, dance_DMCRO2_RCTL_reset),
 };
