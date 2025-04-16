@@ -7,6 +7,7 @@
 #include "quantum.h"
 
 extern bool mcp23018_leds[];
+extern bool voyager_is_launching;
 
 #define MCP23018_DEFAULT_ADDRESS 0b0100000
 

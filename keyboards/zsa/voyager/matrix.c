@@ -23,7 +23,7 @@ static matrix_row_t raw_matrix_right[MATRIX_COLS];
 #endif
 
 extern bool mcp23018_leds[2];
-extern bool is_launching;
+extern bool voyager_is_launching;
 
 static uint16_t mcp23018_reset_loop;
 uint8_t         mcp23018_errors;
@@ -56,7 +56,7 @@ void matrix_init_custom(void) {
     mcp23018_errors += !mcp23018_set_config(MCP23018_DEFAULT_ADDRESS, mcp23018_PORTB, 0b00111111);
 
     if (!mcp23018_errors) {
-        is_launching = true;
+        voyager_is_launching = true;
     }
 }
 
@@ -180,11 +180,11 @@ bool matrix_scan_custom(matrix_row_t current_matrix[]) {
 // DO NOT REMOVE
 // Needed for proper wake/sleep
 void matrix_power_up(void) {
-    bool temp_launching = is_launching;
+    bool temp_launching = voyager_is_launching;
 
     matrix_init_custom();
 
-    is_launching = temp_launching;
+    voyager_is_launching = temp_launching;
     if (!temp_launching) {
         STATUS_LED_1(false);
         STATUS_LED_2(false);

@@ -10,10 +10,9 @@ enum layers {
 };
 
 enum tap_dances {
-    TAP_DANCE_LEADER_RALT = 0,
-    TAP_DANCE_DMCRO1_LCTL,
-    TAP_DANCE_DMCRO2_RCTL,
-    TAP_DANCE_BS_NMPD_OFF,
+    DANCE_RGUI_RALT_LEAD = 0,
+    DANCE_LCTL_LGUI_DMC1,
+    DANCE_RCTL_RGUI_DMC2,
     X_TAP_DANCE
 };
 
@@ -35,20 +34,30 @@ enum tap_dances {
 #define MT_RASN RALT_T(KC_SCLN)
 #define MT_RGSN RGUI_T(KC_SCLN)
 #define MT_RCSN RCTL_T(KC_SCLN)
-#define TD_LCM1 TD(TAP_DANCE_DMCRO1_LCTL)
-#define TD_RCM2 TD(TAP_DANCE_DMCRO2_RCTL)
-#define TD_RALD TD(TAP_DANCE_LEADER_RALT)
+#define TD_R2LD TD(DANCE_RGUI_RALT_LEAD)
+#define TD_LCM1 TD(DANCE_LCTL_LGUI_DMC1)
+#define TD_RCM2 TD(DANCE_RCTL_RGUI_DMC2)
 #define TG_NMPD TG(LAYER_NUMPAD)
 #define TT_FUNC TT(LAYER_FUNCTION)
 #define TT_NUMP TT(LAYER_NUMPAD)
 
-// Include after key definitions in order to use them in the def file.
+// Include after key definitions in order to use them in the def file
 #include "g/keymap_combo.h"
 
-// Expand key groups before passing into layout macro.
+// Expand key groups before passing into layout macro
 #define KL(...) LAYOUT(__VA_ARGS__)
 
-// Expand LED matrixes like keymaps.
+// clang-format off
+
+// Handedness definition
+const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = KL(
+    'L', 'L', 'L', 'L', 'L', 'L',    'R', 'R', 'R', 'R', 'R', 'R',
+    'L', 'L', 'L', 'L', 'L', 'L',    'R', 'R', 'R', 'R', 'R', 'R',
+    'L', 'L', 'L', 'L', 'L', 'L',    'R', 'R', 'R', 'R', 'R', 'R',
+    'L', 'L', 'L', 'L', 'L', 'L',    'R', 'R', 'R', 'R', 'R', 'R',
+                        '*', '*',    '*', '*');
+
+// Expand LED matrixes like keymaps
 #define CL( \
     k00, k01, k02, k03, k04, k05,    k26, k27, k28, k29, k30, k31, \
     k06, k07, k08, k09, k10, k11,    k32, k33, k34, k35, k36, k37, \
@@ -60,13 +69,11 @@ enum tap_dances {
     k26, k27, k28, k29, k30, k31, k32, k33, k34, k35, k36, k37, k38, \
     k39, k40, k41, k42, k43, k44, k45, k46, k47, k48, k49, k50, k51, layer }
 
-// clang-format off
-
 #define _KL_BASE [LAYER_BASE] = KL( /*                   BASE                                                   */ \
     KC_DEL,  __________________QWER_L1__________________,    __________________QWER_R1__________________, KC_BSPC, \
-    MT_LATB, __________________QWER_L2__________________,    __________________QWER_R2__________________, TD_RALD, \
-    MT_LGMN, __________________QWER_L3__________________,    _____________QWER__R3_____________, KC_QUOT, MT_RGSN, \
-    MT_LCEQ, __________________QWER_L4__________________,    __________________QWER_R4__________________, MT_RCBL, \
+    MT_LGTB, __________________QWER_L2__________________,    __________________QWER_R2__________________, TD_R2LD, \
+    MT_LCMN, __________________QWER_L3__________________,    _____________QWER__R3_____________, KC_QUOT, MT_RCSN, \
+    MT_LAEQ, __________________QWER_L4__________________,    __________________QWER_R4__________________, MT_RABL, \
                                         LT_FNES, MT_LSSP,    MT_RSSP, LT_FNEN)
 #define _CL_BASE [LAYER_BASE] = CL(                                                                                \
     CK_WARN, R_RED,   R_ORANG, R_YELLW, R_YLGRN, R_GREEN,    R_AQGRN, R_AQUA,  R_AQBLU, R_BLUE,  R_PURPL, CK_WARN, \
@@ -77,9 +84,9 @@ enum tap_dances {
 
 #define _KL_GRAPHITE [LAYER_GRAPHITE] = KL( /*         GRAPHITE                                                 */ \
     KC_DEL,  __________________GRPH_L1__________________,    __________________GRPH_R1__________________, KC_BSPC, \
-    MT_LATB, __________________GRPH_L2__________________,    KC_QUOT, _____________GRPH__R2_____________, TD_RALD, \
-    MT_LGMN, __________________GRPH_L3__________________,    __________________GRPH_R3__________________, MT_RGSN, \
-    MT_LCEQ, __________________GRPH_L4__________________,    __________________GRPH_R4__________________, MT_RCBL, \
+    MT_LGTB, __________________GRPH_L2__________________,    KC_QUOT, _____________GRPH__R2_____________, TD_R2LD, \
+    MT_LCMN, __________________GRPH_L3__________________,    __________________GRPH_R3__________________, MT_RCSN, \
+    MT_LAEQ, __________________GRPH_L4__________________,    __________________GRPH_R4__________________, MT_RABL, \
                                         LT_FNES, MT_LSSP,    MT_RSSP, LT_FNEN)
 #define _CL_GRAPHITE [LAYER_GRAPHITE] = CL(                                                                        \
     CK_WARN, R_PURPL, R_BLUE,  R_AQBLU, R_AQUA,  R_AQGRN,    R_GREEN, R_YLGRN, R_YELLW, R_ORANG, R_RED,   CK_WARN, \
@@ -88,9 +95,22 @@ enum tap_dances {
     CK_MODT, R_PURPL, R_BLUE,  R_AQBLU, R_AQUA,  R_AQGRN,    R_GREEN, R_YLGRN, R_YELLW, R_ORANG, R_RED,   CK_MODT, \
                                         CL_FUNC, C______,    C______, CL_FUNC,                            CL_BASE)
 
+#define _KL_MAC [LAYER_MAC] = KL( /*                     MAC                                                    */ \
+    _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, \
+    MT_LATB, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, \
+    MT_LGMN, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, MT_RGSN, \
+    MT_LCEQ, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, MT_RCBL, \
+                                        _______, _______,    _______, _______)
+#define _CL_MAC [LAYER_MAC] = CL(                                                                     \
+    C______, C______, C______, C______, C______, C______,    C______, C______, C______, C______, C______, C______, \
+    C______, C______, C______, C______, C______, C______,    C______, C______, C______, C______, C______, C______, \
+    C______, C______, C______, C______, C______, C______,    C______, C______, C______, C______, C______, C______, \
+    C______, C______, C______, C______, C______, C______,    C______, C______, C______, C______, C______, C______, \
+                                        C______, C______,    C______, C______,                            C______)
+
 #define _KL_GAMES [LAYER_GAMES] = KL( /*                 GAME                                                   */ \
     KC_GRV,  __________________QWER_L1__________________,    __________________QWER_R1__________________, KC_BSPC, \
-    KC_TAB,  __________________QWER_L2__________________,    __________________QWER_R2__________________, TD_RALD, \
+    KC_TAB,  __________________QWER_L2__________________,    __________________QWER_R2__________________, TD_R2LD, \
     KC_LCTL, __________________QWER_L3__________________,    _____________QWER__R3_____________, KC_QUOT, KC_SCLN, \
     KC_LALT, __________________QWER_L4__________________,    __________________QWER_R4__________________, KC_BSLS, \
                                         KC_LSFT, KC_SPC,     MT_RSSP, LT_FNEN)
@@ -140,22 +160,46 @@ enum tap_dances {
     C_TO_DO, C_TO_DO, C_TO_DO, C_TO_DO, C_TO_DO, C_TO_DO,    C_TO_DO, C_TO_DO, C_TO_DO, C_TO_DO, C_TO_DO, C_TO_DO, \
                                         C_TO_DO, C_TO_DO,    C_TO_DO, C_TO_DO,                            C_TO_DO) */
 
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = { _KL_BASE, _KL_GRAPHITE, _KL_GAMES, _KL_FUNCTION, _KL_NUMPAD };
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = { _KL_BASE, _KL_GRAPHITE, _KL_MAC, _KL_GAMES, _KL_FUNCTION, _KL_NUMPAD };
 
 #if defined(RGB_MATRIX_ENABLE)
-const uint8_t PROGMEM ledmaps[][RGB_MATRIX_LED_COUNT+1][3] = { _CL_BASE, _CL_GRAPHITE, _CL_GAMES, _CL_FUNCTION, _CL_NUMPAD };
+const uint8_t PROGMEM ledmaps[][RGB_MATRIX_LED_COUNT+1][3] = { _CL_BASE, _CL_GRAPHITE, _CL_MAC, _CL_GAMES, _CL_FUNCTION, _CL_NUMPAD };
 #endif // RGB_MATRIX_ENABLE
 
 // clang-format on
 
-DANCE_LEADER_MOD(RALT)
-DANCE_MACRO_MOD(1, LCTL)
-DANCE_MACRO_MOD(2, RCTL)
+#if defined (VOYAGER_USER_LEDS)
+
+bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case LED_LEVEL:
+            if (record->event.pressed) {
+                keyboard_config.led_level ^= 1;
+                eeconfig_update_kb(keyboard_config.raw);
+                if (keyboard_config.led_level) {
+                    layer_state_set_kb(layer_state);
+                } else {
+                    STATUS_LED_1(false);
+                    STATUS_LED_2(false);
+                    STATUS_LED_3(false);
+                    STATUS_LED_4(false);
+                }
+            }
+            return false;
+    }
+    return true;
+}
+
+#endif // VOYAGER_USER_LEDS
+
+DANCE_PLATMOD_MACRO(LCTL, LGUI, 1)
+DANCE_PLATMOD_MACRO(RCTL, RGUI, 2)
+DANCE_PLATMOD_LEADER(RGUI, RALT)
 
 tap_dance_action_t tap_dance_actions[] = {
-    [TAP_DANCE_LEADER_RALT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_LEADER_RALT_finished, dance_LEADER_RALT_reset),
-    [TAP_DANCE_DMCRO1_LCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_DMCRO1_LCTL_finished, dance_DMCRO1_LCTL_reset),
-    [TAP_DANCE_DMCRO2_RCTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_DMCRO2_RCTL_finished, dance_DMCRO2_RCTL_reset),
+    [DANCE_LCTL_LGUI_DMC1] = ACTION_TAP_DANCE_FN_ADVANCED(NULL,                          dance_DMC1_LCTL_LGUI_finished,     dance_DMC1_LCTL_LGUI_reset),
+    [DANCE_RCTL_RGUI_DMC2] = ACTION_TAP_DANCE_FN_ADVANCED(NULL,                          dance_DMC2_RCTL_RGUI_finished,     dance_DMC2_RCTL_RGUI_reset),
+    [DANCE_RGUI_RALT_LEAD] = ACTION_TAP_DANCE_FN_ADVANCED(NULL,                          dance_LEAD_RGUI_RALT_finished,     dance_LEAD_RGUI_RALT_reset),
 };
 
 bool keyboard_post_init_keymap(void) {
@@ -168,21 +212,57 @@ bool keyboard_post_init_keymap(void) {
 }
 
 bool leader_end_keymap(void) {
-    /* Layr: Base */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_L)) { set_single_default_layer(LAYER_BASE); layer_move(LAYER_BASE); return false; }
-    /* Layr: Grph */ if (leader_sequence_two_keys(KC_L, KC_G) || leader_sequence_two_keys(KC_L, KC_I)) { set_single_default_layer(LAYER_GRAPHITE); layer_move(LAYER_GRAPHITE); return false; }
-    /* Layr: Func */ if (leader_sequence_two_keys(KC_L, KC_F) || leader_sequence_two_keys(KC_L, KC_K)) { layer_move(LAYER_BASE); layer_on(LAYER_FUNCTION); return false; }
-    /* Layr: Nump */ if (leader_sequence_two_keys(KC_L, KC_N) || leader_sequence_two_keys(KC_L, KC_I)) { layer_move(LAYER_BASE); layer_on(LAYER_NUMPAD); return false; }
-    /* Layr: Grph */ if (leader_sequence_two_keys(KC_L, KC_G)) { set_single_default_layer(LAYER_GRAPHITE); layer_move(LAYER_GRAPHITE); return false; }
-    /* Dflt: Qwer */ if (leader_sequence_two_keys(KC_D, KC_Q)) { set_single_persistent_default_layer(LAYER_BASE); return false; }
-    /* Dflt: Grph */ if (leader_sequence_two_keys(KC_D, KC_G)) { set_single_persistent_default_layer(LAYER_GRAPHITE); return false; }
+    /* Layr: Base */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_L)) {
+        set_single_default_layer(LAYER_BASE);
+        layer_move(LAYER_BASE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        return false;
+    }
+    /* Layr: Grph */ if (leader_sequence_two_keys(KC_L, KC_G) || leader_sequence_two_keys(KC_L, KC_I)) {
+        set_single_default_layer(LAYER_GRAPHITE);
+        layer_move(LAYER_GRAPHITE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        return false;
+    }
+    /* Layr: Game */ if (leader_sequence_two_keys(KC_L, KC_W) || leader_sequence_two_keys(KC_L, KC_P)) {
+        layer_move(LAYER_BASE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        layer_on(LAYER_GAMES);
+        return false;
+    }
+    /* Layr: Func */ if (leader_sequence_two_keys(KC_L, KC_F) || leader_sequence_two_keys(KC_L, KC_K)) {
+        layer_move(LAYER_BASE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        layer_on(LAYER_FUNCTION);
+        return false;
+    }
+    /* Layr: Nump */ if (leader_sequence_two_keys(KC_L, KC_N) || leader_sequence_two_keys(KC_L, KC_I)) {
+        layer_move(LAYER_BASE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        layer_on(LAYER_NUMPAD);
+        return false;
+    }
+    /* Dflt: Qwer */ if (leader_sequence_two_keys(KC_D, KC_Q)) {
+        set_single_persistent_default_layer(LAYER_BASE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        return false;
+    }
+    /* Dflt: Grph */ if (leader_sequence_two_keys(KC_D, KC_G)) {
+        set_single_persistent_default_layer(LAYER_GRAPHITE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        return false;
+    }
     return true;
 }
 
 #if defined(COMBO_SHOULD_TRIGGER)
 
+#define GET_HIGHEST_LAYER \
+    get_highest_layer(layer_state); \
+    if (layer == LAYER_BASE || layer == LAYER_MAC) layer = get_highest_layer(default_layer_state)
+
 bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
-    int layer = get_highest_layer(layer_state);
-    if (layer == LAYER_BASE) layer = get_highest_layer(default_layer_state);
+    u_int8_t layer = GET_HIGHEST_LAYER;
     if (layer == LAYER_BASE) {
         switch (combo_index) {
         case COMBO_GRPH_AND:
@@ -195,7 +275,8 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
         case COMBO_GRPH_RCBR:
         case COMBO_GRPH_RBRC:
         case COMBO_GRPH_OR:
-        case COMBO_GRPH_GRV:
+        case COMBO_GRPH_GRV_W:
+        case COMBO_GRPH_GRV_M:
         case COMBO_GRPH_EXLM:
         case COMBO_GRPH_AT:
         case COMBO_GRPH_HASH:
@@ -222,7 +303,8 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
         case COMBO_QWER_RCBR:
         case COMBO_QWER_RBRC:
         case COMBO_QWER_OR:
-        case COMBO_QWER_GRV:
+        case COMBO_QWER_GRV_W:
+        case COMBO_QWER_GRV_M:
         case COMBO_QWER_EXLM:
         case COMBO_QWER_AT:
         case COMBO_QWER_HASH:
@@ -243,6 +325,52 @@ bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode
 
 #endif // COMBO_SHOULD_TRIGGER
 
+bool process_detected_host_os_kb(os_variant_t detected_os) {
+    if (!process_detected_host_os_user(detected_os)) {
+        return false;
+    }
+    switch (detected_os) {
+        case OS_MACOS:
+        case OS_IOS:
+            rgb_matrix_set_color_all(RGB_WHITE);
+            break;
+        case OS_WINDOWS:
+            rgb_matrix_set_color_all(RGB_BLUE);
+            break;
+        case OS_LINUX:
+            rgb_matrix_set_color_all(RGB_ORANGE);
+            break;
+        case OS_UNSURE:
+            rgb_matrix_set_color_all(RGB_RED);
+            break;
+    }
+
+    return true;
+}
+
+#if defined (VOYAGER_USER_LEDS)
+
+layer_state_t layer_state_set_kb(layer_state_t state) {
+    state = layer_state_set_user(state);
+    if (voyager_is_launching || !keyboard_config.led_level) return state;
+
+    bool grph_on = layer_state_cmp(state, LAYER_GRAPHITE);
+    bool mcos_on = layer_state_cmp(state, LAYER_MAC);
+    bool game_on = layer_state_cmp(state, LAYER_GAMES);
+    bool func_on = layer_state_cmp(state, LAYER_FUNCTION);
+    bool nump_on = layer_state_cmp(state, LAYER_NUMPAD);
+
+    STATUS_LED_1(func_on || nump_on);
+    STATUS_LED_2(game_on || nump_on);
+    STATUS_LED_3(grph_on);
+    STATUS_LED_4(mcos_on);
+
+    return state;
+}
+
+
+#endif // VOYAGER_USER_LEDS
+
 #if defined(RGB_MATRIX_ENABLE)
 
 bool rgb_matrix_indicators_user(void) {
@@ -255,8 +383,7 @@ bool rgb_matrix_indicators_user(void) {
         return true;
     }
 #endif // RGB_MATRIX_TIMEOUT > 0
-    int layer = get_highest_layer(layer_state);
-    if (layer == LAYER_BASE) layer = get_highest_layer(default_layer_state);
+    u_int8_t layer = GET_HIGHEST_LAYER;
     if (layer < LAYER_ENUM_END) {
         HSV layer_hsv = {
             .h = pgm_read_byte(&ledmaps[layer][RGB_MATRIX_LED_COUNT][0]),
@@ -288,3 +415,19 @@ bool rgb_matrix_indicators_user(void) {
     return true;
 }
 #endif // RGB_MATRIX_ENABLE
+
+#if defined (OS_DETECTION_ENABLE)
+
+bool process_detected_host_os_user(os_variant_t detected_os) {
+    switch (detected_os) {
+        case OS_MACOS:
+        case OS_IOS:
+            layer_on(LAYER_MAC);
+            return false;
+        default:
+            return true;
+    }
+}
+
+#endif // OS_DETECTION_ENABLE
+
