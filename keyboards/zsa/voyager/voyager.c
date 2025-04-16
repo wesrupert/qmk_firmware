@@ -7,14 +7,14 @@
 keyboard_config_t keyboard_config;
 
 bool mcp23018_leds[2] = {0, 0};
-bool is_launching     = false;
+bool voyager_is_launching = false;
 
 #if defined(DEFERRED_EXEC_ENABLE)
 #    if defined(DYNAMIC_MACRO_ENABLE)
 deferred_token dynamic_macro_token = INVALID_DEFERRED_TOKEN;
 static uint32_t dynamic_macro_led(uint32_t trigger_time, void *cb_arg) {
     static bool led_state = true;
-    if (!is_launching) {
+    if (!voyager_is_launching) {
         led_state = !led_state;
         STATUS_LED_3(led_state);
     }
@@ -76,7 +76,7 @@ static uint32_t startup_exec(uint32_t trigger_time, void *cb_arg) {
             STATUS_LED_4(false);
             break;
         case 8:
-            is_launching = false;
+            voyager_is_launching = false;
             layer_state_set_kb(layer_state);
             return 0;
     }
@@ -104,7 +104,7 @@ void keyboard_pre_init_kb(void) {
 #if !defined(VOYAGER_USER_LEDS)
 layer_state_t layer_state_set_kb(layer_state_t state) {
     state = layer_state_set_user(state);
-    if (is_launching || !keyboard_config.led_level) return state;
+    if (voyager_is_launching || !keyboard_config.led_level) return state;
 
     uint8_t layer = get_highest_layer(state);
 
@@ -281,7 +281,7 @@ void keyboard_post_init_kb(void) {
         eeconfig_update_kb(keyboard_config.raw);
     }
 #if defined(DEFERRED_EXEC_ENABLE)
-    is_launching = true;
+    voyager_is_launching = true;
     defer_exec(500, startup_exec, NULL);
 #endif
     keyboard_post_init_user();

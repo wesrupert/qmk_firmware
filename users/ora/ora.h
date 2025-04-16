@@ -20,6 +20,7 @@ bool force_win_maps;
 enum layers_user {
     LAYER_BASE = 0,
     LAYER_GRAPHITE,
+    LAYER_MAC,
     LAYER_GAMES,
     LAYER_ENUM_END_USER,
 };
@@ -288,7 +289,7 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
 
 // clang-format off
 
-#define PLATFORM_IS_MAC !force_win_maps && (force_mac_maps || OS_MACOS == detected_host_os())
+#define PLATFORM_IS_MAC !force_win_maps && (force_mac_maps || OS_MACOS == detected_host_os() || OS_IOS == detected_host_os())
 
 #define MACRO_SEND_ON_PRESS(KEY, STRING) \
     case KEY: if (record->event.pressed) { SEND_STRING(STRING); return false; } return true
@@ -299,15 +300,48 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
         else SEND_STRING(WIN); \
     } return false
 
-#define DANCE_MACRO_MOD(NR, MOD) \
-        td_state_t dance_DMCRO##NR##_##MOD##_state = 0; \
-        void dance_DMCRO##NR##_##MOD##_finished(tap_dance_state_t *state, void *user_data) { \
-            dance_DMCRO##NR##_##MOD##_state = hold_cur_dance(state); \
+#define DANCE_PLATMOD_TAP(WIN, MAC, TAP) \
+        td_state_t dance_MOD_##WIN##_##MAC##_##TAP##_state = 0; \
+        void dance_MOD_##WIN##_##MAC##_##TAP##_each(tap_dance_state_t *state, void *user_data) { \
+            dance_MOD_##WIN##_##MAC##_##TAP##_state = cur_dance(state); \
+            if (state->count > 1) { \
+                tap_code(KC_##TAP); \
+                reset_tap_dance(state); \
+            } \
+        } \
+        void dance_MOD_##WIN##_##MAC##_##TAP##_finished(tap_dance_state_t *state, void *user_data) { \
+            if (dance_MOD_##WIN##_##MAC##_##TAP##_state == TD_SINGLE_TAP) { \
+                register_code(KC_##TAP); \
+            } else if (PLATFORM_IS_MAC) { \
+                register_code(KC_##MAC); \
+            } else { \
+                register_code(KC_##WIN); \
+            } \
+        } \
+        void dance_MOD_##WIN##_##MAC##_##TAP##_reset(tap_dance_state_t *state, void *user_data) { \
+            if (dance_MOD_##WIN##_##MAC##_##TAP##_state == TD_SINGLE_TAP) { \
+                unregister_code(KC_##TAP); \
+            } else if (PLATFORM_IS_MAC) { \
+                unregister_code(KC_##MAC); \
+            } else { \
+                unregister_code(KC_##WIN); \
+            } \
+        } \
+
+
+#define DANCE_PLATMOD_MACRO(WIN, MAC, NR) \
+        td_state_t dance_DMC##NR##_##WIN##_##MAC##_state = 0; \
+        void dance_DMC##NR##_##WIN##_##MAC##_finished(tap_dance_state_t *state, void *user_data) { \
+            dance_DMC##NR##_##WIN##_##MAC##_state = hold_cur_dance(state); \
             keyrecord_t kr; \
             kr.event.pressed = false; \
-            switch (dance_DMCRO##NR##_##MOD##_state) { \
+            switch (dance_DMC##NR##_##WIN##_##MAC##_state) { \
                 case TD_SINGLE_HOLD: \
-                    register_code(KC_##MOD); \
+                    if (PLATFORM_IS_MAC) { \
+                        register_code(KC_##MAC); \
+                    } else { \
+                        register_code(KC_##WIN); \
+                    } \
                     break; \
                 case TD_SINGLE_TAP: \
                     process_dynamic_macro(DM_PLY##NR, &kr); \
@@ -323,68 +357,88 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
                     break; \
             } \
         } \
-        void dance_DMCRO##NR##_##MOD##_reset(tap_dance_state_t *state, void *user_data) { \
-            switch (dance_DMCRO##NR##_##MOD##_state) { \
+        void dance_DMC##NR##_##WIN##_##MAC##_reset(tap_dance_state_t *state, void *user_data) { \
+            switch (dance_DMC##NR##_##WIN##_##MAC##_state) { \
                 case TD_SINGLE_HOLD: \
-                    unregister_code(KC_##MOD); \
-                    break; \
-                default: \
-                    break; \
-            } \
-            dance_DMCRO##NR##_##MOD##_state = 0; \
-        }
+                    if (PLATFORM_IS_MAC) { \
+                        unregister_code(KC_##MAC); \
+                    } else { \
+                        unregister_code(KC_##WIN); \
+                    } \
+                break; \
+            default: \
+                break; \
+        } \
+        dance_DMC##NR##_##WIN##_##MAC##_state = 0; \
+    }
 
-#define DANCE_LEADER_MOD(MOD) \
-        td_state_t dance_LEADER_##MOD##_state = 0; \
-        void dance_LEADER_##MOD##_finished(tap_dance_state_t *state, void *user_data) { \
-            dance_LEADER_##MOD##_state = hold_cur_dance(state); \
-            switch (dance_LEADER_##MOD##_state) { \
+#define DANCE_PLATMOD_LEADER(WIN, MAC) \
+        td_state_t dance_LEAD_##WIN##_##MAC##_state = 0; \
+        void dance_LEAD_##WIN##_##MAC##_finished(tap_dance_state_t *state, void *user_data) { \
+            dance_LEAD_##WIN##_##MAC##_state = hold_cur_dance(state); \
+            switch (dance_LEAD_##WIN##_##MAC##_state) { \
                 case TD_SINGLE_TAP: \
                     leader_start(); \
                     break; \
                 case TD_SINGLE_HOLD: \
-                    register_code(KC_##MOD); \
+                    if (PLATFORM_IS_MAC) { \
+                        register_code(KC_##MAC); \
+                    } else { \
+                        register_code(KC_##WIN); \
+                    } \
                     break; \
                 default: \
                     tap_code16(PK_LOCK); \
                     break; \
             } \
         } \
-        void dance_LEADER_##MOD##_reset(tap_dance_state_t *state, void *user_data) { \
-            switch (dance_LEADER_##MOD##_state) { \
+        void dance_LEAD_##WIN##_##MAC##_reset(tap_dance_state_t *state, void *user_data) { \
+            switch (dance_LEAD_##WIN##_##MAC##_state) { \
                 case TD_SINGLE_HOLD: \
-                    unregister_code(KC_##MOD); \
+                    if (PLATFORM_IS_MAC) { \
+                        unregister_code(KC_##MAC); \
+                    } else { \
+                        unregister_code(KC_##WIN); \
+                    } \
                     break; \
                 default: \
                     break; \
             } \
-            dance_LEADER_##MOD##_state = 0; \
+            dance_LEAD_##WIN##_##MAC##_state = 0; \
         } \
 
 #define DANCE_MOD_TAP_LAYER_TOGGLE(MOD, LAYER) \
-        td_state_t dance_##LAYER##_##MOD##_state = 0; \
-        void dance_##LAYER##_##MOD##_finished(tap_dance_state_t *state, void *user_data) { \
-            dance_##LAYER##_##MOD##_state = hold_cur_dance(state); \
-            switch (dance_##LAYER##_##MOD##_state) { \
+        td_state_t dance_##LAYER##_##WIN##_##MAC##_state = 0; \
+        void dance_##LAYER##_##WIN##_##MAC##_finished(tap_dance_state_t *state, void *user_data) { \
+            dance_##LAYER##_##WIN##_##MAC##_state = hold_cur_dance(state); \
+            switch (dance_##LAYER##_##WIN##_##MAC##_state) { \
                 case TD_SINGLE_TAP: \
                     layer_invert(LAYER); \
                     break; \
                 case TD_SINGLE_HOLD: \
-                    register_code(KC_##MOD); \
+                    if (PLATFORM_IS_MAC) { \
+                        register_code(KC_##MAC); \
+                    } else { \
+                        register_code(KC_##WIN); \
+                    } \
                     break; \
                 default: \
                     break; \
             } \
         } \
-        void dance_##LAYER##_##MOD##_reset(tap_dance_state_t *state, void *user_data) { \
-            switch (dance_##LAYER##_##MOD##_state) { \
+        void dance_##LAYER##_##WIN##_##MAC##_reset(tap_dance_state_t *state, void *user_data) { \
+            switch (dance_##LAYER##_##WIN##_##MAC##_state) { \
                 case TD_SINGLE_HOLD: \
-                    unregister_code(KC_##MOD); \
+                    if (PLATFORM_IS_MAC) { \
+                        unregister_code(KC_##MAC); \
+                    } else { \
+                        unregister_code(KC_##WIN); \
+                    } \
                     break; \
                 default: \
                     break; \
             } \
-            dance_##LAYER##_##MOD##_state = 0; \
+            dance_##LAYER##_##WIN##_##MAC##_state = 0; \
         }
 
 // clang-format on
