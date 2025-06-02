@@ -19,9 +19,10 @@ bool force_win_maps;
 
 enum layers_user {
     LAYER_BASE = 0,
-    LAYER_GRAPHITE,
     LAYER_MAC,
     LAYER_GAMES,
+    LAYER_FUNCTION,
+    LAYER_NUMPAD,
     LAYER_ENUM_END_USER,
 };
 
