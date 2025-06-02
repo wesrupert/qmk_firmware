@@ -140,6 +140,30 @@ void leader_end_user(void) {
         else SEND_STRING("unsure");
         return;
     }
+    /* Layr: Base */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_L)) {
+        set_single_default_layer(LAYER_BASE);
+        layer_move(LAYER_BASE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        return;
+    }
+    /* Layr: Game */ if (leader_sequence_two_keys(KC_L, KC_W) || leader_sequence_two_keys(KC_L, KC_P)) {
+        layer_move(LAYER_BASE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        layer_on(LAYER_GAMES);
+        return;
+    }
+    /* Layr: Func */ if (leader_sequence_two_keys(KC_L, KC_F) || leader_sequence_two_keys(KC_L, KC_K)) {
+        layer_move(LAYER_BASE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        layer_on(LAYER_FUNCTION);
+        return;
+    }
+    /* Layr: Nump */ if (leader_sequence_two_keys(KC_L, KC_N) || leader_sequence_two_keys(KC_L, KC_I)) {
+        layer_move(LAYER_BASE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        layer_on(LAYER_NUMPAD);
+        return;
+    }
 #if defined(LEADER_FAILED_CODE)
     tap_code(LEADER_FAILED_CODE);
 #else
@@ -191,11 +215,24 @@ __attribute__((weak)) td_state_t hold_cur_dance(tap_dance_state_t *state) {
 #if defined(COMBO_SHOULD_TRIGGER)
 
 __attribute__((weak)) bool combo_should_trigger(uint16_t combo_index, combo_t *combo, uint16_t keycode, keyrecord_t *record) {
-    if (get_highest_layer(layer_state) > 0) {
-        return false;
-    } else {
-        return true;
-    }
+    layer_state_t layer = get_highest_layer(layer_state);
+    return layer == LAYER_BASE || layer == LAYER_MAC;
 }
 
 #endif // COMBO_SHOULD_TRIGGER
+
+#if defined (OS_DETECTION_ENABLE)
+
+bool process_detected_host_os_user(os_variant_t detected_os) {
+    switch (detected_os) {
+        case OS_MACOS:
+        case OS_IOS:
+            layer_on(LAYER_MAC);
+            return false;
+        default:
+            return true;
+    }
+}
+
+#endif // OS_DETECTION_ENABLE
+
