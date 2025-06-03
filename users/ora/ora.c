@@ -111,8 +111,30 @@ void leader_end_user(void) {
     if (!leader_end_keymap()) return;
     /* Key:  Caps */ if (leader_sequence_one_key(KC_C)) { tap_code(KC_CAPS); return; }
     /* Key:  Num  */ if (leader_sequence_one_key(KC_N)) { tap_code(KC_NUM); return; }
-    /* Layr: Base */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_L)) { layer_move(LAYER_BASE); return; }
-    /* Layr: Game */ if (leader_sequence_two_keys(KC_L, KC_G) || leader_sequence_two_keys(KC_L, KC_P)) { layer_move(LAYER_BASE); layer_on(LAYER_GAMES); return; }
+    /* Layr: Base */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_L)) {
+        set_single_default_layer(LAYER_BASE);
+        layer_move(LAYER_BASE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        return;
+    }
+    /* Layr: Game */ if (leader_sequence_two_keys(KC_L, KC_W) || leader_sequence_two_keys(KC_L, KC_P)) {
+        layer_move(LAYER_BASE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        layer_on(LAYER_GAMES);
+        return;
+    }
+    /* Layr: Func */ if (leader_sequence_two_keys(KC_L, KC_F) || leader_sequence_two_keys(KC_L, KC_K)) {
+        layer_move(LAYER_BASE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        layer_on(LAYER_FUNCTION);
+        return;
+    }
+    /* Layr: Nump */ if (leader_sequence_two_keys(KC_L, KC_N) || leader_sequence_two_keys(KC_L, KC_I)) {
+        layer_move(LAYER_BASE);
+        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
+        layer_on(LAYER_NUMPAD);
+        return;
+    }
     /* Plat: Infr */ if (leader_sequence_two_keys(KC_P, KC_D) || leader_sequence_two_keys(KC_P, KC_K)) {
         force_mac_maps = false;
         force_win_maps = false;
@@ -138,30 +160,6 @@ void leader_end_user(void) {
         else if (os == OS_WINDOWS) SEND_STRING("win");
         else if (os == OS_IOS) SEND_STRING("ios");
         else SEND_STRING("unsure");
-        return;
-    }
-    /* Layr: Base */ if (leader_sequence_two_keys(KC_L, KC_D) || leader_sequence_two_keys(KC_L, KC_L)) {
-        set_single_default_layer(LAYER_BASE);
-        layer_move(LAYER_BASE);
-        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
-        return;
-    }
-    /* Layr: Game */ if (leader_sequence_two_keys(KC_L, KC_W) || leader_sequence_two_keys(KC_L, KC_P)) {
-        layer_move(LAYER_BASE);
-        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
-        layer_on(LAYER_GAMES);
-        return;
-    }
-    /* Layr: Func */ if (leader_sequence_two_keys(KC_L, KC_F) || leader_sequence_two_keys(KC_L, KC_K)) {
-        layer_move(LAYER_BASE);
-        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
-        layer_on(LAYER_FUNCTION);
-        return;
-    }
-    /* Layr: Nump */ if (leader_sequence_two_keys(KC_L, KC_N) || leader_sequence_two_keys(KC_L, KC_I)) {
-        layer_move(LAYER_BASE);
-        if (PLATFORM_IS_MAC) layer_on(LAYER_MAC);
-        layer_on(LAYER_NUMPAD);
         return;
     }
 #if defined(LEADER_FAILED_CODE)

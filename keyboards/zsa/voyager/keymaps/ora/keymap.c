@@ -3,6 +3,10 @@
 #include "action_layer.h"
 #include "ora.h"
 
+enum layers {
+    LAYER_ENUM_END = LAYER_ENUM_END_USER,
+};
+
 enum tap_dances {
     DANCE_RGUI_RALT_LEAD = 0,
     DANCE_LCTL_LGUI_DMC1,
@@ -35,6 +39,23 @@ enum tap_dances {
 #define TT_FUNC TT(LAYER_FUNCTION)
 #define TT_NUMP TT(LAYER_NUMPAD)
 
+#define HL_FNA  LT(LAYER_FUNCTION, KC_A)
+#define HM_LAS  LALT_T(KC_S)
+#define HM_LCS  LCTL_T(KC_S)
+#define HM_LSD  LSFT_T(KC_D)
+#define HM_LCF  LCTL_T(KC_F)
+#define HM_LGF  LGUI_T(KC_F)
+#define HM_LGG  LGUI_T(KC_G)
+#define HM_LAG  LALT_T(KC_G)
+#define HM_RGH  RGUI_T(KC_H)
+#define HM_RAH  RALT_T(KC_H)
+#define HM_RGJ  RGUI_T(KC_J)
+#define HM_RCJ  RCTL_T(KC_J)
+#define HM_RSK  RSFT_T(KC_K)
+#define HM_RCL  RCTL_T(KC_L)
+#define HM_RAL  RALT_T(KC_L)
+#define HL_FNSC LT(LAYER_FUNCTION, KC_SCLN)
+
 // Include after key definitions in order to use them in the def file
 #include "g/keymap_combo.h"
 
@@ -49,7 +70,7 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = KL(
     'L', 'L', 'L', 'L', 'L', 'L',    'R', 'R', 'R', 'R', 'R', 'R',
     'L', 'L', 'L', 'L', 'L', 'L',    'R', 'R', 'R', 'R', 'R', 'R',
     'L', 'L', 'L', 'L', 'L', 'L',    'R', 'R', 'R', 'R', 'R', 'R',
-                        '*', '*',    '*', '*');
+                        '*', 'L',    'R', '*');
 
 // Expand LED matrixes like keymaps
 #define CL( \
@@ -66,7 +87,7 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = KL(
 #define _KL_BASE [LAYER_BASE] = KL( /*                   BASE                                                   */ \
     KC_DEL,  __________________QWER_L1__________________,    __________________QWER_R1__________________, KC_BSPC, \
     MT_LGTB, __________________QWER_L2__________________,    __________________QWER_R2__________________, TD_R2LD, \
-    MT_LCMN, __________________QWER_L3__________________,    _____________QWER__R3_____________, KC_SCLN, MT_RCQT, \
+    MT_LCMN, HL_FNA,  HM_LAS,  HM_LSD,  HM_LCF,  HM_LGG,     HM_RGH,  HM_RCJ,  HM_RSK,  HM_RAL,  HL_FNSC, MT_RCQT, \
     MT_LAEQ, __________________QWER_L4__________________,    __________________QWER_R4__________________, MT_RABL, \
                                         LT_FNES, MT_LSSP,    MT_RSSP, LT_FNEN)
 #define _CL_BASE [LAYER_BASE] = CL(                                                                                \
@@ -79,7 +100,7 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = KL(
 #define _KL_MAC [LAYER_MAC] = KL( /*                     MAC                                                    */ \
     _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, \
     MT_LATB, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, \
-    MT_LGMN, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, MT_RGQT, \
+    MT_LGMN, _______, HM_LCS,  HM_LSD,  HM_LGF,  HM_LAG,     HM_RAH,  HM_RGJ,  HM_RSK,  HM_RCL,  _______, MT_RGQT, \
     MT_LCEQ, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, MT_RCBL, \
                                         _______, _______,    _______, _______)
 #define _CL_MAC [LAYER_MAC] = CL(                                                                     \
@@ -90,11 +111,11 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = KL(
                                         C______, C______,    C______, C______,                            C______)
 
 #define _KL_GAMES [LAYER_GAMES] = KL( /*                 GAME                                                   */ \
-    KC_GRV,  __________________QWER_L1__________________,    __________________QWER_R1__________________, KC_BSPC, \
-    KC_TAB,  __________________QWER_L2__________________,    __________________QWER_R2__________________, TD_R2LD, \
-    KC_LCTL, __________________QWER_L3__________________,    _____________QWER__R3_____________, KC_SCLN, KC_QUOT, \
-    KC_LALT, __________________QWER_L4__________________,    __________________QWER_R4__________________, KC_BSLS, \
-                                        KC_LSFT, KC_SPC,     MT_RSSP, LT_FNEN)
+    KC_GRV,  __________________QWER_L1__________________,    _______, _______, _______, _______, _______, _______, \
+    KC_TAB,  __________________QWER_L2__________________,    _______, _______, _______, _______, _______, _______, \
+    KC_LCTL, __________________QWER_L3__________________,    _______, _______, _______, _______, _______, _______, \
+    KC_LALT, __________________QWER_L4__________________,    _______, _______, _______, _______, _______, _______, \
+                                        KC_LSFT, KC_SPC,     _______, _______)
 #define _CL_GAMES [LAYER_GAMES] = CL(                                                                              \
     R_MGNTA, R_RED,   R_ORANG, R_YELLW, R_YLGRN, R_GREEN,    R_AQGRN, R_AQUA,  R_AQBLU, R_BLUE,  R_PURPL, CK_WARN, \
     R_MGNTA, R_RED,   C______, R_YELLW, R_YLGRN, R_GREEN,    R_AQGRN, R_AQUA,  R_AQBLU, R_BLUE,  R_PURPL, CK_META, \

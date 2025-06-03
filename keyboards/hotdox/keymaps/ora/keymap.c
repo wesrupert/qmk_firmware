@@ -3,6 +3,10 @@
 #include "action_layer.h"
 #include "ora.h"
 
+enum layers {
+    LAYER_ENUM_END = LAYER_ENUM_END_USER,
+};
+
 enum tap_dances {
     DANCE_RGUI_RALT_LEAD = 0,
     DANCE_LCTL_LGUI_DMC1,

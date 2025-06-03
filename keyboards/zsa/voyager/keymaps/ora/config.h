@@ -1,4 +1,6 @@
-// #define CHORDAL_HOLD
+#define CHORDAL_HOLD
+#define FLOW_TAP_TERM 250
+
 
 #define SPLIT_LAYER_STATE_ENABLE
 #define VOYAGER_USER_LEDS
