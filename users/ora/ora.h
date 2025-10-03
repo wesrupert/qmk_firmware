@@ -155,38 +155,39 @@ enum keycodes_user {
 // Base Layer
 #define __________________QWER_L1__________________ \
         KC_1   , KC_2   , KC_3   , KC_4   , KC_5
-#define __________________QWER_R1__________________ \
-        KC_6,    KC_7   , KC_8   , KC_9   , KC_0
 #define __________________QWER_L2__________________ \
         KC_Q   , KC_W   , KC_E   , KC_R   , KC_T
-#define __________________QWER_R2__________________ \
-        KC_Y   , KC_U   , KC_I   , KC_O   , KC_P
 #define __________________QWER_L3__________________ \
         KC_A   , KC_S   , KC_D   , KC_F   , KC_G
-#define _____________QWER__R3_____________ \
-        KC_H   , KC_J   , KC_K   , KC_L
 #define __________________QWER_L4__________________ \
         KC_Z   , KC_X   , KC_C   , KC_V   , KC_B
-#define __________________QWER_R4__________________ \
-        KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH
+
+#define                                               __________________QWER_R1__________________ \
+                                                      KC_6,    KC_7   , KC_8   , KC_9   , KC_0
+#define                                               __________________QWER_R2__________________ \
+                                                      KC_Y   , KC_U   , KC_I   , KC_O   , KC_P
+#define                                               _____________QWER__R3_____________ \
+                                                      KC_H   , KC_J   , KC_K   , KC_L
+#define                                               __________________QWER_R4__________________ \
+                                                      KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH
 
 // Base Layer (Graphite)
 #define __________________GRPH_L1__________________ \
         KC_1   , KC_2   , KC_3   , KC_4   , KC_5
-#define __________________GRPH_R1__________________ \
-        KC_6,    KC_7   , KC_8   , KC_9   , KC_0
 #define __________________GRPH_L2__________________ \
         KC_B   , KC_L   , KC_D   , KC_W   , KC_Z
-#define _____________GRPH__R2_____________ \
-        KC_F   , KC_O   , KC_U   , KC_J
 #define __________________GRPH_L3__________________ \
         KC_N   , KC_R   , KC_T   , KC_S   , KC_G
-#define __________________GRPH_R3__________________ \
-        KC_Y   , KC_H   , KC_A   , KC_E   , KC_I
 #define __________________GRPH_L4__________________ \
         KC_Q   , KC_X   , KC_M   , KC_C   , KC_V
-#define __________________GRPH_R4__________________ \
-        KC_K   , KC_P   , KC_COMM, KC_DOT , KC_SLSH
+#define                                               __________________GRPH_R1__________________ \
+                                                      KC_6,    KC_7   , KC_8   , KC_9   , KC_0
+#define                                               _____________GRPH__R2_____________ \
+                                                      KC_F   , KC_O   , KC_U   , KC_J
+#define                                               __________________GRPH_R3__________________ \
+                                                      KC_Y   , KC_H   , KC_A   , KC_E   , KC_I
+#define                                               __________________GRPH_R4__________________ \
+                                                      KC_K   , KC_P   , KC_COMM, KC_DOT , KC_SLSH
 
 // Media
 #define __________MEDIA__________ \
@@ -197,76 +198,114 @@ enum keycodes_user {
 //        VOLU     MUTE     VOLD
 
 // Function Layer
+//        F1       F2       F3       F4       F5    |   F6       F7       F8       F9       F10
+//         1        2        3        4        5    |   6        7        8        9        0
+//                HOME     PGDN     PGUP      END   |  LEFT     DOWN      UP      RIGHT
 #define __________________FUNC_L1__________________ \
-        KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5
-//        F1       F2       F3       F4       F5
-#define __________________FUNC_R1__________________ \
-        KC_F6,   KC_F7  , KC_F8  , KC_F9  , KC_F10
-//        F6,      F7       F8       F9       F10
-#define FUNC_11 \
-        KC_F11
-//        F11
-#define FUNC_12 \
-        KC_F12
-//        F12
-#define _____________FUNC__L2_____________ \
-        KC_LABK, KC_LCBR, KC_RCBR, KC_RABK
-//         <        {        }        >
-#define _____________FUNC__L3_____________ \
-        KC_LBRC, KC_LPRN, KC_RPRN, KC_RBRC
-//         [        (        )        ]
-#define _____________FUNC__R2_____________ \
-        KC_HOME, KC_PGDN, KC_PGUP, KC_END
-//       HOME     PGDN     PGUP      END
-#define _____________FUNC__R3_____________ \
-        KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT
-//       LEFT     DOWN      UP      RIGHT
+        KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5
+#define __________________FUNC_L2__________________ \
+        KC_1,    KC_2,    KC_3,    KC_4,    KC_5
+#define          _____________FUNC__L3_____________ \
+                 KC_HOME, KC_PGDN, KC_PGUP, KC_END
+#define                                                __________________FUNC_R1__________________ \
+                                                       KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10
+#define                                                __________________FUNC_R2__________________ \
+                                                       KC_6,    KC_7,    KC_8,    KC_9,    KC_0
+#define                                                _____________FUNC__R3_____________ \
+                                                       KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT
+//                F11 | F12
+#define FUNC_11 KC_F11
+#define                FUNC_12 KC_F12
 
 // Symbol Layer
+//         !        @        #        $        %    |    ^        &        *        (        )
+//         &&       /        &        -        _    |    =        +        |        \       ||
+//         &&       [        {        (        <    |    >        )        }        ]       ||
+//         1        2        3        4        5    |    6        7        8        9        0
 #define __________________SYMB_L1__________________ \
-        KC_EXLM, KC_AT  , KC_HASH, KC_DLR , KC_PERC
-//         !        @        #        $        %
-#define __________________SYMB_R1__________________ \
-        KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN
-//          ^       &        *        (        )
-#define SYM_SL1 \
-        MA_BRNL
-//       {\n}
-#define SYM_SR1 \
-        MA_LMBD
-//      ()=>{}
+        KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC
 #define __________________SYMB_L2__________________ \
         MA_AND , KC_SLSH, KC_AMPR, KC_MINS, KC_UNDS
-//        &&        /        &        -        _
-#define __________________SYMB_R2__________________ \
-        KC_EQL,  KC_PLUS, KC_PIPE, KC_BSLS, MA_OR
-//         =        +        |        \       ||
 #define __________________SYMB_L3__________________ \
         MA_AND , KC_LBRC, KC_LCBR, KC_LPRN, KC_LABK
-//         &&       [        {        (        <
-#define __________________SYMB_R3__________________ \
-        KC_RABK, KC_RPRN, KC_RCBR, KC_RBRC, MA_OR
-//         >        )        }        ]        ||
 #define __________________SYMB_L4__________________ \
         KC_1,    KC_2,    KC_3,    KC_4,    KC_5
-//         1        2        3        4        5
-#define __________________SYMB_R4__________________ \
-        KC_6,    KC_7,    KC_8,    KC_9,    KC_0
-//         6        7        8        9        0
+#define                                               __________________SYMB_R1__________________ \
+                                                      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN
+#define                                               __________________SYMB_R2__________________ \
+                                                      KC_EQL,  KC_PLUS, KC_PIPE, KC_BSLS, MA_OR
+#define                                               __________________SYMB_R3__________________ \
+                                                      KC_RABK, KC_RPRN, KC_RCBR, KC_RBRC, MA_OR
+#define                                               __________________SYMB_R4__________________ \
+                                                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0
+//               {\n}  | ()=>{}
+#define SYM_SL1 MA_BRNL
+#define                 SYM_SR1 MA_LMBD
 
-// Numpad Layer Left
+// Numpad Layer
+//         7        8        9
+//         4        5        6
+//         1        2        3
+//                  0
 #define __________NMPD_1_________ \
         KC_P7  , KC_P8  , KC_P9
-//         7        8        9
 #define __________NMPD_2_________ \
         KC_P4  , KC_P5  , KC_P6
-//         4        5        6
 #define __________NMPD_3_________ \
         KC_P1  , KC_P2  , KC_P3
-//         1        2        3
-#define NMPD__4 \
-        KC_P0
-//         0
+#define          NMPD__4 \
+                 KC_P0
+
+// Combo keys (override to customize base layer keys)
+#define KM_GRV  KC_GRV
+#define KM_1    KC_1
+#define KM_2    KC_2
+#define KM_3    KC_3
+#define KM_4    KC_4
+#define KM_5    KC_5
+#define KM_6    KC_6
+#define KM_7    KC_7
+#define KM_8    KC_8
+#define KM_9    KC_9
+#define KM_0    KC_0
+#define KM_BSPC KC_BSPC
+#define KM_DEL  KC_DEL
+#define KM_TAB  KC_TAB
+#define KM_Q    KC_Q
+#define KM_W    KC_W
+#define KM_E    KC_E
+#define KM_R    KC_R
+#define KM_T    KC_T
+#define KM_Y    KC_Y
+#define KM_U    KC_U
+#define KM_I    KC_I
+#define KM_O    KC_O
+#define KM_P    KC_P
+#define KM_LEAD QK_LEAD
+#define KM_MINS KC_MINS
+#define KM_A    KC_A
+#define KM_S    KC_S
+#define KM_D    KC_D
+#define KM_F    KC_F
+#define KM_G    KC_G
+#define KM_H    KC_H
+#define KM_J    KC_J
+#define KM_K    KC_K
+#define KM_L    KC_L
+#define KM_SCLN KC_SCLN
+#define KM_QUOT KC_QUOT
+#define KM_EQL  KC_EQL
+#define KM_Z    KC_Z
+#define KM_X    KC_X
+#define KM_C    KC_C
+#define KM_V    KC_V
+#define KM_B    KC_B
+#define KM_N    KC_N
+#define KM_M    KC_M
+#define KM_COMM KC_COMMA
+#define KM_DOT  KC_DOT
+#define KM_SLSH KC_SLSH
+#define KM_BSLS KC_BSLS
 
 // clang-format on
 

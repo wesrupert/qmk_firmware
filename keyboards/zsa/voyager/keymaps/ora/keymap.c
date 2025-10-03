@@ -1,6 +1,7 @@
 // Copyright 2025 Wes Rupert (@wesrupert)
 // SPDX-License-Identifier: GPL-3.0-or-later
 #include "action_layer.h"
+#include "keycodes.h"
 #include "ora.h"
 
 enum layers {
@@ -20,42 +21,46 @@ enum tap_dances {
 #define LI_LYRT TOGGLE_LAYER_COLOR
 #define LT_FNEN LT(LAYER_FUNCTION, KC_ENT)
 #define LT_FNES LT(LAYER_FUNCTION, KC_ESC)
-#define MT_LAEQ LALT_T(KC_EQL)
-#define MT_LGEQ LGUI_T(KC_EQL)
-#define MT_LCEQ LCTL_T(KC_EQL)
-#define MT_LAMN LALT_T(KC_MINS)
-#define MT_LGMN LGUI_T(KC_MINS)
-#define MT_LCMN LCTL_T(KC_MINS)
-#define MT_RABL RALT_T(KC_BSLS)
-#define MT_RGBL RGUI_T(KC_BSLS)
-#define MT_RCBL RCTL_T(KC_BSLS)
-#define MT_RAQT RALT_T(KC_QUOT)
-#define MT_RGQT RGUI_T(KC_QUOT)
-#define MT_RCQT RCTL_T(KC_QUOT)
 #define TD_R2LD TD(DANCE_RGUI_RALT_LEAD)
 #define TD_LCM1 TD(DANCE_LCTL_LGUI_DMC1)
 #define TD_RCM2 TD(DANCE_RCTL_RGUI_DMC2)
 #define TG_NMPD TG(LAYER_NUMPAD)
-#define TT_FUNC TT(LAYER_FUNCTION)
 #define TT_NUMP TT(LAYER_NUMPAD)
 
-#define HL_FNA  LT(LAYER_FUNCTION, KC_A)
-#define HM_LAS  LALT_T(KC_S)
-#define HM_LCS  LCTL_T(KC_S)
-#define HM_LSD  LSFT_T(KC_D)
-#define HM_LCF  LCTL_T(KC_F)
-#define HM_LGF  LGUI_T(KC_F)
-#define HM_LGG  LGUI_T(KC_G)
-#define HM_LAG  LALT_T(KC_G)
-#define HM_RGH  RGUI_T(KC_H)
-#define HM_RAH  RALT_T(KC_H)
-#define HM_RGJ  RGUI_T(KC_J)
-#define HM_RCJ  RCTL_T(KC_J)
-#define HM_RSK  RSFT_T(KC_K)
-#define HM_RCL  RCTL_T(KC_L)
-#define HM_RAL  RALT_T(KC_L)
-#define HL_FNSC LT(LAYER_FUNCTION, KC_SCLN)
+#define HM_LAA  LALT_T(KC_A)
+#define HM_LGS  LGUI_T(KC_S)
+#define HM_LCD  LCTL_T(KC_D)
+#define HM_LSF  LSFT_T(KC_F)
+#define HL_FNG  LT(LAYER_FUNCTION, KC_G)
+#define HL_FNH  LT(LAYER_FUNCTION, KC_H)
+#define HM_RSJ  RSFT_T(KC_J)
+#define HM_RCK  RCTL_T(KC_K)
+#define HM_RGL  RGUI_T(KC_L)
+#define HM_RASC RALT_T(KC_SCLN)
 
+// Combo definitions
+#undef  KM_A
+#define KM_A    HM_LAA
+#undef  KM_S
+#define KM_S    HM_LGS
+#undef  KM_D
+#define KM_D    HM_LCD
+#undef  KM_F
+#define KM_F    HM_LSF
+#undef  KM_G
+#define KM_G    HL_FNG
+#undef  KM_H
+#define KM_H    HL_FNH
+#undef  KM_J
+#define KM_J    HM_RSJ
+#undef  KM_K
+#define KM_K    HM_RCK
+#undef  KM_L
+#define KM_L    HM_RGL
+#undef  KM_SC
+#define KM_SC   HM_RASC
+#undef  KM_LEAD
+#define KM_LEAD TD_R2LD
 // Include after key definitions in order to use them in the def file
 #include "g/keymap_combo.h"
 
@@ -66,11 +71,11 @@ enum tap_dances {
 
 // Handedness definition
 const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = KL(
+    '*', 'L', 'L', 'L', 'L', 'L',    'R', 'R', 'R', 'R', 'R', '*',
+    '*', 'L', 'L', 'L', 'L', 'L',    'R', 'R', 'R', 'R', 'R', '*',
     'L', 'L', 'L', 'L', 'L', 'L',    'R', 'R', 'R', 'R', 'R', 'R',
     'L', 'L', 'L', 'L', 'L', 'L',    'R', 'R', 'R', 'R', 'R', 'R',
-    'L', 'L', 'L', 'L', 'L', 'L',    'R', 'R', 'R', 'R', 'R', 'R',
-    'L', 'L', 'L', 'L', 'L', 'L',    'R', 'R', 'R', 'R', 'R', 'R',
-                        '*', 'L',    'R', '*');
+                        '*', '*',    '*', '*');
 
 // Expand LED matrixes like keymaps
 #define CL( \
@@ -85,10 +90,10 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = KL(
     k39, k40, k41, k42, k43, k44, k45, k46, k47, k48, k49, k50, k51, layer }
 
 #define _KL_BASE [LAYER_BASE] = KL( /*                   BASE                                                   */ \
-    KC_DEL,  __________________QWER_L1__________________,    __________________QWER_R1__________________, KC_BSPC, \
-    MT_LGTB, __________________QWER_L2__________________,    __________________QWER_R2__________________, TD_R2LD, \
-    MT_LCMN, HL_FNA,  HM_LAS,  HM_LSD,  HM_LCF,  HM_LGG,     HM_RGH,  HM_RCJ,  HM_RSK,  HM_RAL,  HL_FNSC, MT_RCQT, \
-    MT_LAEQ, __________________QWER_L4__________________,    __________________QWER_R4__________________, MT_RABL, \
+    KM_DEL,  __________________QWER_L1__________________,    __________________QWER_R1__________________, KM_BSPC, \
+    KM_TAB,  __________________QWER_L2__________________,    __________________QWER_R2__________________, KM_LEAD, \
+    KM_MINS, KM_A,    KM_S,    KM_D,    KM_F,    KM_G,       KM_H,    KM_J,    KM_K,    KM_L,    KM_SC,   KM_QUOT, \
+    KM_EQL,  __________________QWER_L4__________________,    __________________QWER_R4__________________, KM_BSLS, \
                                         LT_FNES, MT_LSSP,    MT_RSSP, LT_FNEN)
 #define _CL_BASE [LAYER_BASE] = CL(                                                                                \
     CK_WARN, R_RED,   R_ORANG, R_YELLW, R_YLGRN, R_GREEN,    R_AQGRN, R_AQUA,  R_AQBLU, R_BLUE,  R_PURPL, CK_WARN, \
@@ -99,11 +104,11 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = KL(
 
 #define _KL_MAC [LAYER_MAC] = KL( /*                     MAC                                                    */ \
     _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, \
-    MT_LATB, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, \
-    MT_LGMN, _______, HM_LCS,  HM_LSD,  HM_LGF,  HM_LAG,     HM_RAH,  HM_RGJ,  HM_RSK,  HM_RCL,  _______, MT_RGQT, \
-    MT_LCEQ, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, MT_RCBL, \
+    _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, \
+    _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, \
+    _______, _______, _______, _______, _______, _______,    _______, _______, _______, _______, _______, _______, \
                                         _______, _______,    _______, _______)
-#define _CL_MAC [LAYER_MAC] = CL(                                                                     \
+#define _CL_MAC [LAYER_MAC] = CL(                                                                                  \
     C______, C______, C______, C______, C______, C______,    C______, C______, C______, C______, C______, C______, \
     C______, C______, C______, C______, C______, C______,    C______, C______, C______, C______, C______, C______, \
     C______, C______, C______, C______, C______, C______,    C______, C______, C______, C______, C______, C______, \
@@ -125,8 +130,8 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = KL(
 
 #define _KL_FUNCTION [LAYER_FUNCTION] = KL( /*         FUNCTION                                                 */ \
     FUNC_11, __________________FUNC_L1__________________,    __________________FUNC_R1__________________, FUNC_12, \
-    KC_LGUI, PK_ASST, _____________FUNC__L2_____________,    _____________FUNC__R2_____________, PK_PSCR, _______, \
-    KC_LCTL, QK_LOCK, _____________FUNC__L3_____________,    _____________FUNC__R3_____________, PK_PSCF, KC_RCTL, \
+    KC_LGUI, __________________FUNC_L2__________________,    __________________FUNC_R2__________________, _______, \
+    KC_LCTL, PK_PSCR, _____________FUNC__L3_____________,    _____________FUNC__R3_____________, PK_PSCF, KC_RCTL, \
     KC_LALT, TD_LCM1, __________MEDIA__________, PK_LOCK,    PK_LOCK, __________VOLUM__________, TD_RCM2, KC_RALT, \
                                         TT_NUMP, CW_TOGG,    CW_TOGG,  TT_NUMP)
 #define _CL_FUNCTION [LAYER_FUNCTION] = CL(                                                                        \

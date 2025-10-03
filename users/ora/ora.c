@@ -173,6 +173,29 @@ void leader_end_user(void) {
 // clang-format on
 #endif // LEADER_ENABLED
 
+#if defined(FLOW_TAP_TERM)
+
+bool is_flow_tap_key(uint16_t keycode) {
+    // Disable Flow Tap on hotkeys.
+    if ((get_mods() & MOD_MASK_CAG) != 0) return false;
+    switch (get_tap_keycode(keycode)) {
+        /* case KC_SPC: */
+        case KC_A ... KC_Z:
+        case KC_DOT:
+        case KC_COMM:
+        case KC_SCLN:
+        case KC_MINS:
+        case KC_EQL:
+        case KC_QUOT:
+        case KC_SLSH:
+        case KC_BSLS:
+            return true;
+    }
+    return false;
+}
+
+#endif // FLOW_TAP_TERM
+
 #if defined(TAP_DANCE_ENABLE)
 
 // Get easy combo state enum from the current state object.
