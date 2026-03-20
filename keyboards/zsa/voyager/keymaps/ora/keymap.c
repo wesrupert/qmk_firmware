@@ -16,7 +16,7 @@ enum tap_dances {
 };
 
 // Advance key aliases
-#define LI_ANIT RGB_TOG
+#define LI_ANIT QK_RGB_MATRIX_TOGGLE
 #define LI_LDLT LED_LEVEL
 #define LI_LYRT TOGGLE_LAYER_COLOR
 #define LT_FNEN LT(LAYER_FUNCTION, KC_ENT)
@@ -27,40 +27,32 @@ enum tap_dances {
 #define TG_NMPD TG(LAYER_NUMPAD)
 #define TT_NUMP TT(LAYER_NUMPAD)
 
-#define HM_LAA  LALT_T(KC_A)
-#define HM_LGS  LGUI_T(KC_S)
-#define HM_LCD  LCTL_T(KC_D)
-#define HM_LSF  LSFT_T(KC_F)
-#define HL_FNG  LT(LAYER_FUNCTION, KC_G)
-#define HL_FNH  LT(LAYER_FUNCTION, KC_H)
-#define HM_RSJ  RSFT_T(KC_J)
-#define HM_RCK  RCTL_T(KC_K)
-#define HM_RGL  RGUI_T(KC_L)
-#define HM_RASC RALT_T(KC_SCLN)
-
-// Combo definitions
+// Homerow mods
+// TODO: 'as'/'sa' bridges keep misfiring mods.
+// Investigate custom timing for A?
 #undef  KM_A
-#define KM_A    HM_LAA
+#define KM_A    KC_A
 #undef  KM_S
-#define KM_S    HM_LGS
+#define KM_S    LCTL_T(KC_S)
 #undef  KM_D
-#define KM_D    HM_LCD
+#define KM_D    LGUI_T(KC_D)
 #undef  KM_F
-#define KM_F    HM_LSF
+#define KM_F    LSFT_T(KC_F)
 #undef  KM_G
-#define KM_G    HL_FNG
+#define KM_G    LALT_T(KC_G)
 #undef  KM_H
-#define KM_H    HL_FNH
+#define KM_H    LALT_T(KC_H)
 #undef  KM_J
-#define KM_J    HM_RSJ
+#define KM_J    RSFT_T(KC_J)
 #undef  KM_K
-#define KM_K    HM_RCK
+#define KM_K    RGUI_T(KC_K)
 #undef  KM_L
-#define KM_L    HM_RGL
+#define KM_L    RCTL_T(KC_L)
 #undef  KM_SC
-#define KM_SC   HM_RASC
+#define KM_SC   LT(LAYER_FUNCTION, KC_SCLN)
 #undef  KM_LEAD
 #define KM_LEAD TD_R2LD
+
 // Include after key definitions in order to use them in the def file
 #include "g/keymap_combo.h"
 
