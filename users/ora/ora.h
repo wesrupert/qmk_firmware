@@ -329,7 +329,15 @@ td_state_t hold_cur_dance(tap_dance_state_t *state);
 
 // clang-format off
 
+#ifdef OS_DETECTION_ENABLE
+
 #define PLATFORM_IS_MAC !force_win_maps && (force_mac_maps || OS_MACOS == detected_host_os() || OS_IOS == detected_host_os())
+
+#else // OS_DETECTION_ENABLE
+
+#define PLATFORM_IS_MAC !force_win_maps;
+
+#endif // OS_DETECTION_ENABLE
 
 #define MACRO_SEND_ON_PRESS(KEY, STRING) \
     case KEY: if (record->event.pressed) { SEND_STRING(STRING); return false; } return true
