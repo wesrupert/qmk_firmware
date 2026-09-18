@@ -153,6 +153,7 @@ void leader_end_user(void) {
         layer_off(LAYER_MAC);
         return;
     }
+#if defined (OS_DETECTION_ENABLE)
     /* Plat: Prnt */ if (leader_sequence_two_keys(KC_P, KC_P)) {
         os_variant_t os = detected_host_os();
         if (os == OS_MACOS) SEND_STRING("mac");
@@ -162,6 +163,7 @@ void leader_end_user(void) {
         else SEND_STRING("unsure");
         return;
     }
+#endif
 #if defined(LEADER_FAILED_CODE)
     tap_code(LEADER_FAILED_CODE);
 #else
